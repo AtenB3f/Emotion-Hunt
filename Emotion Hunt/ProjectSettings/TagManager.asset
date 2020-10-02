@@ -13,13 +13,13 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - SystemTab
+  - MiniGame
+  - ChatWindow
+  - Object
+  - Character
+  - Audio
+  - Background
   - 
   - 
   - 
