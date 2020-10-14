@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Video;
 using DG.Tweening;
 
 public class MainTitleIntro : MonoBehaviour
@@ -10,43 +11,57 @@ public class MainTitleIntro : MonoBehaviour
     public GameObject IntroPanel;
     public Image IntroImg;
     public Image TitleImg;
+    public Image BgImg;
+    private VideoPlayer Video;
+    //public AudioSource Audio;
 
     private bool SplashEn = false;
 
     void Start()
     {
-        //IntroImg = IntroPanel.gameObject.GetComponent<Image>();//IntroPanel.GetComponent<Image>();
-        //TitleImg = TitlePanel.gameObject.GetComponent<Image>();
+        Application.runInBackground = true;
 
+        // Image Color Setting
         IntroImg.color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
-        TitleImg.color = new Color(0.0f, 0.0f, 0.0f, 0.0f);
+        TitleImg.color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
 
+        /*
+        // Video Setting
+        Video = gameObject.AddComponent<VideoPlayer>();
+        Video.playOnAwake = false;
+        Video.targetCameraAlpha = 0.6f;
+        Video.aspectRatio = VideoAspectRatio.Stretch;
+        Video.source = VideoSource.VideoClip;
+        */
+
+        // Panel Disable
         TitlePanel.SetActive(false);
         IntroPanel.SetActive(false);
 
+        // Splash Intro -> Main Title
         StartCoroutine(SplashIntro());
         StartCoroutine(TitleIntro());
     }
 
     void Update()
     {
-
+        // Button
     }
 
     private IEnumerator SplashIntro()
     {
         IntroPanel.SetActive(true);
 
-        // Fade In 2AST Team Logo
-        
+        // Fade In 2AST Team Logo  
         IntroImg.DOFade(1.0f,  0.8f);
         yield return new WaitForSeconds(2.0f);
+        
 
         // Fade Out 2AST Team Logo
         IntroImg.DOFade(0.0f, 1.2f);
         yield return new WaitForSeconds(3.0f);
 
-        // Title Flag On
+        // Splash Disable
         IntroPanel.SetActive(false);
         SplashEn = true;
         yield return null;
@@ -57,19 +72,56 @@ public class MainTitleIntro : MonoBehaviour
         while(!SplashEn)
             yield return null;
 
-        Debug.Log("Start title");
-        
+        // Title Enable
         TitlePanel.SetActive(true);
 
-        
-        //TitlePanel.GetComponent<Image>().material.color = ImgCol;
-        TitleImg.DOFade(1.0f, 1.0f);
-        // Video Setting
-        // Audio Setting
+        /*
+        // Background Image Fade In
+        Color Col = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+        BgImg = TitlePanel.GetComponent<Image>();
+        BgImg.color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
+        BgImg.DOColor(Col, 1.5f);
+        */
+        new WaitForSeconds(3.0f);
 
-        // Play Video
+        // Title Fade In
+        TitleImg.DOFade(1.0f, 1.0f);
+
+
 
         // Show Title Image, Icons, Bottons
         yield return null;
     }
+
+    private IEnumerator PlayVideo()
+    {
+        Debug.Log("Start Play Video");
+        //TitleVideo.source = VideoSource.VideoClip;
+        //TitleVideo.url = System.IO.Path.Combine(Application.streamingAssetsPath, "particles_01.mp4");
+        Video.source = VideoSource.VideoClip;
+        Video = gameObject.GetComponent<VideoPlayer>();
+
+        //Video.audioOutputMode = VideoAudioOutputMode.AudioSource;
+        Video.audioOutputMode = VideoAudioOutputMode.None;
+
+        //Video.EnableAudioTrack(0, true);
+        //Video.SetTargetAudioSource(0, Audio);
+
+        Video.Prepare();
+
+        while (!Video.isPrepared)
+        {
+            yield return null;
+        }
+        Debug.Log("Prepared Video");
+        Video.Play();
+        //Audio.Play();
+
+        while (Video.isPlaying)
+        {
+            //Debug.LogWarning("Video Time: " + Mathf.FloorToInt((float)Video.time));
+            yield return null;
+        }
+    }
 }
+
