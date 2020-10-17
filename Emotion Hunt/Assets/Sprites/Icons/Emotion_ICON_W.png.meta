@@ -1,0 +1,371 @@
+fileFormatVersion: 2
+guid: 759afec210746184b8f2e26eada8c973
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 2690951391353452542
+    second: Emotion_ICON_W_0
+  - first:
+      213: 3870075965581082136
+    second: Emotion_ICON_W_1
+  - first:
+      213: 5212556489463051866
+    second: Emotion_ICON_W_2
+  - first:
+      213: -12540387202356206
+    second: Emotion_ICON_W_3
+  - first:
+      213: -560471342211316834
+    second: Emotion_ICON_W_4
+  - first:
+      213: -6387561736147049493
+    second: Emotion_ICON_W_5
+  - first:
+      213: -4718806907657489295
+    second: Emotion_ICON_W_6
+  - first:
+      213: -6667676675978747353
+    second: Emotion_ICON_W_7
+  - first:
+      213: -191575747299122717
+    second: Emotion_ICON_W_8
+  - first:
+      213: -7300877677117804885
+    second: Emotion_ICON_W_9
+  - first:
+      213: -7263174628416191176
+    second: Emotion_ICON_W_10
+  - first:
+      213: 8921872441137904706
+    second: Emotion_ICON_W_11
+  - first:
+      213: -6916310442325052788
+    second: Emotion_ICON_W_12
+  - first:
+      213: 5974895973556314128
+    second: Emotion_ICON_W_13
+  - first:
+      213: -746127997452910700
+    second: Emotion_ICON_W_14
+  - first:
+      213: 4463240265837871696
+    second: Emotion_ICON_W_15
+  - first:
+      213: 827167317354916748
+    second: Emotion_ICON_W_16
+  - first:
+      213: 4235334525745484877
+    second: Emotion_ICON_W_17
+  - first:
+      213: 6145150580040399376
+    second: Emotion_ICON_W_18
+  - first:
+      213: -1347686209128270963
+    second: Emotion_ICON_W_19
+  - first:
+      213: 5878416170939867376
+    second: Emotion_ICON_W_20
+  - first:
+      213: 5804710263481353973
+    second: Emotion_ICON_W_21
+  - first:
+      213: 418131315064190110
+    second: Emotion_ICON_W_22
+  - first:
+      213: 4626580851295193542
+    second: Emotion_ICON_W_23
+  - first:
+      213: 3649661161824175847
+    second: Emotion_ICON_W_24
+  - first:
+      213: -5037549996030283541
+    second: Emotion_ICON_W_25
+  - first:
+      213: 259160581937496160
+    second: Emotion_ICON_W_26
+  - first:
+      213: 8294615985680912650
+    second: Emotion_ICON_W_27
+  - first:
+      213: 1275697874238237727
+    second: Emotion_ICON_W_28
+  - first:
+      213: 859051186948795654
+    second: Emotion_ICON_W_29
+  - first:
+      213: -485487883273805723
+    second: Emotion_ICON_W_30
+  - first:
+      213: 8735624705586693064
+    second: Emotion_ICON_W_31
+  - first:
+      213: -8670063544353234266
+    second: Emotion_ICON_W_32
+  - first:
+      213: -3525624714887892153
+    second: Emotion_ICON_W_33
+  - first:
+      213: 2799624740741193738
+    second: Emotion_ICON_W_34
+  - first:
+      213: 2703827465865563808
+    second: Emotion_ICON_W_35
+  - first:
+      213: 8687579405644754884
+    second: Emotion_ICON_W_36
+  - first:
+      213: 670912707797050196
+    second: Emotion_ICON_W_37
+  - first:
+      213: -9210704590133578800
+    second: Emotion_ICON_W_38
+  - first:
+      213: 7592011221130930840
+    second: Emotion_ICON_W_39
+  - first:
+      213: 6846867660149332405
+    second: Emotion_ICON_W_40
+  - first:
+      213: -3173740238176793132
+    second: Emotion_ICON_W_41
+  - first:
+      213: -576905195560672665
+    second: Emotion_ICON_W_42
+  - first:
+      213: 4825297961222999584
+    second: Emotion_ICON_W_43
+  - first:
+      213: -3829302731805475082
+    second: Emotion_ICON_W_44
+  - first:
+      213: 3741104328019316557
+    second: Emotion_ICON_W_45
+  - first:
+      213: -2012664968019342941
+    second: Emotion_ICON_W_46
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: -1
+    aniso: -1
+    mipBias: -100
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Emotion_ICON_W_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ef7377d780e285520800000000000000
+      internalID: 2690951391353452542
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Emotion_ICON_W_1
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 0
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 81ebc3e069545b530800000000000000
+      internalID: 3870075965581082136
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Emotion_ICON_W_2
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 0
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a563a168288b65840800000000000000
+      internalID: 5212556489463051866
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Emotion_ICON_W_3
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 0
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 21c2573959273dff0800000000000000
+      internalID: -12540387202356206
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Emotion_ICON_W_4
+      rect:
+        serializedVersion: 2
+        x: 1200
+        y: 0
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e9345b4a84ec838f0800000000000000
+      internalID: -560471342211316834
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Emotion_ICON_W_5
+      rect:
+        serializedVersion: 2
+        x: 1500
+        y: 0
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: be3e3189172da57a0800000000000000
+      internalID: -6387561736147049493
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
