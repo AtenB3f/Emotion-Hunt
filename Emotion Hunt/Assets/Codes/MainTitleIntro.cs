@@ -12,6 +12,7 @@ public class MainTitleIntro : MonoBehaviour
     public Image IntroImg;
     public Image TitleImg;
     public Image BgImg;
+    public GameObject Btn;
     private VideoPlayer Video;
     //public AudioSource Audio;
 
@@ -24,7 +25,7 @@ public class MainTitleIntro : MonoBehaviour
         // Image Color Setting
         IntroImg.color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
         TitleImg.color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
-
+        
         /*
         // Video Setting
         Video = gameObject.AddComponent<VideoPlayer>();
@@ -56,7 +57,6 @@ public class MainTitleIntro : MonoBehaviour
         IntroImg.DOFade(1.0f,  0.8f);
         yield return new WaitForSeconds(2.0f);
         
-
         // Fade Out 2AST Team Logo
         IntroImg.DOFade(0.0f, 1.2f);
         yield return new WaitForSeconds(3.0f);
@@ -69,27 +69,36 @@ public class MainTitleIntro : MonoBehaviour
 
     private IEnumerator TitleIntro()
     {
-        while(!SplashEn)
+        while (!SplashEn)
             yield return null;
 
         // Title Enable
         TitlePanel.SetActive(true);
-
-        /*
-        // Background Image Fade In
-        Color Col = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-        BgImg = TitlePanel.GetComponent<Image>();
-        BgImg.color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
-        BgImg.DOColor(Col, 1.5f);
-        */
         new WaitForSeconds(3.0f);
+        
+        // Panel Fade In
+        TitlePanel.GetComponent<Image>().DOFade(1, 1.8f);
+        new WaitForSeconds(4.0f);
 
         // Title Fade In
         TitleImg.DOFade(1.0f, 1.0f);
 
+        new WaitForSeconds(3.0f);
 
+        TitlePanel.GetComponentInChildren<Text>().DOFade(1, 2);
 
-        // Show Title Image, Icons, Bottons
+        //Button Fade In
+        Button[] Arr = Btn.GetComponentsInChildren<Button>();
+        int Cnt = Arr.Length;
+        for (int i=0; i<Cnt; i++)
+        {
+            if (Arr[i].GetComponentInChildren<Image>())
+                Arr[i].GetComponent<Image>().DOFade(1, 2);
+                
+            if (Arr[i].GetComponentInChildren<Text>())
+                Arr[i].GetComponentInChildren<Text>().DOFade(1, 2);
+        }
+        
         yield return null;
     }
 
