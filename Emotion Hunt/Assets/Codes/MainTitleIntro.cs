@@ -13,6 +13,7 @@ public class MainTitleIntro : MonoBehaviour
     public Image TitleImg;
     public Image BgImg;
     public GameObject Btn;
+    public GameObject SubBtn;
     private VideoPlayer Video;
     //public AudioSource Audio;
 
@@ -88,18 +89,24 @@ public class MainTitleIntro : MonoBehaviour
         TitlePanel.GetComponentInChildren<Text>().DOFade(1, 2);
 
         //Button Fade In
-        Button[] Arr = Btn.GetComponentsInChildren<Button>();
+        ButtonFadeIn(Btn);
+        ButtonFadeIn(SubBtn);
+
+        yield return null;
+    }
+
+    private void ButtonFadeIn(GameObject objButton)
+    {
+        Button[] Arr = objButton.GetComponentsInChildren<Button>();
         int Cnt = Arr.Length;
-        for (int i=0; i<Cnt; i++)
+        for (int i = 0; i < Cnt; i++)
         {
             if (Arr[i].GetComponentInChildren<Image>())
                 Arr[i].GetComponent<Image>().DOFade(1, 2);
-                
+
             if (Arr[i].GetComponentInChildren<Text>())
                 Arr[i].GetComponentInChildren<Text>().DOFade(1, 2);
         }
-        
-        yield return null;
     }
 
     private IEnumerator PlayVideo()
