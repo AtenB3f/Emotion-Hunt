@@ -32,71 +32,126 @@ using UnityEngine.EventSystems;
 
 public class MainMenuManager : MonoBehaviour
 {
+    public const int DEF_MAINMENU_PLAY = 0;
+    public const int DEF_MAINMENU_COLLECT = 1;
+    public const int DEF_MAINMENU_SETTING = 2;
+    public const int DEF_MAINMENU_EXIT = 3;
+
     public GameObject MainBtn;      // Play, Collect, Setting, Exit Button (in "TitlePanel"-"ButtonSet")
     public GameObject SubBtn;       // Setting Icon, Exit Icon Button (in "TitlePanel"-"SubButtonSet")
     public GameObject PlayObj;      // Play Menu Object
     public GameObject SettingObj;   // Setting Menu Object
+    public GameObject MenuPanel;
     public GameObject SystemPanel;  // System Panel
+    private int MainMenuStat;
+    private Button[] MainBtnArr;
+    private Button[] SubBtnArr;
 
     void Start()
     {
-        Button[] MainBtnArr = MainBtn.GetComponentsInChildren<Button>();
-        Button[] SubBtnArr = SubBtn.GetComponentsInChildren<Button>();
+        MainBtnArr = MainBtn.GetComponentsInChildren<Button>();
+        SubBtnArr = SubBtn.GetComponentsInChildren<Button>();
 
         // Panel Disable
-        SystemPanelEnable(false);
+        EnableSystemPanel(false);
+
+        PlayObj.SetActive(false);
+        SettingObj.SetActive(false);
     }
 
     void Update()
     {
-        
     }
 
-    private void PlayMenu(bool En)
+    public void PlayMenuCliked()
     {
-        if(En)
-        {
-            PlayObj.SetActive(true);
+        MainBtnArr[DEF_MAINMENU_PLAY].interactable = false;
 
-            // System Panel Blur Effect On
-            SystemPanelEnable(true);
+        MainMenuStat = DEF_MAINMENU_PLAY;
 
-            // Enable Play Menu Panel
+        MenuPanel.SetActive(true);
 
-        }
-        else
-        {
-            PlayObj.SetActive(false);
+        // Enable Play Menu Panel
+        PlayObj.SetActive(true);
 
-            // System Panel Blur Effect On
-            SystemPanelEnable(false);
-
-            // Disable Play Menu Panel
-        }
-
+        // System Panel Blur Effect On
+        EnableSystemPanel(true);
     }
 
-    private void SystemPanelEnable(bool En)
+    public void SettingMenuClick()
+    {
+        MainBtnArr[DEF_MAINMENU_SETTING].interactable = false;
+
+        MainMenuStat = DEF_MAINMENU_SETTING;
+
+        MenuPanel.SetActive(true);
+
+        // Enable Play Menu Panel
+        SettingObj.SetActive(true);
+
+        // System Panel Blur Effect On
+        EnableSystemPanel(true);
+    }
+
+    public void DisableMainMenu()
+    {
+        switch (MainMenuStat)
+        {
+            case 0:     // Play Menu
+                // Disable Play Menu Panel
+                PlayObj.SetActive(false);
+
+                // System Panel Blur Effect On
+                EnableSystemPanel(false);
+                break;
+            case 1:     // Collect Menu
+                break;
+            case 2:     // Setting Menu
+                // Disable Play Menu Panel
+                SettingObj.SetActive(false);
+
+                // System Panel Blur Effect On
+                EnableSystemPanel(false);
+                break;
+            case 3:     // Exit Menu
+                break;
+        }
+        MenuPanel.SetActive(false);
+    }
+
+    private void DisableMainMenu(int Num)
+    {
+        switch (Num)
+        {
+            case 0:     // Play Menu
+                // Disable Play Menu Panel
+                PlayObj.SetActive(false);
+
+                // System Panel Blur Effect On
+                EnableSystemPanel(false);
+                break;
+            case 1:     // Collect Menu
+                break;
+            case 2:     // Setting Menu
+
+                // Disable Play Menu Panel
+                SettingObj.SetActive(false);
+
+                // System Panel Blur Effect On
+                EnableSystemPanel(false);
+                break;
+            case 3:     // Exit Menu
+                break;
+        }
+        MenuPanel.SetActive(false);
+    }
+
+    private void EnableSystemPanel(bool En)
     {
         if(En)
-            SystemPanel.GetComponent<Image>().color = new Color(0.0f, 0.0f, 0.0f, 0.4f);
+            SystemPanel.GetComponent<Image>().color = new Color(0.0f, 0.0f, 0.0f, 0.6f);
         else
             SystemPanel.GetComponent<Image>().color = new Color(0.0f, 0.0f, 0.0f, 0.0f);
-    }
-
-    private void ButtonStatus()
-    {
-        
-    }
-
-    private void PlayMenu()
-    {
-
-    }
-
-    private void SettingMenu()
-    {
-
     }
 
     public void ResetSelected()

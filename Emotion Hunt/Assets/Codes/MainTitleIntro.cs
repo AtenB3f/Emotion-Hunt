@@ -9,6 +9,7 @@ public class MainTitleIntro : MonoBehaviour
 {
     public GameObject TitlePanel;
     public GameObject IntroPanel;
+    public GameObject MenuPanel;
     public Image IntroImg;
     public Image TitleImg;
     public Image BgImg;
@@ -39,6 +40,7 @@ public class MainTitleIntro : MonoBehaviour
         // Panel Disable
         TitlePanel.SetActive(false);
         IntroPanel.SetActive(false);
+        MenuPanel.SetActive(false);
 
         // Splash Intro -> Main Title
         StartCoroutine(SplashIntro());
