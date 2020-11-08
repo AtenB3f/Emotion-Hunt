@@ -109,6 +109,7 @@
      <Compile Include="Assets\BuildReport\Scripts\Editor\Window\Screen\BRT_OptionsScreen.cs" />
      <Compile Include="Assets\BuildReport\Scripts\Editor\Window\Screen\BRT_OverviewScreen.cs" />
      <Compile Include="Assets\BuildReport\Scripts\Editor\Window\Screen\BRT_SizeStatsScreen.cs" />
+     <Compile Include="Assets\Dark UI\Editor\InitDarkUI.cs" />
      <None Include="Assets\BuildReport\Scripts\Editor\FuzzyString\FuzzyStringLicense.txt" />
  <Reference Include="UnityEngine">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.7f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>

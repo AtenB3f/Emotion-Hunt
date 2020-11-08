@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 /*      [ Button ]
  *      
@@ -41,6 +42,7 @@ public class MainMenuManager : MonoBehaviour
     public GameObject SubBtn;       // Setting Icon, Exit Icon Button (in "TitlePanel"-"SubButtonSet")
     public GameObject PlayObj;      // Play Menu Object
     public GameObject SettingObj;   // Setting Menu Object
+    public GameObject ExitObj;      // Exit Menu Object
     public GameObject MenuPanel;
     public GameObject SystemPanel;  // System Panel
     private int MainMenuStat;
@@ -57,6 +59,7 @@ public class MainMenuManager : MonoBehaviour
 
         PlayObj.SetActive(false);
         SettingObj.SetActive(false);
+        ExitObj.SetActive(false);
     }
 
     void Update()
@@ -65,7 +68,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void PlayMenuCliked()
     {
-        MainBtnArr[DEF_MAINMENU_PLAY].interactable = false;
+        MainBtnArr[DEF_MAINMENU_PLAY].interactable = true;
 
         MainMenuStat = DEF_MAINMENU_PLAY;
 
@@ -78,9 +81,18 @@ public class MainMenuManager : MonoBehaviour
         EnableSystemPanel(true);
     }
 
+    public void CollectMenuClick()
+    {
+        MainBtnArr[DEF_MAINMENU_COLLECT].interactable = true;
+
+        MainMenuStat = DEF_MAINMENU_COLLECT;
+
+        SceneManager.LoadScene("Collect");
+    }
+
     public void SettingMenuClick()
     {
-        MainBtnArr[DEF_MAINMENU_SETTING].interactable = false;
+        MainBtnArr[DEF_MAINMENU_SETTING].interactable = true;
 
         MainMenuStat = DEF_MAINMENU_SETTING;
 
@@ -93,6 +105,22 @@ public class MainMenuManager : MonoBehaviour
         EnableSystemPanel(true);
     }
 
+    public void ExitMenuClick()
+    {
+        MainBtnArr[DEF_MAINMENU_EXIT].interactable = true;
+
+        MainMenuStat = DEF_MAINMENU_EXIT;
+
+        MenuPanel.SetActive(true);
+
+        // Enable Play Menu Panel
+        ExitObj.SetActive(true);
+
+        // System Panel Blur Effect On
+        EnableSystemPanel(true);
+    }
+
+
     public void DisableMainMenu()
     {
         switch (MainMenuStat)
@@ -100,49 +128,47 @@ public class MainMenuManager : MonoBehaviour
             case 0:     // Play Menu
                 // Disable Play Menu Panel
                 PlayObj.SetActive(false);
-
-                // System Panel Blur Effect On
-                EnableSystemPanel(false);
                 break;
             case 1:     // Collect Menu
                 break;
             case 2:     // Setting Menu
                 // Disable Play Menu Panel
                 SettingObj.SetActive(false);
-
-                // System Panel Blur Effect On
-                EnableSystemPanel(false);
                 break;
             case 3:     // Exit Menu
+                // Disable Exit Menu Panel
+                ExitObj.SetActive(false);
                 break;
         }
+        // System Panel Blur Effect On
+        EnableSystemPanel(false);
+
         MenuPanel.SetActive(false);
     }
 
-    private void DisableMainMenu(int Num)
+    public void DisableMainMenu(int Num)
     {
         switch (Num)
         {
             case 0:     // Play Menu
                 // Disable Play Menu Panel
                 PlayObj.SetActive(false);
-
-                // System Panel Blur Effect On
-                EnableSystemPanel(false);
                 break;
             case 1:     // Collect Menu
                 break;
             case 2:     // Setting Menu
-
                 // Disable Play Menu Panel
                 SettingObj.SetActive(false);
-
-                // System Panel Blur Effect On
-                EnableSystemPanel(false);
                 break;
             case 3:     // Exit Menu
+                // Disable Exit Menu Panel
+                ExitObj.SetActive(false);
                 break;
         }
+
+        // System Panel Blur Effect On
+        EnableSystemPanel(false);
+
         MenuPanel.SetActive(false);
     }
 
@@ -157,5 +183,15 @@ public class MainMenuManager : MonoBehaviour
     public void ResetSelected()
     {
         EventSystem.current.SetSelectedGameObject(null);
+    }
+
+    public void PlayNewGame()
+    {
+        SceneManager.LoadScene("NewGame");
+    }
+
+    public void PlayContinue()
+    {
+
     }
 }
