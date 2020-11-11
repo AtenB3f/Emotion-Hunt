@@ -43,6 +43,7 @@ public class MainMenuManager : MonoBehaviour
     public GameObject PlayObj;      // Play Menu Object
     public GameObject SettingObj;   // Setting Menu Object
     public GameObject ExitObj;      // Exit Menu Object
+    public GameObject DevlopObj;    // Devlop Object
     public GameObject MenuPanel;
     public GameObject SystemPanel;  // System Panel
     private int MainMenuStat;
@@ -60,6 +61,7 @@ public class MainMenuManager : MonoBehaviour
         PlayObj.SetActive(false);
         SettingObj.SetActive(false);
         ExitObj.SetActive(false);
+        DevlopObj.SetActive(false);
     }
 
     void Update()
@@ -120,24 +122,54 @@ public class MainMenuManager : MonoBehaviour
         EnableSystemPanel(true);
     }
 
+    public void EnableMenu(int num)
+    {
+        switch (num)
+        {
+            case 0:     // Play Menu
+                MainBtnArr[DEF_MAINMENU_PLAY].interactable = true;
+                PlayObj.SetActive(true);
+                break;
+            case 1:     // Collect Menu
+                break;
+            case 2:     // Setting Menu
+                MainBtnArr[DEF_MAINMENU_SETTING].interactable = true;
+                SettingObj.SetActive(true);
+                break;
+            case 3:     // Exit Menu
+                MainBtnArr[DEF_MAINMENU_EXIT].interactable = true;
+                ExitObj.SetActive(true);
+                break;
+            case 4:     // Develop Info
+                
+                DevlopObj.SetActive(true);
 
+                //Disable Setting Menu
+                SettingObj.SetActive(false);
+                break;
+        }
+        // System Panel Blur Effect On
+        EnableSystemPanel(true);
+    }
+    /*
     public void DisableMainMenu()
     {
         switch (MainMenuStat)
         {
             case 0:     // Play Menu
-                // Disable Play Menu Panel
                 PlayObj.SetActive(false);
                 break;
             case 1:     // Collect Menu
                 break;
             case 2:     // Setting Menu
-                // Disable Play Menu Panel
                 SettingObj.SetActive(false);
                 break;
             case 3:     // Exit Menu
-                // Disable Exit Menu Panel
                 ExitObj.SetActive(false);
+                break;
+            case 4:     // Develop Info
+                DevlopObj.SetActive(false);
+                SettingObj.SetActive(true);
                 break;
         }
         // System Panel Blur Effect On
@@ -145,7 +177,7 @@ public class MainMenuManager : MonoBehaviour
 
         MenuPanel.SetActive(false);
     }
-
+    */
     public void DisableMainMenu(int Num)
     {
         switch (Num)
@@ -164,6 +196,10 @@ public class MainMenuManager : MonoBehaviour
                 // Disable Exit Menu Panel
                 ExitObj.SetActive(false);
                 break;
+            case 4:     // Develop Info
+                DevlopObj.SetActive(false);
+                SettingObj.SetActive(true);
+                break;
         }
 
         // System Panel Blur Effect On
@@ -178,6 +214,22 @@ public class MainMenuManager : MonoBehaviour
             SystemPanel.GetComponent<Image>().color = new Color(0.0f, 0.0f, 0.0f, 0.6f);
         else
             SystemPanel.GetComponent<Image>().color = new Color(0.0f, 0.0f, 0.0f, 0.0f);
+    }
+
+    public void DispDevelopInfo(bool OnOff)
+    {
+        if(OnOff)
+        {
+            // On
+            DevlopObj.SetActive(true);
+
+        }
+        else
+        {
+            // Off
+            DevlopObj.SetActive(false);
+
+        }
     }
 
     public void ResetSelected()
