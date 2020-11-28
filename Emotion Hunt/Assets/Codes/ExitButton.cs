@@ -19,24 +19,21 @@ public class ExitButton : MonoBehaviour
         Btn = ExitBtnSet.GetComponentsInChildren<Button>();
     }
 
-    public void ExitClose()
-    {
-        Btn[EXIT_CLOSE].interactable = true;
-        ExitMenu.SetActive(false);
-    }
     public void ExitNo()
     {
         Btn[EXIT_NO].interactable = true;
+        Btn[EXIT_CLOSE].interactable = true;
         ExitMenu.SetActive(false);
     }
 
     public void ExitGame()
-    {
-        Btn[EXIT_YES].interactable = true;
+    {        
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else
         Application.Quit();
+        //Application.CancelQuit();
+        //System.Diagnostics.Process.GetCurrentProcess().Kill();
 #endif
     }
 }
