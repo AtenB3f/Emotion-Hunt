@@ -1,0 +1,7 @@
+This file is free for Personal and Commercial use, but you must give attribution in one of the following ways:
+
+TV/Broadcase : Mention "Videezy.com" in the credits.
+Web : Copy and paste the following html code on the page:
+
+<a rel="nofollow" target="_blank" href="http://www.videezy.com/">Free Stock Footage by Videezy</a>
+
