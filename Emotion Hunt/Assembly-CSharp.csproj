@@ -56,12 +56,16 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Codes\AudioManager.cs" />
+     <Compile Include="Assets\Codes\CharacterManager.cs" />
+     <Compile Include="Assets\Codes\DialogManager.cs" />
      <Compile Include="Assets\Codes\ExitButton.cs" />
      <Compile Include="Assets\Codes\MainMenuManager.cs" />
      <Compile Include="Assets\Codes\MainTitleIntro.cs" />
      <Compile Include="Assets\Codes\MainTitleManager.cs" />
+     <Compile Include="Assets\Codes\PrologueManager.cs" />
      <Compile Include="Assets\Codes\SettingManager.cs" />
      <Compile Include="Assets\Codes\SplashManager.cs" />
+     <Compile Include="Assets\Codes\StoryManager.cs" />
      <Compile Include="Assets\Codes\VideoPlay.cs" />
      <Compile Include="Assets\Dark UI\Scripts\BlurManager.cs" />
      <Compile Include="Assets\Dark UI\Scripts\ButtonAnimationFix.cs" />
