@@ -6,45 +6,58 @@ using DG.Tweening;
 using TMPro;
 
 public class DialogManager : MonoBehaviour
-{ 
+{
+    public DialogInfo info = new DialogInfo();
+
+    const float ON_OFF_TIME = 0.6f;
+
     public GameObject dialogObj;
     public GameObject nameObj;
     public GameObject chatObj;
+    public GameObject skipObj;
+    public GameObject triangleObj;
     private TextMeshProUGUI nameText;
     private TextMeshProUGUI chatText;
-    private Image[] dialogImg;
-    public DialogInfo info;
-
-
+    private Image chatImg;
+    private Image nameImg;
+    private Image triangleImg;
+    private Animation triangleAni;
+    
     public void Start()
     {
         // Load object
-        dialogImg = new Image[2];
-        dialogImg = dialogObj.GetComponentsInChildren<Image>();     // [0] : Chat ,[1] : Name
+        nameImg = nameObj.GetComponent<Image>();
+        chatImg = chatObj.GetComponent<Image>();
 
         nameText = nameObj.GetComponentInChildren<TextMeshProUGUI>();
         chatText = chatObj.GetComponentInChildren<TextMeshProUGUI>();
 
-        // Alpha Setting
-        Color chatImgColor = dialogImg[0].color;
-        Color nameImgColor = dialogImg[1].color;
-        Color nameTextColor = nameText.color;
-        Color chatTextColor = chatText.color;
+        triangleAni = triangleObj.GetComponent<Animation>();
+        triangleImg = triangleObj.GetComponent<Image>();
 
-        chatImgColor.a = 0.0f;
-        nameImgColor.a = 0.0f;
-        nameTextColor.a = 0.0f;
-        chatTextColor.a = 0.0f;
-
-        dialogImg[0].color = chatImgColor;
-        dialogImg[1].color = nameImgColor;
-        nameText.color = nameTextColor;
-        chatText.color = chatTextColor;
+        SetAlpha(0.0f);
+        OffDialog();
     }
 
-    void Update()                 
+    private void SetAlpha(float value)
     {
-        
+        Color chatImgColor = chatImg.color;
+        Color nameImgColor = nameImg.color;
+        Color nameTextColor = nameText.color;
+        Color chatTextColor = chatText.color;
+        Color triangleColor = triangleImg.color;
+
+        chatImgColor.a = value;
+        nameImgColor.a = value;
+        nameTextColor.a = value;
+        chatTextColor.a = value;
+        triangleColor.a = value;
+
+        chatImg.color = chatImgColor;
+        nameImg.color = nameImgColor;
+        triangleImg.color = triangleColor;
+        chatText.color = chatTextColor;
+        nameText.color = nameTextColor;
     }
 
     public void PrintDialog(string text)
@@ -59,24 +72,99 @@ public class DialogManager : MonoBehaviour
 
     public void OnDialog()
     {
-        dialogImg[0].DOFade(1.0f, 0.6f);
-        dialogImg[1].DOFade(1.0f, 0.6f);
-        nameText.DOFade(1.0f, 0.6f);
-        chatText.DOFade(1.0f, 0.6f);
+        OnName();
+        OnSkip();
+        OnChat();
+        OnTriangle();
     }
 
     public void OffDialog()
     {
-        dialogImg[0].DOFade(0.0f, 0.6f);
-        dialogImg[1].DOFade(0.0f, 0.6f);
-        nameText.DOFade(0.0f, 0.6f);
-        chatText.DOFade(0.0f, 0.6f);
+        OffName();
+        OffSkip();
+        OffChat();
+        OffTriangle();
     }
-    
+    public void OnName()
+    {
+#if TEST
+        if (info.name == "Player")
+            return;
+#endif
+        nameImg.DOFade(1.0f, ON_OFF_TIME);
+        nameText.DOFade(1.0f, ON_OFF_TIME);
+    }
+
+    public void OnChat()
+    {
+        chatImg.DOFade(1.0f, ON_OFF_TIME);
+        chatText.DOFade(1.0f, ON_OFF_TIME);
+        triangleImg.DOFade(1.0f, ON_OFF_TIME);
+    }
+
+    public void OnTriangle()
+    {
+        triangleObj.SetActive(true);
+        triangleImg.DOFade(1.0f, ON_OFF_TIME);
+        PlayTriangelAni(true);
+    }
+
+    public void OnSkip()
+    {
+        skipObj.SetActive(true);
+    }
+
+    public void OffName()
+    {
+        nameText.DOFade(0.0f, ON_OFF_TIME);
+        nameImg.DOFade(0.0f, ON_OFF_TIME);
+    }
+    public void OffChat()
+    {
+        chatImg.DOFade(0.0f, ON_OFF_TIME);
+        chatText.DOFade(0.0f, ON_OFF_TIME);
+    }
+    public void OffTriangle()
+    {
+        PlayTriangelAni(false);
+        triangleObj.SetActive(false);
+    }
+
+    public void OffSkip()
+    {
+        skipObj.SetActive(false);
+    }
+
+    private void PlayTriangelAni(bool play)
+    {
+        if (play == true)            
+            triangleAni.Play();
+        else
+            triangleAni.Stop();
+    }
+
 }
 
 public class DialogInfo
 {
-    bool namePos = false;       // left : false / right :  true
-    bool readText = false;      // not read yet : false / read : true
+    public bool token = false;
+    public string name;
+    public bool skip = false;
+
+    public void SetName(string str)
+    {
+        name = str;
+    }
+    public void ResetInfo()
+    {
+        name = null;
+        token = false;
+        skip = false;
+    }
+
+    public void ResetSkip()
+    {
+        token = false;
+        skip = false;
+    }
 }
