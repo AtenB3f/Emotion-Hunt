@@ -3,6 +3,44 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+enum StoryControl
+{
+    BackgroundInfo,
+    Object,
+    Music,
+    Effect,
+    Party,
+    Selection,
+    Dialog,
+    Answer,
+    Delay,
+}
+
+enum StoryType
+{
+    A,
+    B,
+    C,
+    On,
+    Off,
+    Play,
+    Repeat,
+    Add,
+    Remove
+}
+
+public struct Story
+{
+    int index;
+    int subIndex;
+    StoryControl control;
+    StoryType type;
+    float value;
+    Emotion emotion;
+    CharacterChat chat;
+}
+
+
 public class StoryManager : MonoBehaviour
 {
     private int day = 0;
@@ -12,6 +50,7 @@ public class StoryManager : MonoBehaviour
     CharacterManager characterManager;
     private bool token = true;
 
+    
     void Start()
     {
         dialogManager = GameObject.Find("Dialog").GetComponent<DialogManager>();
@@ -23,6 +62,15 @@ public class StoryManager : MonoBehaviour
         // day확인
         // 동작 파악
         // 배경, 브금 설정
+        /*
+        List<Dictionary<string, object>> storyList = CSVReader.Read("Script/Helen/Story_Helen_1");
+        for (int i=0; i<storyList.Count; i++)
+        {
+            print("Index :: " + storyList[i]["Index"] );
+            print("Sub Index :: " + storyList[i]["Sub Index"]);
+            print("Chat :: " + storyList[i]["Chat"]);
+        }
+        */
     }
 
     int cnt = 0;
@@ -35,9 +83,9 @@ public class StoryManager : MonoBehaviour
             dialogManager.OnDialog();
             selectionManager.OnSelection();
             SetName("Elisha");
-            characterManager.info.AddNumNPC();
-            characterManager.OnCharacter();
-            characterManager.SettingCharacter();
+            //characterManager.info.AddNumNPC();
+            //characterManager.OnCharacter();
+            //characterManager.SettingCharacter();
             
         }
         // 키 입력에 따라 현재 진행 대사 확인

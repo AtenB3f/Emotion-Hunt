@@ -10,6 +10,7 @@ public class DialogManager : MonoBehaviour
     public DialogInfo info = new DialogInfo();
 
     const float ON_OFF_TIME = 0.6f;
+    const float SET_ALPHA = 0.8f;
 
     public GameObject dialogObj;
     public GameObject nameObj;
@@ -18,6 +19,7 @@ public class DialogManager : MonoBehaviour
     public GameObject triangleObj;
     private TextMeshProUGUI nameText;
     private TextMeshProUGUI chatText;
+    private Image nameLineImg;
     private Image chatImg;
     private Image nameImg;
     private Image triangleImg;
@@ -28,10 +30,9 @@ public class DialogManager : MonoBehaviour
         // Load object
         nameImg = nameObj.GetComponent<Image>();
         chatImg = chatObj.GetComponent<Image>();
-
         nameText = nameObj.GetComponentInChildren<TextMeshProUGUI>();
+        nameLineImg = nameText.GetComponentInChildren<Image>();
         chatText = chatObj.GetComponentInChildren<TextMeshProUGUI>();
-
         triangleAni = triangleObj.GetComponent<Animation>();
         triangleImg = triangleObj.GetComponent<Image>();
 
@@ -43,21 +44,24 @@ public class DialogManager : MonoBehaviour
     {
         Color chatImgColor = chatImg.color;
         Color nameImgColor = nameImg.color;
+        Color nameLineImgColor = nameLineImg.color;
         Color nameTextColor = nameText.color;
         Color chatTextColor = chatText.color;
         Color triangleColor = triangleImg.color;
 
         chatImgColor.a = value;
         nameImgColor.a = value;
+        nameLineImgColor.a = value;
         nameTextColor.a = value;
         chatTextColor.a = value;
         triangleColor.a = value;
 
         chatImg.color = chatImgColor;
         nameImg.color = nameImgColor;
-        triangleImg.color = triangleColor;
-        chatText.color = chatTextColor;
+        nameLineImg.color = nameImgColor;
         nameText.color = nameTextColor;
+        chatText.color = chatTextColor;
+        triangleImg.color = triangleColor;
     }
 
     public void PrintDialog(string text)
@@ -87,17 +91,15 @@ public class DialogManager : MonoBehaviour
     }
     public void OnName()
     {
-#if TEST
-        if (info.name == "Player")
-            return;
-#endif
-        nameImg.DOFade(1.0f, ON_OFF_TIME);
+        nameImg.DOFade(SET_ALPHA, ON_OFF_TIME);
+        Color col = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+        nameLineImg.DOColor(col, ON_OFF_TIME);
         nameText.DOFade(1.0f, ON_OFF_TIME);
     }
 
     public void OnChat()
     {
-        chatImg.DOFade(1.0f, ON_OFF_TIME);
+        chatImg.DOFade(SET_ALPHA, ON_OFF_TIME);
         chatText.DOFade(1.0f, ON_OFF_TIME);
         triangleImg.DOFade(1.0f, ON_OFF_TIME);
     }
@@ -117,6 +119,7 @@ public class DialogManager : MonoBehaviour
     public void OffName()
     {
         nameText.DOFade(0.0f, ON_OFF_TIME);
+        nameLineImg.DOFade(0.0f, ON_OFF_TIME);
         nameImg.DOFade(0.0f, ON_OFF_TIME);
     }
     public void OffChat()

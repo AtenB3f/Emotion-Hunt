@@ -258,6 +258,18 @@ public class CharacerInfo
     }
 }
 
+enum Emotion 
+{
+    None,
+    Love,
+    Philia,
+    Sympathy,
+    Hate,
+    LoveAndHate,
+    Contempt
+}
+
+
 public struct EmotionInfo
 {
     [Range(0, 100)] int eros;           // 사랑
@@ -266,4 +278,11 @@ public struct EmotionInfo
     [Range(0, 100)] int hatred;         // 증오
     [Range(0, 100)] int contempt;       // 경멸
     [Range(0, 100)] int lovenhate;      // 애증
+}
+
+public struct CharacterChat
+{
+    string name;
+    string face;
+    string chat;
 }
