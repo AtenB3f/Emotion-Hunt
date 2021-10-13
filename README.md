@@ -32,44 +32,45 @@ SCM : Trello
 :e-mail: E-Mail : AtenB@gmail.com <br>
 :black_nib: Develop
 ```sh
-<Develop>
 메인 메뉴 구현
 대화시스템 구현
-
-<Illust>
+```
+:black_nib: Illust
+```sh
 NPC 캐릭터 디자인
 NPC 일러스트 작업
 ```
 
 ### [Doby](https://github.com/treasure-shun)
-:e-mail: E-Mail : illusion9715@gmail.com
-:black_nib:
+:e-mail: E-Mail : illusion9715@gmail.com <br>
+:black_nib: Develop
 ```sh
-<Develop>
 시스템 메뉴 기능 추가
-
-<(Audio>
+```
+:black_nib: Audio
+```sh
 Effect 및 BGM 선정
 ```
 
 ### 페어리 참
-:e-mail: E-Mail :gghwj22@gmail.com
-:black_nib:
+:e-mail: E-Mail :gghwj22@gmail.com <br>
+:black_nib: Scenario
 ```sh
 세계관 설정
 NPC 헬렌 시나리오
 ```
 
 ### 도로
-:e-mail: E-Mail :turtle9708@gmail.com
-:black_nib:
+:e-mail: E-Mail :turtle9708@gmail.com <br>
+:black_nib: Scenario
 ```sh
 세계관 설정
 NPC 에드윈 시나리오
 ```
 
 ### 민물장어
-:e-mail: E-Mail : qkr1790@gmail.com
+:e-mail: E-Mail : qkr1790@gmail.com <br>
+:black_nib: UX/UI
 ```sh
 대화창 UI 디자인
 ```
