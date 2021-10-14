@@ -8,9 +8,12 @@ using TMPro;
 public class DialogManager : MonoBehaviour
 {
     public DialogInfo info = new DialogInfo();
-
+    
     const float ON_OFF_TIME = 0.6f;
     const float SET_ALPHA = 0.7f;
+    const float CHAT_SPEED_NOMAL = 0.05f;
+    const float CHAT_SPEED_FAST = 0.035f;
+    float chatSpeed = CHAT_SPEED_NOMAL;
 
     public GameObject dialogObj;
     public GameObject nameObj;
@@ -38,6 +41,16 @@ public class DialogManager : MonoBehaviour
 
         SetAlpha(0.0f);
         OffDialog();
+    }
+
+    public void Update()
+    {
+        // If Coroutine is done, token set None.
+        if (changeStateCoroutine)
+        {
+            changeStateCoroutine = false;
+            info.SetToken(Token.None);
+        }
     }
 
     private void ResetData()
@@ -75,7 +88,7 @@ public class DialogManager : MonoBehaviour
         return chatText.text;
     }
 
-    public void PrintDialog(string text)
+    public void PrintChat(string text)
     {
         chatText.text = text;
     }
@@ -159,28 +172,73 @@ public class DialogManager : MonoBehaviour
             triangleAni.Stop();
     }
 
+    public void SetName(string name)
+    {
+        if (name == "Player")
+        {
+            // 세이브 매니저에서 불러오기
+            name = "플레이어";
+        }
+        PrintName(name);
+    }
+
+    public void SetDialog(string str)
+    {
+        StartCoroutine(PrintDialog(str));
+    }
+
+    public void SetDialog(int stPoint, string str)
+    {
+        StartCoroutine(PrintDialog(stPoint, str));
+    }
+
+    bool changeStateCoroutine = false;
+
+    IEnumerator PrintDialog(string str)
+    {
+        WaitForSeconds ws = new WaitForSeconds(chatSpeed);
+        int length = str.Length;
+        print(length);
+        print(str);
+
+        for (int i = 0; i < length; i++)
+        {
+            string data = str.Substring(0, i+1);
+            PrintChat(data);
+
+            yield return ws;
+        }
+        changeStateCoroutine = true;
+    }
+    IEnumerator PrintDialog(int stPoit, string str)
+    {
+        WaitForSeconds ws = new WaitForSeconds(chatSpeed);
+        int length = str.Length;
+
+        for (int i = stPoit; i < length; i++)
+        {
+            string data = str.Substring(0, i+1);
+            PrintChat(data);
+
+            yield return ws;
+        }
+        changeStateCoroutine = true;
+    }
+
 }
 
 public class DialogInfo
 {
-    public bool token = false;
-    public string name;
-    public bool skip = false;
-    public bool play = false;
-    public void SetName(string str)
+    Token token = Token.None;
+    public bool onDialog = false;
+
+    public void SetToken(Token type)
     {
-        name = str;
-    }
-    public void ResetInfo()
-    {
-        name = null;
-        token = false;
-        skip = false;
+        token = type;
     }
 
-    public void ResetSkip()
+    public Token ReadToken()
     {
-        token = false;
-        skip = false;
+        return token;
     }
 }

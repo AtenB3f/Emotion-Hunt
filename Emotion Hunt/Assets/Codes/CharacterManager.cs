@@ -272,10 +272,10 @@ public enum Emotion
 
 public struct EmotionInfo
 {
-    [Range(0, 100)] int eros;           // 사랑
+    [Range(0, 100)] int love;           // 사랑
     [Range(0, 100)] int philia;         // 애정
-    [Range(0, 100)] int commiseration;  // 연민
-    [Range(0, 100)] int hatred;         // 증오
+    [Range(0, 100)] int sympathy;       // 연민
+    [Range(0, 100)] int hate;           // 증오
     [Range(0, 100)] int contempt;       // 경멸
     [Range(0, 100)] int lovenhate;      // 애증
 }

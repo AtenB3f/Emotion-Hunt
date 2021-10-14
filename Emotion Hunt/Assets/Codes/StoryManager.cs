@@ -16,7 +16,7 @@ public struct StoryConfig
     public string chat;
 }
 
-enum Token
+public enum Token
 { 
     None,
     Background,
@@ -32,20 +32,17 @@ enum Token
 
 public class StoryManager : MonoBehaviour
 {
-    const float CHAT_SPEED_NOMAL = 0.05f;
-    const float CHAT_SPEED_FAST = 0.03f;
-
-    float chatSpeed = CHAT_SPEED_NOMAL;
-    private int day = 0;
     DialogManager dialogManager;
     SelectionManager selectionManager;
     BackgroundManager backgroundManager;
     CharacterManager characterManager;
+
     Token token;
     private StoryConfig beforeConfigStory;
     public StoryConfig configStory;
-    int listCnt = 0;
     List<Dictionary<string, object>> storyList;
+
+    int listCnt = 0;
 
     void Start()
     {
@@ -71,27 +68,83 @@ public class StoryManager : MonoBehaviour
 
     void Update()
     {
+        ObserveToken();
+
         if (Input.GetKeyUp(KeyCode.Escape))
         {
+            print("system menu");
             // System 메뉴
         }
 
-        if (token == Token.Dialog || token == Token.Answer)
+        if ((token == Token.Selection) && (selectionManager.info.OnOff == false))
+        {
+            LoadStory();
+        } else if (token == Token.None)
         {
             //test code
             if (Input.GetKeyUp(KeyCode.Backspace))
             {
                 // Skip
             }
-            // 키 입력에 따라 현재 진행 대사 확인
-            if (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.KeypadEnter))
+            else if (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.KeypadEnter))
             {
                 LoadStory();
             }
         }
-        else if(token != Token.Selection)
+    }
+
+    private void SetToken(Token type)
+    {
+        token = type;
+
+        switch (token)
         {
-            LoadStory();
+            case Token.Dialog:
+            case Token.Answer:
+                dialogManager.info.SetToken(type);
+                break;
+            case Token.Background:
+                break;
+            case Token.Object:
+                break;
+            case Token.Selection:
+                selectionManager.info.SetToken(type);
+                break;
+            case Token.BGM:
+                break;
+            case Token.Effect:
+                break;
+            case Token.Party:
+                break;
+            case Token.Delay:
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void ObserveToken()
+    {
+        switch (token)
+        {
+            case Token.Dialog:
+            case Token.Answer:
+                if (dialogManager.info.ReadToken() != token)
+                {
+                    token = Token.None;
+                    //dialogManager.info.SetToken(token);
+                }
+                break;
+            case Token.Selection:
+                if (selectionManager.info.ReadToken() != token)
+                {
+                    token = Token.None;
+                    LoadStory();
+                }
+                break;
+            default:
+                
+                break;
         }
     }
 
@@ -122,7 +175,8 @@ public class StoryManager : MonoBehaviour
         configStory.chat = storyList[listCnt]["Chat"].ToString();
 
         print("LoadStory  " + listCnt + "  " + configStory.control);
-
+        print("Chat :: " + configStory.chat);
+        print("Type :: " + configStory.type);
         listCnt++;
         if (listCnt >= storyList.Count)
         {
@@ -269,8 +323,8 @@ public class StoryManager : MonoBehaviour
     void CtrlSelection()
     {
         token = Token.Selection;
-        if (selectionManager.info.OnOff == false)
-            selectionManager.OnSelection();
+        selectionManager.info.SetToken(Token.Selection);
+
         string emotion = configStory.emotion;
         int val = configStory.value;
         switch (configStory.type)
@@ -286,6 +340,8 @@ public class StoryManager : MonoBehaviour
             case "C":
                 selectionManager.info.SetConfig(SelectionBtn.BUTTON_C, emotion, val);
                 selectionManager.UpdateText(SelectionBtn.BUTTON_C, configStory.chat);
+                if (selectionManager.info.OnOff == false)
+                    selectionManager.OnSelection();
                 break;
             default:
                 print("CtrlParty. Type name :: " + configStory.type);
@@ -295,38 +351,96 @@ public class StoryManager : MonoBehaviour
 
     void CtrlDialog()
     {
-        token = Token.Dialog;
-        switch (configStory.type)
+        // test. 세이브 매니저에서 불러오기.
+        string emotion = "None";
+        if (configStory.emotion == emotion || configStory.emotion == "None")
         {
-            case "Off":
-                dialogManager.info.play = false;
-                dialogManager.OffDialog();
-                break;
-            case "Play":
-                if (dialogManager.info.play == false)
-                {
-                    dialogManager.info.play = true;
-                    dialogManager.OnDialog();
-                }
+            SetToken(Token.Dialog);
 
-                if (configStory.index == beforeConfigStory.index)
-                {
-                    string str = dialogManager.GetDialog() + configStory.chat;
-                    StartCoroutine(SetDialog(str));
-                }
-                else
-                {
-                    StartCoroutine(SetDialog(dialogManager.GetDialog()));
-                }
-                break;
-            default:
-                print("CtrlParty. Type name :: " + configStory.type);
-                break;
+            switch (configStory.type)
+            {
+                case "Off":
+                    dialogManager.info.onDialog = false;
+                    dialogManager.OffDialog();
+                    break;
+                case "Play":
+                    if (dialogManager.info.onDialog == false)
+                    {
+                        dialogManager.info.onDialog = true;
+                        dialogManager.OnDialog();
+                    }
+                    // 이름 설정
+                    dialogManager.SetName(configStory.name);
+
+                    // 대화 출력
+                    if (configStory.index == beforeConfigStory.index && configStory.subIndex > beforeConfigStory.subIndex)
+                    {
+                        string str = dialogManager.GetDialog() + "\n" + configStory.chat;
+                        int length = dialogManager.GetDialog().Length;
+                        dialogManager.SetDialog(length, str);
+                    }
+                    else
+                    {
+                        string str = configStory.chat;
+                        dialogManager.SetDialog(str);
+                    }
+                    break;
+                default:
+                    print("CtrlParty. Type name :: " + configStory.type);
+                    break;
+            }
         }
     }
 
     void CtrlAnswer()
-    { 
+    {
+        // test. 세이브 매니저에서 불러오기
+        string emotion = "None";
+
+        SelectionBtn btn = selectionManager.info.GetSelectButton();
+        SelectionConfig config = selectionManager.info.GetConfig(btn);
+        string type = "A";
+        switch (btn)
+        {
+            case SelectionBtn.BUTTON_A:
+                type = "A";
+                break;
+            case SelectionBtn.BUTTON_B:
+                type = "B";
+                break;
+            case SelectionBtn.BUTTON_C:
+                type = "C";
+                break;
+        }
+
+        if (configStory.emotion == emotion || configStory.emotion == "None")
+        {
+            SetToken(Token.Answer);
+
+            if (configStory.type == type)
+            {
+                if (dialogManager.info.onDialog == false)
+                {
+                    dialogManager.info.onDialog = true;
+                    dialogManager.OnDialog();
+                }
+                // 이름 설정
+                dialogManager.PrintName(configStory.name);
+
+                // 대화 출력
+                if (configStory.index == beforeConfigStory.index && configStory.subIndex > beforeConfigStory.subIndex)
+                {
+                    string str = dialogManager.GetDialog() + "\n" + configStory.chat;
+                    int length = dialogManager.GetDialog().Length;
+                    dialogManager.SetDialog(length, str);
+                }
+                else
+                {
+                    string str = configStory.chat;
+                    dialogManager.SetDialog(str);
+                }
+            }
+        }
     }
 
     void ResetToken()
@@ -340,46 +454,7 @@ public class StoryManager : MonoBehaviour
         Invoke("ResetToken", configStory.value);
     }
 
-    void SetName(string name)
-    {
-        dialogManager.PrintName(name);
-    }
 
-    bool playCoroutine = false;
-    IEnumerator SetDialog(string str)
-    {
-        playCoroutine = true;
-        WaitForSeconds ws = new WaitForSeconds(chatSpeed);
-        int length = str.Length;
-
-        for(int i=0;i< length; i++)
-        {
-            string data = str.Substring(0, i);
-            dialogManager.PrintDialog(data);
-
-            yield return ws;
-        }
-        print("End SetDialog");
-        ResetToken();
-        playCoroutine = false;
-    }
-    IEnumerator SetDialog(int stPoit, string str)
-    {
-        playCoroutine = true;
-        WaitForSeconds ws = new WaitForSeconds(0.015f);
-        int length = str.Length;
-
-        for (int i = stPoit; i < length; i++)
-        {
-            string data = str.Substring(0, i);
-            dialogManager.PrintDialog(str);
-
-            yield return ws;
-        }
-        print("End SetDialog");
-        ResetToken();
-        playCoroutine = false;
-    }
 
     void EndStory()
     {

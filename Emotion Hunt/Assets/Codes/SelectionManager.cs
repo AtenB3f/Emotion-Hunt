@@ -98,6 +98,7 @@ public class SelectionManager : MonoBehaviour
         Selection.SetActive(true);
         SetAlpha(alpha);
         FirstHighlight();
+        info.OnOff = true;
     }
 
     public void OffSelection()
@@ -106,6 +107,7 @@ public class SelectionManager : MonoBehaviour
         Selection.SetActive(false);
         SetAlpha(alpha);
         firstHighlight = false;
+        info.OnOff = false;
     }
 
     // btnIdx : A(0) / B(1) / C(2)
@@ -116,41 +118,54 @@ public class SelectionManager : MonoBehaviour
         {
             case SelectionBtn.BUTTON_A:
                 idx = 0;
-                
+                nomalText[idx] = groupA[NOMAL].GetComponentInChildren<TextMeshProUGUI>();
+                highlightText[idx] = groupA[HIGHLIGHT].GetComponentInChildren<TextMeshProUGUI>();
                 break;
             case SelectionBtn.BUTTON_B:
                 idx = 1;
+                nomalText[idx] = groupB[NOMAL].GetComponentInChildren<TextMeshProUGUI>();
+                highlightText[idx] = groupB[HIGHLIGHT].GetComponentInChildren<TextMeshProUGUI>();
                 break;
             case SelectionBtn.BUTTON_C:
                 idx = 2;
+                nomalText[idx] = groupC[NOMAL].GetComponentInChildren<TextMeshProUGUI>();
+                highlightText[idx] = groupC[HIGHLIGHT].GetComponentInChildren<TextMeshProUGUI>();
                 break;
             default:
                 idx = 0;
                 break;
         }
-        nomalText[idx] = groupA[NOMAL].GetComponentInChildren<TextMeshProUGUI>();
-        highlightText[idx] = groupA[HIGHLIGHT].GetComponentInChildren<TextMeshProUGUI>();
+
         nomalText[idx].text = str;
         highlightText[idx].text = str;
     }
 
     public void SelectOptionA()
     {
-        print("Select A Click!");
-        info.selBtn = BUTTON_A;
-        info.token = false;
+        info.SetSelectButton(SelectionBtn.BUTTON_A);
+        SelectionConfig config = info.GetConfig(SelectionBtn.BUTTON_A);
+        config.value += SaveManager.GetValueEmotion(config.emotion);
+        SaveManager.SaveValueEmotion(config);
+        OffSelection();
+        info.SetToken(Token.None);
     }
     public void SelectOptionB()
     {
-        print("Select B Click!");
-        info.selBtn = BUTTON_B;
-        info.token = false;
+        info.SetSelectButton(SelectionBtn.BUTTON_B);
+        SelectionConfig config = info.GetConfig(SelectionBtn.BUTTON_B);
+        config.value += SaveManager.GetValueEmotion(config.emotion);
+        SaveManager.SaveValueEmotion(config);
+        OffSelection();
+        info.SetToken(Token.None);
     }
     public void SelectOptionC()
     {
-        print("Select C Click!");
-        info.selBtn = BUTTON_C;
-        info.token = false;
+        info.SetSelectButton(SelectionBtn.BUTTON_C);
+        SelectionConfig config = info.GetConfig(SelectionBtn.BUTTON_C);
+        config.value += SaveManager.GetValueEmotion(config.emotion);
+        SaveManager.SaveValueEmotion(config);
+        OffSelection();
+        info.SetToken(Token.None);
     }
 
     bool firstHighlight = false;
@@ -169,16 +184,21 @@ public struct SelectionConfig
 
 public class SelectionInfo
 {
-    public bool token = false;
+    Token token = Token.None;
     public bool OnOff = false;
-    public int selBtn = 0;
-    public SelectionConfig[] selConfig = new SelectionConfig[3];
-    public void ResetInfo()
+    SelectionBtn selectBtn = 0;
+    SelectionConfig[] selConfig = new SelectionConfig[3];
+
+    public void SetToken(Token type)
     {
-        token = false;
-        OnOff = false;
-        selBtn = 0;
+        token = type;
     }
+
+    public Token ReadToken()
+    {
+        return token;
+    }
+
     public void SetConfig(SelectionBtn btn, string emotion, int value)
     {
         int idx = (int)btn;
@@ -204,8 +224,28 @@ public class SelectionInfo
                 selConfig[idx].emotion = Emotion.Contempt;
                 break;
             default:
-                Debug.LogError("SetConfig, Emotion error. name :: " + emotion);
+                selConfig[idx].emotion = Emotion.None;
                 break;
         }
     }
-}
+
+    public SelectionConfig GetConfig(SelectionBtn btn)
+    {
+        SelectionConfig config;
+
+        config.emotion = selConfig[(int)btn].emotion;
+        config.value = selConfig[(int)btn].value;
+
+        return config;
+    }
+
+    public void SetSelectButton(SelectionBtn btn)
+    {
+        selectBtn = btn;
+    }
+
+    public SelectionBtn GetSelectButton()
+    {
+        return selectBtn;
+    }
+ }
