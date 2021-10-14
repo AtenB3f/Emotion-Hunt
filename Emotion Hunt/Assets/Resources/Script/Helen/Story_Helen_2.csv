@@ -1,21 +1,21 @@
 ﻿Index,Sub Index,Control,Type,Value,Emotion,Name,Face,Chat
 1,,Background,On,,,Road,,
 2,,Effect,Play,,,Running Footsteps,,
-3,1,Dialog,,,,??,,"저기 저기, 신사분~? 헉, 헉."
-3,2,Dialog,,,,??,,다리가 길어서 그런가 걸음이 빠르시네요.
-4,,Dialog,,,,Player,,(누구지? 일단 위험 인물은 아닌 것 같다.)
-5,1,Dialog,,,,??,,"그 옷 정말 멋진데, 어디서 구했나요?"
-5,2,Dialog,,,,??,,당신은 외부인이니까 분명 멋들어진 상점에서 산 거겠죠? 이 단추와….
+3,1,Dialog,Play,,,??,,"저기 저기, 신사분~? 헉, 헉."
+3,2,Dialog,Play,,,??,,다리가 길어서 그런가 걸음이 빠르시네요.
+4,,Dialog,Play,,,Player,,(누구지? 일단 위험 인물은 아닌 것 같다.)
+5,1,Dialog,Play,,,??,,"그 옷 정말 멋진데, 어디서 구했나요?"
+5,2,Dialog,Play,,,??,,당신은 외부인이니까 분명 멋들어진 상점에서 산 거겠죠? 이 단추와….
 6,,Dialog,Shake,,None,Helen,,에드윈~~!!
-7,,Dialog,,,,??,,
-8,1,Dialog,,,,Player,,(헬렌이 남자의 머리를 세게 주먹으로 쳤다.) 
-8,2,Dialog,,,,Player,,(저게 꿀밤이라고 불리는 행위인 것 같다.)
-9,,Dialog,,,,Edwin,Whine,아파요 엄마~!
-10,1,Dialog,,,,Edwin,Smile,하지만 오늘도 건강하시네요!
-10,2,Dialog,,,,Edwin,Default,이따가 밭에 잠깐 들를게요! 이방인 신사분! 나중에 봐요!
-11,,Dialog,,,,None,,에드윈이라고 불린 남자가 헬렌에게서 벗어나 손키스를 날리며 길 저쪽으로 사라졌다.
-12,1,Dialog,,,,Helen,Default,"어휴...미안, 쟤는 우리 아들이란다. 이름은 에드윈. 나이는 비슷해 보이는데 친하게 지내 주렴."
-12,2,Dialog,,,,Helen,Default,바깥양반은 이름이 빌츠라고 해. 무뚝뚝한 양반이지만 다정하단다. 후후. 
+7,,Dialog,Play,,,??,,
+8,1,Dialog,Play,,,Player,,(헬렌이 남자의 머리를 세게 주먹으로 쳤다.) 
+8,2,Dialog,Play,,,Player,,(저게 꿀밤이라고 불리는 행위인 것 같다.)
+9,,Dialog,Play,,,Edwin,Whine,아파요 엄마~!
+10,1,Dialog,Play,,,Edwin,Smile,하지만 오늘도 건강하시네요!
+10,2,Dialog,Play,,,Edwin,Default,이따가 밭에 잠깐 들를게요! 이방인 신사분! 나중에 봐요!
+11,,Dialog,Play,,,None,,에드윈이라고 불린 남자가 헬렌에게서 벗어나 손키스를 날리며 길 저쪽으로 사라졌다.
+12,1,Dialog,Play,,,Helen,Default,"어휴...미안, 쟤는 우리 아들이란다. 이름은 에드윈. 나이는 비슷해 보이는데 친하게 지내 주렴."
+12,2,Dialog,Play,,,Helen,Default,바깥양반은 이름이 빌츠라고 해. 무뚝뚝한 양반이지만 다정하단다. 후후. 
 13,1,Sellection,A,2,,,,헬렌과 많이 닮았네요
 13,2,Sellection,B,3,,,,아버지와 더 닮았나요? 
 13,3,Sellection,C,1,,,,아드님이 잘생기셨네요
@@ -28,7 +28,8 @@
 14,1,Answer,C,,,Player,,아드님이 잘 생기셨네요.
 14,2,Answer,C,,,Helen,Default,그런가? 잘 생기면 뭘 하니. 실속이 없는 걸. 
 15,,Delay,,1.5,,,,
-16,,Dialog,,,,Helen,Default,"어머, 내 정신 좀 봐. 밭일도 안 끝내고 장을 보러 와 버렸지 뭐니."
-16,,Dialog,,,,Helen,Default,네가 충분히 할 수 있는 일이니 밭일 좀 거들어 주겠니?
-17,,Dialog,,,,Player,,"네, 좋아요."
-18,,Dialog,,,,Helen,Smile,그럼 맡길게. 이따 보자꾸나~
+16,,Dialog,Play,,,Helen,Default,"어머, 내 정신 좀 봐. 밭일도 안 끝내고 장을 보러 와 버렸지 뭐니."
+16,,Dialog,Play,,,Helen,Default,네가 충분히 할 수 있는 일이니 밭일 좀 거들어 주겠니?
+17,,Dialog,Play,,,Player,,"네, 좋아요."
+18,,Dialog,Play,,,Helen,Smile,그럼 맡길게. 이따 보자꾸나~
+19,,Dialog,Off,,,,,

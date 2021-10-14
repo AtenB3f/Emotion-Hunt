@@ -10,7 +10,7 @@ public class DialogManager : MonoBehaviour
     public DialogInfo info = new DialogInfo();
 
     const float ON_OFF_TIME = 0.6f;
-    const float SET_ALPHA = 0.8f;
+    const float SET_ALPHA = 0.7f;
 
     public GameObject dialogObj;
     public GameObject nameObj;
@@ -40,6 +40,12 @@ public class DialogManager : MonoBehaviour
         OffDialog();
     }
 
+    private void ResetData()
+    {
+        nameText.text = "";
+        chatText.text = "";
+    }
+
     private void SetAlpha(float value)
     {
         Color chatImgColor = chatImg.color;
@@ -64,6 +70,11 @@ public class DialogManager : MonoBehaviour
         triangleImg.color = triangleColor;
     }
 
+    public string GetDialog()
+    {
+        return chatText.text;
+    }
+
     public void PrintDialog(string text)
     {
         chatText.text = text;
@@ -76,6 +87,7 @@ public class DialogManager : MonoBehaviour
 
     public void OnDialog()
     {
+        ResetData();
         OnName();
         OnSkip();
         OnChat();
@@ -88,6 +100,7 @@ public class DialogManager : MonoBehaviour
         OffSkip();
         OffChat();
         OffTriangle();
+        ResetData();
     }
     public void OnName()
     {
@@ -153,7 +166,7 @@ public class DialogInfo
     public bool token = false;
     public string name;
     public bool skip = false;
-
+    public bool play = false;
     public void SetName(string str)
     {
         name = str;

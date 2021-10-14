@@ -5,6 +5,12 @@ using UnityEngine.UI;
 using DG.Tweening;
 using TMPro;
 
+public enum SelectionBtn
+{
+    BUTTON_A = 0,
+    BUTTON_B = 1,
+    BUTTON_C = 2
+}
 public class SelectionManager : MonoBehaviour
 {
     public SelectionInfo info = new SelectionInfo();
@@ -103,31 +109,29 @@ public class SelectionManager : MonoBehaviour
     }
 
     // btnIdx : A(0) / B(1) / C(2)
-    public void UpdateText(int btnIdx, string str)
+    public void UpdateText(SelectionBtn btn, string str)
     {
-
-        switch (btnIdx)
+        int idx = 0;
+        switch (btn)
         {
-            case BUTTON_A:
-                nomalText[btnIdx] = groupA[NOMAL].GetComponentInChildren<TextMeshProUGUI>();
-                highlightText[btnIdx] = groupA[HIGHLIGHT].GetComponentInChildren<TextMeshProUGUI>();
+            case SelectionBtn.BUTTON_A:
+                idx = 0;
+                
                 break;
-            case BUTTON_B:
-                nomalText[btnIdx] = groupB[NOMAL].GetComponentInChildren<TextMeshProUGUI>();
-                highlightText[btnIdx] = groupB[HIGHLIGHT].GetComponentInChildren<TextMeshProUGUI>();
+            case SelectionBtn.BUTTON_B:
+                idx = 1;
                 break;
-            case BUTTON_C:
-                nomalText[btnIdx] = groupC[NOMAL].GetComponentInChildren<TextMeshProUGUI>();
-                highlightText[btnIdx] = groupC[HIGHLIGHT].GetComponentInChildren<TextMeshProUGUI>();
+            case SelectionBtn.BUTTON_C:
+                idx = 2;
                 break;
             default:
-                nomalText[btnIdx] = groupA[NOMAL].GetComponentInChildren<TextMeshProUGUI>();
-                highlightText[btnIdx] = groupA[HIGHLIGHT].GetComponentInChildren<TextMeshProUGUI>();
+                idx = 0;
                 break;
         }
-
-        nomalText[btnIdx].text = str;
-        highlightText[btnIdx].text = str;
+        nomalText[idx] = groupA[NOMAL].GetComponentInChildren<TextMeshProUGUI>();
+        highlightText[idx] = groupA[HIGHLIGHT].GetComponentInChildren<TextMeshProUGUI>();
+        nomalText[idx].text = str;
+        highlightText[idx].text = str;
     }
 
     public void SelectOptionA()
@@ -157,13 +161,51 @@ public class SelectionManager : MonoBehaviour
     }
 }
 
+public struct SelectionConfig
+{
+    public Emotion emotion;
+    public int value;
+}
+
 public class SelectionInfo
 {
     public bool token = false;
+    public bool OnOff = false;
     public int selBtn = 0;
+    public SelectionConfig[] selConfig = new SelectionConfig[3];
     public void ResetInfo()
     {
         token = false;
+        OnOff = false;
         selBtn = 0;
+    }
+    public void SetConfig(SelectionBtn btn, string emotion, int value)
+    {
+        int idx = (int)btn;
+        selConfig[idx].value = value;
+        switch (emotion)
+        {
+            case "Love":
+                selConfig[idx].emotion = Emotion.Love;
+                break;
+            case "Philia":
+                selConfig[idx].emotion = Emotion.Philia;
+                break;
+            case "Sympathy":
+                selConfig[idx].emotion = Emotion.Sympathy;
+                break;
+            case "Hate":
+                selConfig[idx].emotion = Emotion.Hate;
+                break;
+            case "LoveAndHate":
+                selConfig[idx].emotion = Emotion.LoveAndHate;
+                break;
+            case "Contempt":
+                selConfig[idx].emotion = Emotion.Contempt;
+                break;
+            default:
+                Debug.LogError("SetConfig, Emotion error. name :: " + emotion);
+                break;
+        }
     }
 }

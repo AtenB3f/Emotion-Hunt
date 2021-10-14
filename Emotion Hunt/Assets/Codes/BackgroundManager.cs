@@ -34,14 +34,14 @@ public class BackgroundManager : MonoBehaviour
     }
 
     // Day 시작했을 때 Stroy Manager에서 사용
-    void SetBackground(string name, string path)
+    public void LoadBackground(string name, string path)
     {
         Sprite tmp = Resources.Load<Sprite>(path) as Sprite;
         fileBackground.Add(name, tmp);
         
     }
     // Day 시작했을 때 Stroy Manager에서 사용
-    void SetObject(string name, string path)
+    public void LoadObject(string name, string path)
     {
         Sprite tmp = Resources.Load<Sprite>(path) as Sprite;
         fileObject.Add(name, tmp);
@@ -69,22 +69,34 @@ public class BackgroundManager : MonoBehaviour
 
     public void SetBackground(string name)
     {
-        if (fileBackground[name] == null)
+        if (fileBackground == null)
+            return;
+
+        if (fileBackground.ContainsKey(name))
+        {
+            imgBackground.sprite = fileBackground[name];
+        }
+        else
         {
             print("SetBackgrounc Error. Not Exist File");
             return;
         }
-        imgBackground.sprite = fileBackground[name];
     }
 
-    public void SetObject(int index)
+    public void SetObject(string name)
     {
-        if (fileObject[name] == null)
+        if (fileObject == null)
+            return;
+
+        if (fileObject.ContainsKey(name))
+        {
+            imgObject.sprite = fileObject[name];
+        }
+        else
         {
             print("SetObject Error. Not Exist File");
             return;
         }
-        imgObject.sprite = fileObject[name];
     }
 }
 

@@ -20,7 +20,7 @@ public class CharacterManager : MonoBehaviour
 
     void Start()
     {
-        OffCharacter();
+        //OffCharacter();
     }
 
     public void OnCharacter()
@@ -258,7 +258,7 @@ public class CharacerInfo
     }
 }
 
-enum Emotion 
+public enum Emotion 
 {
     None,
     Love,
@@ -282,7 +282,7 @@ public struct EmotionInfo
 
 public struct CharacterChat
 {
-    string name;
-    string face;
-    string chat;
+    public string name;
+    public string face;
+    public string chat;
 }
