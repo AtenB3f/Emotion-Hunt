@@ -6,10 +6,9 @@ using DG.Tweening;
 
 public class BackgroundManager : MonoBehaviour
 {
-    BackgroundInfo info = new BackgroundInfo();
+    public BackgroundInfo info = new BackgroundInfo();
 
-    private const float ON_TIME = 0.6f;
-    private const float OFF_TIME = 0.6f;
+    private const float ON_OFF_TIME = 0.6f;
 
     private const int NUM_BG_IMG = 10;
     private const int NUM_OBJ_IMG = 10;
@@ -19,10 +18,7 @@ public class BackgroundManager : MonoBehaviour
 
     public Image imgBackground;
     public Image imgObject;
-
-    private Dictionary<string, Sprite> fileBackground;
-    private Dictionary<string, Sprite> fileObject;
-
+    
     void Start()
     {
         Color colorBG = imgBackground.color;
@@ -33,74 +29,108 @@ public class BackgroundManager : MonoBehaviour
         imgObject.color = colorObj;
     }
 
-    // Day 시작했을 때 Stroy Manager에서 사용
-    public void LoadBackground(string name, string path)
+    private void ResetToken()
     {
-        Sprite tmp = Resources.Load<Sprite>(path) as Sprite;
-        fileBackground.Add(name, tmp);
-        
-    }
-    // Day 시작했을 때 Stroy Manager에서 사용
-    public void LoadObject(string name, string path)
-    {
-        Sprite tmp = Resources.Load<Sprite>(path) as Sprite;
-        fileObject.Add(name, tmp);
+        info.SetToken(Token.None);
     }
 
     public void OnBackground()
     {
-        imgBackground.DOFade(1.0f, ON_TIME);
+        imgBackground.DOFade(1.0f, ON_OFF_TIME);
+        Invoke("ResetToken", ON_OFF_TIME);
     }
 
     public void OffBackground()
     {
-        imgBackground.DOFade(0.0f, OFF_TIME);
+        imgBackground.DOFade(0.0f, ON_OFF_TIME);
+        Invoke("ResetToken", ON_OFF_TIME);
     }
 
     public void OnObject()
     {
-        imgObject.DOFade(1.0f, ON_TIME);
+        imgObject.DOFade(1.0f, ON_OFF_TIME);
+        Invoke("ResetToken", ON_OFF_TIME);
     }
 
     public void OffObject()
     {
-        imgObject.DOFade(0.0f, OFF_TIME);
+        imgObject.DOFade(0.0f, ON_OFF_TIME);
+        Invoke("ResetToken", ON_OFF_TIME);
     }
 
     public void SetBackground(string name)
     {
-        if (fileBackground == null)
-            return;
-
-        if (fileBackground.ContainsKey(name))
+        if (info.fileBackground == null)
         {
-            imgBackground.sprite = fileBackground[name];
+            ResetToken();
+            return;
+        }
+        if (info.fileBackground.ContainsKey(name))
+        {
+            imgBackground.sprite = info.fileBackground[name];
         }
         else
         {
             print("SetBackgrounc Error. Not Exist File");
             return;
         }
+        ResetToken();
     }
 
     public void SetObject(string name)
     {
-        if (fileObject == null)
-            return;
-
-        if (fileObject.ContainsKey(name))
+        if (info.fileObject == null)
         {
-            imgObject.sprite = fileObject[name];
+            ResetToken();
+            return;
+        }
+
+        if (info.fileObject.ContainsKey(name))
+        {
+            imgObject.sprite = info.fileObject[name];
         }
         else
         {
             print("SetObject Error. Not Exist File");
             return;
         }
+        ResetToken();
     }
 }
 
 public class BackgroundInfo
 {
-    bool token = false;
+    Token token = Token.None;
+
+    public Dictionary<string, Sprite> fileBackground;
+    public Dictionary<string, Sprite> fileObject;
+
+    bool onBackground = false;
+    bool onObject = false;
+
+    public void SetToken(Token type)
+    {
+        token = type;
+    }
+    public Token ReadToken()
+    {
+        return token;
+    }
+
+    // Day 시작했을 때 Stroy Manager에서 사용
+    public void LoadBackground(string name)
+    {
+        string path = "Image/Background";
+        Sprite tmp = Resources.Load<Sprite>(path) as Sprite;
+        fileBackground.Add(name, tmp);
+
+    }
+    // Day 시작했을 때 Stroy Manager에서 사용
+    public void LoadObject(string name)
+    {
+        string path = "Image/Object";
+        Sprite tmp = Resources.Load<Sprite>(path) as Sprite;
+        fileObject.Add(name, tmp);
+    }
+
 }

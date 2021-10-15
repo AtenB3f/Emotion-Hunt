@@ -20,19 +20,46 @@ public class CharacterManager : MonoBehaviour
 
     void Start()
     {
-        //OffCharacter();
+        NPC_A.color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
+        NPC_B.color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
+        NPC_C.color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
+        for(int i=0; i<MAX_NPC; i++)
+            info.onCharacter[i] = false;
     }
-
-    public void OnCharacter()
+    
+    public void OnCharacter(int idx)
     {
-        NPC_A.DOFade(1.0f, ON_OFF_TIME);
+        switch (idx)
+        {
+            case 0:
+                NPC_A.DOFade(1.0f, ON_OFF_TIME);
+                break;
+            case 1:
+                NPC_B.DOFade(1.0f, ON_OFF_TIME);
+                break;
+            case 2:
+                NPC_C.DOFade(1.0f, ON_OFF_TIME);
+                break;
+        }
+        
     }
 
-    public void OffCharacter()
+    public void OffCharacter(int idx)
     {
-        NPC_A.DOFade(0.0f, ON_OFF_TIME);
+        switch (idx)
+        {
+            case 0:
+                NPC_A.DOFade(0.0f, ON_OFF_TIME);
+                break;
+            case 1:
+                NPC_B.DOFade(0.0f, ON_OFF_TIME);
+                break;
+            case 2:
+                NPC_C.DOFade(0.0f, ON_OFF_TIME);
+                break;
+        }
     }
-
+    /*
     public IEnumerator OnCharacter(int num)
     {
         Image NPC;
@@ -49,11 +76,12 @@ public class CharacterManager : MonoBehaviour
                 break;
             default:
                 NPC = NPC_A;
+                print("OnCharacter error");
                 break;
         }
 
         if (NPC.color.a == 1.0f)
-            info.SetToken(false);
+            info.SetToken(Token.None);
         else if(NPC.color.a == 0.0f)
         {
             NPC.DOFade(1.0f, ON_OFF_TIME);
@@ -82,7 +110,7 @@ public class CharacterManager : MonoBehaviour
                 break;
         }
         if (NPC.color.a == 0.0f)
-            info.SetToken(false);
+            info.SetToken(Token.None);
         else if (NPC.color.a == 1.0f)
         {
             NPC.DOFade(0.0f, ON_OFF_TIME);
@@ -91,6 +119,7 @@ public class CharacterManager : MonoBehaviour
         else
             yield return 1;
     }
+    
 
     // only party member on
     public IEnumerator OnParty()
@@ -104,7 +133,7 @@ public class CharacterManager : MonoBehaviour
                 yield return 1;
             }
             else if (NPC_B.color.a == 1.0f)
-                info.SetToken(false);
+                info.SetToken(Token.None);
             else
                 yield return 1;
         }
@@ -122,10 +151,45 @@ public class CharacterManager : MonoBehaviour
                 yield return 1;
             }
             else if (NPC_B.color.a == 0.0f)
-                info.SetToken(false);
+                info.SetToken(Token.None);
             else
                 yield return 1;
         }
+    }
+    */
+
+    public void SetCharacter(string name, string face)
+    {
+        if (name == "" || name == "Player")
+            return;
+        Sprite img = info.GetCharacter(name, face) as Sprite;
+        int idx = 0;
+
+        if (info.numNPC == 0)
+        {
+            info.AddMember(name);
+        } else
+        {
+            for (; idx < info.numNPC; idx++)
+                if (info.party[idx] == name)
+                    break;
+        }
+
+        switch(idx)
+        {
+            case 0:
+                NPC_A.sprite = img;
+                break;
+            case 1:
+                NPC_B.sprite = img;
+                break;
+            case 2:
+                NPC_C.sprite = img;
+                break;
+        }
+
+        if (info.onCharacter[idx] == false)
+            OnCharacter(idx);
     }
 
     public void RemoveParty(string name)
@@ -195,36 +259,20 @@ public class CharacterManager : MonoBehaviour
 
 public class CharacerInfo
 {
-    const int MAX_NPC = 3;
+    public const int MAX_NPC = 3;
 
-    public bool token = false;
-    public int numNPC = 1;
+    //public Token token = Token.None;
+    public bool[] onCharacter = new bool[3];
+    public int numNPC = 0;
     public string[] party = new string[MAX_NPC];
-    private Dictionary<string, Sprite[]> fileCharacter;
+    private Dictionary<string, Sprite> fileCharacter = new Dictionary<string, Sprite>();
 
-    public void SetToken(bool state)
+    /*
+    public void SetToken(Token state)
     {
         token = state;
     }
-
-    public void AddNumNPC()
-    {
-        if(numNPC < MAX_NPC)
-            numNPC++;
-    }
-
-    public void RemoveNPC()
-    {
-        if (numNPC > 0)
-            numNPC--;
-    }
-
-    public void SetCharacter(string name, string clothes, string path)
-    {
-        string fileName = name + '_' + clothes;
-        Sprite[] sprites = Resources.LoadAll<Sprite>(path) as Sprite[];
-        fileCharacter.Add(fileName, sprites);
-    }
+    */
 
     public void AddMember(string name)
     {
@@ -256,6 +304,26 @@ public class CharacerInfo
         }
         party = tmp;
     }
+
+    public Sprite GetCharacter(string name, string face)
+    {
+        string key = name + "_" + face;
+        return fileCharacter[key];
+    }
+
+    public void LoadCharacter(string name)
+    {
+        if (name == "" || name == "Player")
+            return;
+        string path = "Image/NPC/" + name + "/" + "Basic";
+        Sprite[] sprites = Resources.LoadAll<Sprite>(path) as Sprite[];
+        for(int i=0; i<sprites.Length; i++)
+        {
+            string key = sprites[i].name;
+            fileCharacter.Add(key, sprites[i]);
+        }
+    }
+
 }
 
 public enum Emotion 
@@ -278,11 +346,4 @@ public struct EmotionInfo
     [Range(0, 100)] int hate;           // 증오
     [Range(0, 100)] int contempt;       // 경멸
     [Range(0, 100)] int lovenhate;      // 애증
-}
-
-public struct CharacterChat
-{
-    public string name;
-    public string face;
-    public string chat;
 }
