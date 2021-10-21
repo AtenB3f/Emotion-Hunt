@@ -7,14 +7,21 @@ using UnityEngine.UI;
 public class AudioManager : MonoBehaviour
 {
     public AudioMixer audioMixer;
-    private float audioEffectVal;
-    private float audioBGVal;
 
     public AudioInfo info = new AudioInfo();
+
+    private AudioSource backgroundSrc = new AudioSource();
+    private AudioSource effectSrc = new AudioSource();
+
+    private float audioEffectVal;
+    private float audioBGVal;
 
     void Start()
     {
         GetAudioVolume();
+
+        backgroundSrc.loop = true;
+        effectSrc.loop = false;
     }
 
     public void GetAudioVolume()
@@ -27,8 +34,8 @@ public class AudioManager : MonoBehaviour
     {
         GetAudioVolume();
 
-        SetSfxLvl(audioEffectVal);
-        SetMusicLvl(audioEffectVal);
+        SetEffect(audioEffectVal);
+        SetBackground(audioBGVal);
     }
 
     private float ChangeValueToDecibel(float value)
@@ -41,17 +48,28 @@ public class AudioManager : MonoBehaviour
         return (Decibel == -40.0f) ? -80.0f : Decibel;
     }
 
-    public void SetSfxLvl(float sfxLvl)
+    public void SetEffect(float level)
     {
-        float Decibel = ChangeValueToDecibel(sfxLvl);
+        float Decibel = ChangeValueToDecibel(level);
         audioMixer.SetFloat("effectVol", Decibel);
         audioMixer.SetFloat("systemVol", Decibel);
     }
 
-    public void SetMusicLvl(float musicLvl)
+    public void SetBackground(float level)
     {
-        float Decibel = ChangeValueToDecibel(musicLvl);
+        float Decibel = ChangeValueToDecibel(level);
         audioMixer.SetFloat("musicVol", Decibel);
+    }
+
+    public void OnEffect(string name)
+    {
+        effectSrc.clip = info.GetEffect(name);
+        effectSrc.Play();
+    }
+    public void OnBGM(string name)
+    {
+        backgroundSrc.clip = info.GetBGM(name);
+        backgroundSrc.Play();
     }
 }
 
@@ -64,15 +82,39 @@ public class AudioInfo
 
     public void LoadBGM(string name)
     {
-        string path = "Sound/BGM"+name;
+        string path = "Sound/BGM/" + name;
         AudioClip clip = Resources.Load<AudioClip>(path) as AudioClip;
-        fileBGM.Add(name, clip);
+        if (clip != null)
+            fileBGM.Add(name, clip);
+        else
+            Debug.LogError("Load BGM Error. File no Exist.");
+    }
+
+    public AudioClip GetBGM(string key)
+    {
+        return fileBGM[key];
+    }
+    public AudioClip GetEffect(string key)
+    {
+        return fileEffect[key];
     }
 
     public void LoadEffect(string name)
     {
-        string path = "Sound/Effect" + name;
+        string path = "Sound/Effect/" + name;
         AudioClip clip = Resources.Load<AudioClip>(path) as AudioClip;
-        fileBGM.Add(name, clip);
+        if (clip != null)
+            fileBGM.Add(name, clip);
+        else
+            Debug.LogError("Load BGM Error. File no Exist.");
+    }
+
+    public void SetToken(Token type)
+    {
+        token = type;
+    }
+    public Token ReadToken()
+    {
+        return token;
     }
 }

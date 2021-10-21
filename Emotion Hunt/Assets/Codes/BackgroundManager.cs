@@ -117,20 +117,24 @@ public class BackgroundInfo
         return token;
     }
 
-    // Day 시작했을 때 Stroy Manager에서 사용
     public void LoadBackground(string name)
     {
-        string path = "Image/Background";
+        string path = "Image/Background/" + name;
         Sprite tmp = Resources.Load<Sprite>(path) as Sprite;
-        fileBackground.Add(name, tmp);
+        if (tmp != null)
+            fileBackground.Add(name, tmp);
+        else
+            Debug.LogError("Load Background Error. No Exist File");
 
     }
-    // Day 시작했을 때 Stroy Manager에서 사용
     public void LoadObject(string name)
     {
-        string path = "Image/Object";
+        string path = "Image/Object/" + name;
         Sprite tmp = Resources.Load<Sprite>(path) as Sprite;
-        fileObject.Add(name, tmp);
+        if (tmp != null)
+            fileObject.Add(name, tmp);
+        else
+            Debug.LogError("Load Object Error. No Exist File");
     }
 
 }

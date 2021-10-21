@@ -198,8 +198,6 @@ public class DialogManager : MonoBehaviour
     {
         WaitForSeconds ws = new WaitForSeconds(chatSpeed);
         int length = str.Length;
-        print(length);
-        print(str);
 
         for (int i = 0; i < length; i++)
         {

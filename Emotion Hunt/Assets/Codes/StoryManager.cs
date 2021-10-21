@@ -81,6 +81,9 @@ public class StoryManager : MonoBehaviour
         if ((token == Token.Selection) && (selectionManager.info.OnOff == false))
         {
             LoadStory();
+        } else if(token == Token.Background || token == Token.Object || token == Token.BGM || token == Token.Effect || token == Token.Party)
+        {
+            LoadStory();
         } else if (token == Token.None)
         {
             //test code
@@ -103,6 +106,7 @@ public class StoryManager : MonoBehaviour
         {
             case Token.Dialog:
             case Token.Answer:
+            case Token.Party:
                 dialogManager.info.SetToken(type);
                 break;
             case Token.Background:
@@ -113,24 +117,22 @@ public class StoryManager : MonoBehaviour
                 selectionManager.info.SetToken(type);
                 break;
             case Token.BGM:
-                break;
             case Token.Effect:
-                break;
-            case Token.Party:
+                audioManager.info.SetToken(type);
                 break;
             case Token.Delay:
-                break;
-            default:
                 break;
         }
     }
 
+    int cntSel = 0;
     private void ObserveToken()
     {
         switch (token)
         {
             case Token.Dialog:
             case Token.Answer:
+            case Token.Party:
                 if (dialogManager.info.ReadToken() != token)
                 {
                     token = Token.None;
@@ -141,18 +143,30 @@ public class StoryManager : MonoBehaviour
                 if (selectionManager.info.ReadToken() != token)
                 {
                     token = Token.None;
+                    int addIdx = (int)selectionManager.info.GetSelectButton();
+                    int idx = (cntSel * 3) + addIdx;
+                    listCnt = listAnswer[idx];
+                    cntSel++;
                     LoadStory();
                 }
                 break;
             case Token.Background:
+            case Token.Object:
                 if (backgroundManager.info.ReadToken() != token)
                 {
                     token = Token.None;
                     LoadStory();
                 }
                 break;
+            case Token.BGM:
+            case Token.Effect:
+                if (audioManager.info.ReadToken() != token)
+                {
+                    token = Token.None;
+                    LoadStory();
+                }
+                break;
             default:
-                
                 break;
         }
     }
@@ -162,12 +176,14 @@ public class StoryManager : MonoBehaviour
     HashSet<string> hashObj = new HashSet<string>();
     HashSet<string> hashEffect = new HashSet<string>();
     HashSet<string> hashBGM = new HashSet<string>();
-    HashSet<int> hashSelection = new HashSet<int>();
+    LinkedList<int> linkSelection = new LinkedList<int>();
+    List<int> listAnswer = new List<int>();
 
     
     private void ReadStory()
     {
         HashSet<string> hashSet;
+        string type = "";
 
         for (int i = 0; i < storyList.Count; i++)
         {
@@ -192,14 +208,23 @@ public class StoryManager : MonoBehaviour
                     hashSet.Add(storyList[i]["Name"].ToString());
                     break;
                 case "Dialog":
-                case "Answer":
                     hashSet = hashNPC;
                     hashSet.Add(storyList[i]["Name"].ToString());
                     break;
+                case "Answer":
+                    hashSet = hashNPC;
+                    hashSet.Add(storyList[i]["Name"].ToString());
+                    if(type != storyList[i]["Type"].ToString())
+                    {
+                        type = storyList[i]["Type"].ToString();
+                        listAnswer.Add(i);
+                    }
+                    break;
                 case "Selection":
-                    string str = storyList[i]["Index"].ToString();
-                    int idx = int.Parse(str);
-                    hashSelection.Add(idx);
+                    if (linkSelection.Count == 0)
+                        linkSelection.AddFirst(i);
+                    else
+                        linkSelection.AddLast(i);
                     break;
                 default:
                     continue;
@@ -212,19 +237,18 @@ public class StoryManager : MonoBehaviour
 
         foreach(string str in hashNPC)
             characterManager.info.LoadCharacter(str);
-        /*
+        
         foreach (string str in hashBG)
             backgroundManager.info.LoadBackground(str);
 
         foreach (string str in hashObj)
             backgroundManager.info.LoadObject(str);
-
+        
         foreach (string str in hashEffect)
             audioManager.info.LoadEffect(str);
 
         foreach (string str in hashBGM)
             audioManager.info.LoadBGM(str);
-            */
     }
     private void LoadStory ()
     {
@@ -264,7 +288,6 @@ public class StoryManager : MonoBehaviour
 
     void ActiveStory ()
     {
-        print("Active Story :: " + configStory.control);
         switch (configStory.control)
         {
             case "Background":
@@ -303,7 +326,7 @@ public class StoryManager : MonoBehaviour
 
     void CtrlBackground()
     {
-        SetToken(Token.Background);
+         SetToken(Token.Background);
         switch (configStory.type)
         {
             case "On":
@@ -342,7 +365,6 @@ public class StoryManager : MonoBehaviour
                 print("CtrlObject. Type name :: " + configStory.type);
                 break;
         }
-        ResetToken();
     }
 
     void CtrlBGM()
@@ -351,6 +373,7 @@ public class StoryManager : MonoBehaviour
         switch (configStory.type)
         {
             case "On":
+                audioManager.OnBGM(configStory.name);
                 break;
             case "Off":
                 break;
@@ -358,7 +381,6 @@ public class StoryManager : MonoBehaviour
                 print("CtrlBGM. Type name :: " + configStory.type);
                 break;
         }
-        ResetToken();
     }
 
     void CtrlEffect()
@@ -366,15 +388,16 @@ public class StoryManager : MonoBehaviour
         token = Token.Effect;
         switch (configStory.type)
         {
-            case "Fade In":
+            case "Play":
+                audioManager.OnEffect(configStory.name);
                 break;
-            case "Fade Out":
+            case "Fade In":
+                audioManager.OnEffect(configStory.name);
                 break;
             default:
                 print("CtrlBGM. Type name :: " + configStory.type);
                 break;
         }
-        ResetToken();
     }
 
     void CtrlParty()
@@ -383,6 +406,7 @@ public class StoryManager : MonoBehaviour
         switch (configStory.type)
         {
             case "Add":
+                
                 break;
             case "Remove":
                 break;
@@ -390,7 +414,6 @@ public class StoryManager : MonoBehaviour
                 print("CtrlParty. Type name :: " + configStory.type);
                 break;
         }
-        ResetToken();
     }
 
     void CtrlSelection()
@@ -557,6 +580,7 @@ public class StoryManager : MonoBehaviour
     {
         ResetToken();
         listCnt = 0;
+        cntSel = 0;
         // 데이터 저장
         // scene 이동 : 메인 스토리이면 플레이어 홈으로, 캐릭터 스토리면 미니게임으로
     }
