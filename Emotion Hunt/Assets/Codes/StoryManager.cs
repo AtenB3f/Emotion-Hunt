@@ -326,7 +326,7 @@ public class StoryManager : MonoBehaviour
 
     void CtrlBackground()
     {
-         SetToken(Token.Background);
+        SetToken(Token.Background);
         switch (configStory.type)
         {
             case "On":
@@ -347,8 +347,7 @@ public class StoryManager : MonoBehaviour
 
     void CtrlObject()
     {
-        token = Token.Object;
-
+        SetToken(Token.Object);
         switch (configStory.type)
         {
             case "On":
@@ -369,7 +368,7 @@ public class StoryManager : MonoBehaviour
 
     void CtrlBGM()
     {
-        token = Token.BGM;
+        SetToken(Token.BGM);
         switch (configStory.type)
         {
             case "On":
@@ -385,7 +384,7 @@ public class StoryManager : MonoBehaviour
 
     void CtrlEffect()
     {
-        token = Token.Effect;
+        SetToken(Token.Effect);
         switch (configStory.type)
         {
             case "Play":
@@ -402,7 +401,7 @@ public class StoryManager : MonoBehaviour
 
     void CtrlParty()
     {
-        token = Token.Party;
+        SetToken(Token.Party);
         switch (configStory.type)
         {
             case "Add":
@@ -418,8 +417,7 @@ public class StoryManager : MonoBehaviour
 
     void CtrlSelection()
     {
-        token = Token.Selection;
-        selectionManager.info.SetToken(Token.Selection);
+        SetToken(Token.Selection);
 
         string emotion = configStory.emotion;
         int val = configStory.value;

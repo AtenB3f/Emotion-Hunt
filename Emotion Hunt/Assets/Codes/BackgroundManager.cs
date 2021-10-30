@@ -102,8 +102,8 @@ public class BackgroundInfo
 {
     Token token = Token.None;
 
-    public Dictionary<string, Sprite> fileBackground;
-    public Dictionary<string, Sprite> fileObject;
+    public Dictionary<string, Sprite> fileBackground = new Dictionary<string, Sprite>();
+    public Dictionary<string, Sprite> fileObject = new Dictionary<string, Sprite>();
 
     bool onBackground = false;
     bool onObject = false;

@@ -7,21 +7,33 @@ using UnityEngine.UI;
 public class AudioManager : MonoBehaviour
 {
     public AudioMixer audioMixer;
-
     public AudioInfo info = new AudioInfo();
 
-    private AudioSource backgroundSrc = new AudioSource();
-    private AudioSource effectSrc = new AudioSource();
+    private AudioSource backgroundSrc;
+    private AudioSource effectSrc;
+    private AudioSource systemSrc;
 
     private float audioEffectVal;
     private float audioBGVal;
 
     void Start()
     {
-        GetAudioVolume();
+        SetAudioVolume();
+
+        SetAudioSource();
+
+    }
+
+    void SetAudioSource()
+    {
+        AudioSource[] audioSrc = this.GetComponents<AudioSource>();
+        backgroundSrc = audioSrc[0];
+        effectSrc = audioSrc[1];
+        systemSrc = audioSrc[2];
 
         backgroundSrc.loop = true;
         effectSrc.loop = false;
+        systemSrc.loop = false;
     }
 
     public void GetAudioVolume()
@@ -54,22 +66,44 @@ public class AudioManager : MonoBehaviour
         audioMixer.SetFloat("effectVol", Decibel);
         audioMixer.SetFloat("systemVol", Decibel);
     }
-
     public void SetBackground(float level)
     {
         float Decibel = ChangeValueToDecibel(level);
         audioMixer.SetFloat("musicVol", Decibel);
     }
+    private IEnumerator PlayEffect()
+    {
+        WaitForSeconds ws = new WaitForSeconds(0.5f);
+        effectSrc.Play();
+
+        if (effectSrc.isPlaying)
+            yield return ws;
+
+        info.SetToken(Token.None);
+    }
 
     public void OnEffect(string name)
     {
-        effectSrc.clip = info.GetEffect(name);
-        effectSrc.Play();
+        AudioClip clip = info.GetEffect(name);
+
+        if (clip == null)
+            return;
+
+        effectSrc.clip = clip;
+
+        StartCoroutine("PlayEffect");
     }
     public void OnBGM(string name)
     {
+        AudioClip clip = info.GetBGM(name);
+
+        if (clip == null)
+            return;
+
         backgroundSrc.clip = info.GetBGM(name);
         backgroundSrc.Play();
+
+        info.SetToken(Token.None);
     }
 }
 
@@ -77,8 +111,8 @@ public class AudioInfo
 {
     Token token = Token.None;
 
-    Dictionary<string, AudioClip> fileBGM;
-    Dictionary<string, AudioClip> fileEffect;
+    Dictionary<string, AudioClip> fileBGM = new Dictionary<string, AudioClip>();
+    Dictionary<string, AudioClip> fileEffect = new Dictionary<string, AudioClip>();
 
     public void LoadBGM(string name)
     {
@@ -104,9 +138,9 @@ public class AudioInfo
         string path = "Sound/Effect/" + name;
         AudioClip clip = Resources.Load<AudioClip>(path) as AudioClip;
         if (clip != null)
-            fileBGM.Add(name, clip);
+            fileEffect.Add(name, clip);
         else
-            Debug.LogError("Load BGM Error. File no Exist.");
+            Debug.LogError("Load BGM Error. File no Exist."+ path);
     }
 
     public void SetToken(Token type)
