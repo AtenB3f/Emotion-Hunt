@@ -44,6 +44,8 @@ public class StoryManager : MonoBehaviour
     List<Dictionary<string, object>> storyList;
     int listCnt = 0;
 
+    const float DELAY_TIME = 1.5f;
+
     void Start()
     {
         dialogManager = GameObject.Find("Dialog").GetComponent<DialogManager>();
@@ -66,7 +68,11 @@ public class StoryManager : MonoBehaviour
         LoadStory();
     }
 
-    
+    IEnumerator Delay(float time)
+    {
+        yield return new WaitForSeconds(time);
+        ResetToken();
+    }
 
     void Update()
     {
@@ -462,8 +468,6 @@ public class StoryManager : MonoBehaviour
                     string face = configStory.face;
                     characterManager.SetCharacter(name, face);
 
-                    //Invoke("ResetToken", 1.0f);
-
                     SetToken(Token.Dialog);
 
                     if (dialogManager.info.onDialog == false)
@@ -570,8 +574,8 @@ public class StoryManager : MonoBehaviour
 
     void CtrlDelay()
     {
-        token = Token.Delay;
-        Invoke("ResetToken", configStory.value);
+        float time = (float)configStory.value;
+        StartCoroutine(Delay(time));
     }
 
     void EndStory()

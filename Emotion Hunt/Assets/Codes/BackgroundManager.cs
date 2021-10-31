@@ -8,6 +8,7 @@ public class BackgroundManager : MonoBehaviour
 {
     public BackgroundInfo info = new BackgroundInfo();
 
+    private const float DELAY_TIME = 5.0f;
     private const float ON_OFF_TIME = 0.6f;
 
     private const int NUM_BG_IMG = 10;
@@ -36,26 +37,26 @@ public class BackgroundManager : MonoBehaviour
 
     public void OnBackground()
     {
-        imgBackground.DOFade(1.0f, ON_OFF_TIME);
-        Invoke("ResetToken", ON_OFF_TIME);
+        //imgBackground.DOFade(1.0f, ON_OFF_TIME);
+        Color col = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+        imgBackground.DOColor(col, ON_OFF_TIME);
     }
 
     public void OffBackground()
     {
-        imgBackground.DOFade(0.0f, ON_OFF_TIME);
-        Invoke("ResetToken", ON_OFF_TIME);
+        Color col = new Color(0.0f, 0.0f, 0.0f, 0.0f);
+        //imgBackground.DOFade(0.0f, ON_OFF_TIME);
+        imgBackground.DOColor(col, ON_OFF_TIME);
     }
 
     public void OnObject()
     {
         imgObject.DOFade(1.0f, ON_OFF_TIME);
-        Invoke("ResetToken", ON_OFF_TIME);
     }
 
     public void OffObject()
     {
         imgObject.DOFade(0.0f, ON_OFF_TIME);
-        Invoke("ResetToken", ON_OFF_TIME);
     }
 
     public void SetBackground(string name)

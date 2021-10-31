@@ -9,6 +9,7 @@ public class CharacterManager : MonoBehaviour
 {
     const int MAIN_NPC = 0;
     const int MAX_NPC = 3;
+    const float DELAY_TIME = 10.0f;
     const float ON_OFF_TIME = 0.6f;
     const float DARKLIGHT_TIME = 0.4f;
 
@@ -26,7 +27,7 @@ public class CharacterManager : MonoBehaviour
         for(int i=0; i<MAX_NPC; i++)
             info.onCharacter[i] = false;
     }
-    
+
     public void OnCharacter(int idx)
     {
         switch (idx)
@@ -41,7 +42,6 @@ public class CharacterManager : MonoBehaviour
                 NPC_C.DOFade(1.0f, ON_OFF_TIME);
                 break;
         }
-        
     }
 
     public void OffCharacter(int idx)
@@ -59,109 +59,12 @@ public class CharacterManager : MonoBehaviour
                 break;
         }
     }
-    /*
-    public IEnumerator OnCharacter(int num)
-    {
-        Image NPC;
-        switch (num)
-        {
-            case 0:
-                NPC = NPC_A;
-                break;
-            case 1:
-                NPC = NPC_B;
-                break;
-            case 2:
-                NPC = NPC_C;
-                break;
-            default:
-                NPC = NPC_A;
-                print("OnCharacter error");
-                break;
-        }
-
-        if (NPC.color.a == 1.0f)
-            info.SetToken(Token.None);
-        else if(NPC.color.a == 0.0f)
-        {
-            NPC.DOFade(1.0f, ON_OFF_TIME);
-            yield return 1;
-        }
-        else
-            yield return 1;
-    }
-
-    public IEnumerator OffCharacter(int num)
-    {
-        Image NPC;
-        switch (num)
-        {
-            case 0:
-                NPC = NPC_A;
-                break;
-            case 1:
-                NPC = NPC_B;
-                break;
-            case 2:
-                NPC = NPC_C;
-                break;
-            default:
-                NPC = NPC_A;
-                break;
-        }
-        if (NPC.color.a == 0.0f)
-            info.SetToken(Token.None);
-        else if (NPC.color.a == 1.0f)
-        {
-            NPC.DOFade(0.0f, ON_OFF_TIME);
-            yield return 1;
-        }
-        else
-            yield return 1;
-    }
-    
-
-    // only party member on
-    public IEnumerator OnParty()
-    {
-        if (info.numNPC > 1)
-        {
-            if (NPC_B.color.a == 0.0f)
-            {
-                NPC_B.DOFade(1.0f, ON_OFF_TIME);
-                NPC_C.DOFade(1.0f, ON_OFF_TIME);
-                yield return 1;
-            }
-            else if (NPC_B.color.a == 1.0f)
-                info.SetToken(Token.None);
-            else
-                yield return 1;
-        }
-    }
-
-    // only party member off
-    public IEnumerator OffParty()
-    {
-        if (info.numNPC > 1)
-        {
-            if(NPC_B.color.a == 1.0f)
-            {
-                NPC_B.DOFade(0.0f, ON_OFF_TIME);
-                NPC_C.DOFade(0.0f, ON_OFF_TIME);
-                yield return 1;
-            }
-            else if (NPC_B.color.a == 0.0f)
-                info.SetToken(Token.None);
-            else
-                yield return 1;
-        }
-    }
-    */
 
     public void SetCharacter(string name, string face)
     {
         if (name == "" || name == "Player")
             return;
+
         Sprite img = info.GetCharacter(name, face) as Sprite;
         int idx = 0;
 
@@ -260,19 +163,10 @@ public class CharacterManager : MonoBehaviour
 public class CharacerInfo
 {
     public const int MAX_NPC = 3;
-
-    //public Token token = Token.None;
     public bool[] onCharacter = new bool[3];
     public int numNPC = 0;
     public string[] party = new string[MAX_NPC];
     private Dictionary<string, Sprite> fileCharacter = new Dictionary<string, Sprite>();
-
-    /*
-    public void SetToken(Token state)
-    {
-        token = state;
-    }
-    */
 
     public void AddMember(string name)
     {

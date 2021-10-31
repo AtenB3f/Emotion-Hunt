@@ -174,12 +174,47 @@ public class DialogManager : MonoBehaviour
 
     public void SetName(string name)
     {
-        if (name == "Player")
+        string str = "";
+        switch (name)
         {
-            // 세이브 매니저에서 불러오기
-            name = "플레이어";
+            case "Player":
+                // 저장된 이름 불러오기
+                break;
+            case "Helen":
+                str = "헬렌";
+                break;
+            case "Lyam":
+                str = "리암";
+                break;
+            case "Elisha":
+                str = "엘리샤";
+                break;
+            case "Edwin":
+                str = "에드윈";
+                break;
+            case "Julieta":
+                str = "줄리에타";
+                break;
+            case "Michael":
+                str = "미카엘";
+                break;
+            case "Miranda":
+                str = "미란다";
+                break;
+            case "Robert":
+                str = "로베르";
+                break;
+            case "Vivi":
+                str = "비비";
+                break;
+            case "Vivan":
+                str = "비반";
+                break;
+            default:
+                str = name;
+                break;
         }
-        PrintName(name);
+        PrintName(str);
     }
 
     public void SetDialog(string str)
