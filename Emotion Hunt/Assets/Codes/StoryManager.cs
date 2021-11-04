@@ -87,9 +87,6 @@ public class StoryManager : MonoBehaviour
         if ((token == Token.Selection) && (selectionManager.info.OnOff == false))
         {
             LoadStory();
-        } else if(token == Token.Background || token == Token.Object || token == Token.BGM || token == Token.Effect || token == Token.Party)
-        {
-            LoadStory();
         } else if (token == Token.None)
         {
             //test code
@@ -459,6 +456,7 @@ public class StoryManager : MonoBehaviour
             {
                 case "Off":
                     SetToken(Token.Dialog);
+                    characterManager.OffCharacter();
                     dialogManager.info.onDialog = false;
                     dialogManager.OffDialog();
                     SetToken(Token.None);

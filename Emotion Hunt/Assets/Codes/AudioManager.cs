@@ -73,7 +73,7 @@ public class AudioManager : MonoBehaviour
     }
     private IEnumerator PlayEffect()
     {
-        WaitForSeconds ws = new WaitForSeconds(0.5f);
+        WaitForSeconds ws = new WaitForSeconds(effectSrc.clip.length+1.0f);
         effectSrc.Play();
 
         if (effectSrc.isPlaying)
@@ -87,7 +87,10 @@ public class AudioManager : MonoBehaviour
         AudioClip clip = info.GetEffect(name);
 
         if (clip == null)
+        {
+            info.SetToken(Token.None);
             return;
+        }
 
         effectSrc.clip = clip;
 
@@ -98,7 +101,10 @@ public class AudioManager : MonoBehaviour
         AudioClip clip = info.GetBGM(name);
 
         if (clip == null)
+        {
+            info.SetToken(Token.None);
             return;
+        }
 
         backgroundSrc.clip = info.GetBGM(name);
         backgroundSrc.Play();

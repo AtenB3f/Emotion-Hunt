@@ -1,13 +1,13 @@
 ﻿Index,Sub Index,Control,Sub Control,Type,Value,Emotion,Name,Face,Chat
 1,,Background,,On,,,Player_Yard,,
 2,,Effect,,Play,,,Knock,,
-3,,Effect,,Play,,,Open_Door,,
+3,,Effect,,Play,,,Open_The_Door,,
 4,1,Dialog,,Play,,None,Helen,Default,"안녕, 좋은 아침! 잠은 잘 잤니?"
 4,2,Dialog,,Play,,None,Helen,Default,낡았지만 그 집도 살기엔 괜찮아.
 4,3,Dialog,,Play,,None,Helen,Default,"식재료가 없었을 텐데, 밥은 먹었니?"
 5,1,Selection,,A,0,None,,,먹었다.
 5,2,Selection,,B,0,None,,,먹지 않았다.
-5,3,Selection,,C,0,None,,,test
+5,3,Selection,,C,0,None,,,대답하지 않는다.
 6,1,Answer,,A,,None,Player,,먹었어요.
 6,2,Answer,,A,,None,Helen,Default,보나마나 빵이나 주워 먹었을 테지.
 6,3,Answer,,A,,None,Helen,Default,아침은 든든하게 먹어야 해! 감자스프가 있으니 우리 집에 와서 먹고 가렴.
@@ -16,7 +16,11 @@
 6,2,Answer,,B,,None,Helen,Default,"어머, 어지럽지 않니?? 지금 시간이 몇 시인데!"
 6,3,Answer,,B,,None,Helen,Default,얼른 우리 집에 와서 감자 스프 먹고 가렴.
 6,1,Answer,,B,,None,Player,,감사해요.
-6,1,Answer,,C,,None,Player,,test
+6,1,Answer,,C,,None,Player,,…..
+6,2,Answer,,C,,None,Player,,(무슨 의도로 물어보는 거지?)
+6,1,Answer,,C,,None,Helen,Surprised,"어머, 말할 힘도 없는 거니?"
+6,2,Answer,,C,,None,Helen,Angry,이런… 밥은 꼭 챙겨 먹어야 해! 얼른 오렴!
+6,1,Answer,,C,,None,Player,,자..잠시만요...!
 7,,Dialog,,Off,,None,,,
 8,,Background,,Change,,,Helen_Home,,
 9,1,Dialog,,Play,,None,Helen,Default,음식은 입에 맞지? 우리 집에서 키운 감자로 만들었단다.
@@ -30,7 +34,7 @@
 11,2,Answer,,A,,None,Helen,Smile,"자, 여기!"
 11,1,Answer,,B,,None,Player,,정말 맛있네요. 감사합니다.
 11,1,Answer,,B,,None,Helen,Smile,뭘 그렇게까지야. 앞으로도 배가 고프면 언제든 말하렴. 음식은 항상 많으니까!
-11,1,Answer,,C,,None,Player,,
+11,1,Answer,,C,,None,Player,,…..
 11,1,Answer,,C,,None,Helen,Default,사실 감자를 별로 좋아하지 않는구나?
 11,2,Answer,,C,,None,Helen,Default,우리 집 애도 어렸을 적엔 편식이 아주 심했지.
 11,3,Answer,,C,,None,Helen,Default,꿀밤 한 대로 고쳐졌지만 말야! 호호!
@@ -40,3 +44,4 @@
 13,3,Dialog,,Play,,None,Helen,Default,할 수 있겠지?
 14,1,Dialog,,Play,,None,Player,,네. 잘 부탁드려요.
 15,,Dialog,,Off,,None,,,
+16,,Delay,,,2,,,,

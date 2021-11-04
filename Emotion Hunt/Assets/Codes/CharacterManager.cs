@@ -59,6 +59,12 @@ public class CharacterManager : MonoBehaviour
                 break;
         }
     }
+    public void OffCharacter()
+    {
+        NPC_A.DOFade(0.0f, ON_OFF_TIME);
+        NPC_B.DOFade(0.0f, ON_OFF_TIME);
+        NPC_C.DOFade(0.0f, ON_OFF_TIME);
+    }
 
     public void SetCharacter(string name, string face)
     {
