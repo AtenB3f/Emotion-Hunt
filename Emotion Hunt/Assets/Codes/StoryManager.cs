@@ -27,7 +27,8 @@ public enum Token
     Selection,
     Dialog,
     Answer,
-    Delay
+    Delay,
+    Input
 }
 
 public class StoryManager : MonoBehaviour
@@ -37,14 +38,13 @@ public class StoryManager : MonoBehaviour
     BackgroundManager backgroundManager;
     CharacterManager characterManager;
     AudioManager audioManager;
+    CSVManager csvManager;
 
     Token token;
     private StoryConfig beforeConfigStory;
     public StoryConfig configStory;
     List<Dictionary<string, object>> storyList;
     int listCnt = 0;
-
-    const float DELAY_TIME = 1.5f;
 
     void Start()
     {
@@ -87,7 +87,7 @@ public class StoryManager : MonoBehaviour
         if ((token == Token.Selection) && (selectionManager.info.OnOff == false))
         {
             LoadStory();
-        } else if (token == Token.None)
+        } else if (token == Token.Input)
         {
             //test code
             if (Input.GetKeyUp(KeyCode.Backspace))
@@ -96,8 +96,13 @@ public class StoryManager : MonoBehaviour
             }
             else if (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.KeypadEnter))
             {
+                print("next");
                 LoadStory();
             }
+        }
+        else if(token == Token.None)
+        {
+            LoadStory();
         }
     }
 
@@ -123,7 +128,7 @@ public class StoryManager : MonoBehaviour
             case Token.Effect:
                 audioManager.info.SetToken(type);
                 break;
-            case Token.Delay:
+            default:
                 break;
         }
     }
@@ -131,21 +136,22 @@ public class StoryManager : MonoBehaviour
     int cntSel = 0;
     private void ObserveToken()
     {
+
         switch (token)
         {
             case Token.Dialog:
             case Token.Answer:
             case Token.Party:
-                if (dialogManager.info.ReadToken() != token)
+                if (dialogManager.info.ReadToken() == Token.None || dialogManager.info.ReadToken() == Token.Input)
                 {
-                    token = Token.None;
+                    token = NextToken();
                     //dialogManager.info.SetToken(token);
                 }
                 break;
             case Token.Selection:
-                if (selectionManager.info.ReadToken() != token)
+                if (selectionManager.info.ReadToken() == Token.None || selectionManager.info.ReadToken() == Token.Input)
                 {
-                    token = Token.None;
+                    token = NextToken();
                     int addIdx = (int)selectionManager.info.GetSelectButton();
                     int idx = (cntSel * 3) + addIdx;
                     listCnt = listAnswer[idx];
@@ -155,17 +161,17 @@ public class StoryManager : MonoBehaviour
                 break;
             case Token.Background:
             case Token.Object:
-                if (backgroundManager.info.ReadToken() != token)
+                if (backgroundManager.info.ReadToken() == Token.None || backgroundManager.info.ReadToken() == Token.Input)
                 {
-                    token = Token.None;
+                    token = NextToken();
                     LoadStory();
                 }
                 break;
             case Token.BGM:
             case Token.Effect:
-                if (audioManager.info.ReadToken() != token)
+                if (audioManager.info.ReadToken() == Token.None || audioManager.info.ReadToken() == Token.Input)
                 {
-                    token = Token.None;
+                    token = NextToken();
                     LoadStory();
                 }
                 break;
@@ -234,6 +240,7 @@ public class StoryManager : MonoBehaviour
             }            
         }
     }
+
     private void LoadFile()
     {
         ReadStory();
@@ -253,6 +260,7 @@ public class StoryManager : MonoBehaviour
         foreach (string str in hashBGM)
             audioManager.info.LoadBGM(str);
     }
+
     private void LoadStory ()
     {
         beforeConfigStory = configStory;
@@ -446,6 +454,37 @@ public class StoryManager : MonoBehaviour
         }        
     }
 
+    void SetDIalog()
+    {
+        string name = configStory.name;
+        string face = configStory.face;
+        
+        dialogManager.SetName(name);
+        characterManager.SetCharacter(name, face);
+
+        // Dialog On
+        if (dialogManager.info.onDialog == false)
+        {
+            dialogManager.info.onDialog = true;
+            if (dialogManager.GetName() != "")
+                dialogManager.EnableName();
+            else
+                dialogManager.OnDialog();
+        }
+
+        if (configStory.index == beforeConfigStory.index && configStory.subIndex > beforeConfigStory.subIndex)
+        {
+            string str = dialogManager.GetDialog() + "\n" + configStory.chat;
+            int length = dialogManager.GetDialog().Length;
+            dialogManager.SetDialog(length, str);
+        }
+        else
+        {
+            string str = configStory.chat;
+            dialogManager.SetDialog(str);
+        }
+    }
+
     void CtrlDialog()
     {
         // test. 세이브 매니저에서 불러오기.
@@ -459,37 +498,14 @@ public class StoryManager : MonoBehaviour
                     characterManager.OffCharacter();
                     dialogManager.info.onDialog = false;
                     dialogManager.OffDialog();
-                    SetToken(Token.None);
+                    ResetToken();
                     break;
                 case "Play":
-                    string name = configStory.name;
-                    string face = configStory.face;
-                    characterManager.SetCharacter(name, face);
-
                     SetToken(Token.Dialog);
-
-                    if (dialogManager.info.onDialog == false)
-                    {
-                        dialogManager.info.onDialog = true;
-                        dialogManager.OnDialog();
-                    }
-
-                    dialogManager.SetName(name);
-
-                    if (configStory.index == beforeConfigStory.index && configStory.subIndex > beforeConfigStory.subIndex)
-                    {
-                        string str = dialogManager.GetDialog() + "\n" + configStory.chat;
-                        int length = dialogManager.GetDialog().Length;
-                        dialogManager.SetDialog(length, str);
-                    }
-                    else
-                    {
-                        string str = configStory.chat;
-                        dialogManager.SetDialog(str);
-                    }
+                    SetDIalog();
                     break;
                 default:
-                    SetToken(Token.None);
+                    ResetToken();
                     print("CtrlParty. Type name :: " + configStory.type);
                     break;
             }
@@ -519,61 +535,55 @@ public class StoryManager : MonoBehaviour
 
         if (configStory.emotion == emotion || configStory.emotion == "None")
         {
-            string name = configStory.name;
-            string face = configStory.face;
-            characterManager.SetCharacter(name, face);
-
             SetToken(Token.Answer);
 
+            // A / B / C
             if (configStory.type == type)
             {
-                if (dialogManager.info.onDialog == false)
-                {
-                    dialogManager.info.onDialog = true;
-                    dialogManager.OnDialog();
-                }
-
-                dialogManager.SetName(name);
-
-
-                if (configStory.index == beforeConfigStory.index && configStory.subIndex > beforeConfigStory.subIndex)
-                {
-                    string str = dialogManager.GetDialog() + "\n" + configStory.chat;
-                    int length = dialogManager.GetDialog().Length;
-                    dialogManager.SetDialog(length, str);
-                }
-                else
-                {
-                    string str = configStory.chat;
-                    dialogManager.SetDialog(str);
-                }
+                SetDIalog();
             } else
             {
-                NextDialog(configStory.index);
-                SetToken(Token.None);
+                NextDialog(configStory.type);
+                ResetToken();
             }
         }
-    }
-    void NextDialog(int idx)
-    {
-        listCnt++;
-        SetConfig();
-
-        if (configStory.index == idx)
-            NextDialog(idx);
-        else
-            return;
-    }
-
-    void ResetToken()
-    {
-        token = Token.None;
     }
 
     void CtrlDelay()
     {
         float time = (float)configStory.value;
         StartCoroutine(Delay(time));
+    }
+
+    void NextDialog(string type)
+    {
+        listCnt++;
+        SetConfig();
+
+        if (configStory.type == type)
+            NextDialog(type);
+        else
+            return;
+    }
+
+    Token NextToken()
+    {
+        if (storyList.Count <= (listCnt + 1))
+            return Token.None;
+
+        string ctrl = storyList[listCnt + 1]["Control"].ToString();
+
+        if (ctrl == "Dialog" || ctrl == "Answer")
+            return Token.Input;
+
+        return Token.None;
+    }
+
+    void ResetToken()
+    {
+        token = NextToken();
+
+        SetToken(token);
     }
 
     void EndStory()

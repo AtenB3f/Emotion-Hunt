@@ -93,6 +93,11 @@ public class DialogManager : MonoBehaviour
         chatText.text = text;
     }
 
+    public string GetName()
+    {
+        return nameText.text;
+    }
+
     public void PrintName(string name)
     {
         nameText.text = name;
@@ -153,6 +158,23 @@ public class DialogManager : MonoBehaviour
         chatImg.DOFade(0.0f, ON_OFF_TIME);
         chatText.DOFade(0.0f, ON_OFF_TIME);
     }
+
+    public void EnableName()
+    {
+        Color col = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+        nameText.color = col;
+        nameLineImg.color = col;
+        nameImg.color = col;
+    }
+
+    public void DisableName()
+    {
+        Color col = new Color(1.0f, 1.0f, 1.0f, 0.0f);
+        nameText.color = col;
+        nameLineImg.color = col;
+        nameImg.color = col;
+    }
+
     public void OffTriangle()
     {
         PlayTriangelAni(false);
@@ -177,6 +199,10 @@ public class DialogManager : MonoBehaviour
         string str = "";
         switch (name)
         {
+            case "None":
+                info.onDialog = false;
+                DisableName();
+                break;
             case "Player":
                 // 저장된 이름 불러오기
                 break;

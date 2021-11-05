@@ -43,5 +43,5 @@
 13,2,Dialog,,Play,,None,Helen,Default,하는 방법은 내가 잘 설명해 줄테니 너무 걱정하지 마렴.
 13,3,Dialog,,Play,,None,Helen,Default,할 수 있겠지?
 14,1,Dialog,,Play,,None,Player,,네. 잘 부탁드려요.
-15,,Dialog,,Off,,None,,,
-16,,Delay,,,2,,,,
+15,,Delay,,,3,,,,
+16,,Dialog,,Off,,None,,,
