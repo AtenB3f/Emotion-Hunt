@@ -3,18 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public struct StoryConfig
-{
-    public int index;
-    public int subIndex;
-    public string control;
-    public string type;
-    public int value;
-    public string emotion;
-    public string name;
-    public string face;
-    public string chat;
-}
 
 public enum Token
 { 
@@ -41,28 +29,16 @@ public class StoryManager : MonoBehaviour
     CSVManager csvManager;
 
     Token token;
-    private StoryConfig beforeConfigStory;
-    public StoryConfig configStory;
-    List<Dictionary<string, object>> storyList;
-    int listCnt = 0;
-
+    
     void Start()
     {
+        csvManager = GameObject.Find("Main Camera").GetComponent<CSVManager>();
         dialogManager = GameObject.Find("Dialog").GetComponent<DialogManager>();
         backgroundManager = GameObject.Find("GameObject").GetComponent<BackgroundManager>();
         selectionManager = GameObject.Find("Selection").GetComponent<SelectionManager>();
         selectionManager.OffSelection();
         characterManager = GameObject.Find("Characters").GetComponent<CharacterManager>();
         audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
-
-        // 공략 NPC 확인
-        // day확인
-        string targetNPC = "Helen";
-        int playDay = 1;
-
-        // CSV Read
-        string path = "Script/" + targetNPC + "/Story_" + targetNPC + "_" + playDay.ToString();
-        storyList = CSVReader.Read(path);
 
         LoadFile();
         LoadStory();
@@ -106,6 +82,26 @@ public class StoryManager : MonoBehaviour
         }
     }
 
+    private void LoadFile()
+    {
+        //ReadStory();
+
+        foreach (string str in csvManager.hashNPC)
+            characterManager.info.LoadCharacter(str);
+
+        foreach (string str in csvManager.hashBG)
+            backgroundManager.info.LoadBackground(str);
+
+        foreach (string str in csvManager.hashObj)
+            backgroundManager.info.LoadObject(str);
+
+        foreach (string str in csvManager.hashEffect)
+            audioManager.info.LoadEffect(str);
+
+        foreach (string str in csvManager.hashBGM)
+            audioManager.info.LoadBGM(str);
+    }
+
     private void SetToken(Token type)
     {
         token = type;
@@ -144,18 +140,23 @@ public class StoryManager : MonoBehaviour
             case Token.Party:
                 if (dialogManager.info.ReadToken() == Token.None || dialogManager.info.ReadToken() == Token.Input)
                 {
-                    token = NextToken();
+                    token = csvManager.NextToken();
                     //dialogManager.info.SetToken(token);
                 }
                 break;
             case Token.Selection:
                 if (selectionManager.info.ReadToken() == Token.None || selectionManager.info.ReadToken() == Token.Input)
                 {
-                    token = NextToken();
+                    token = csvManager.NextToken();
+                    /*
                     int addIdx = (int)selectionManager.info.GetSelectButton();
                     int idx = (cntSel * 3) + addIdx;
                     listCnt = listAnswer[idx];
                     cntSel++;
+                    */
+                    //LoadStory();
+                    string btn = selectionManager.info.GetSelectButtonString();
+                    csvManager.NextSelectionDialog(btn);
                     LoadStory();
                 }
                 break;
@@ -163,7 +164,7 @@ public class StoryManager : MonoBehaviour
             case Token.Object:
                 if (backgroundManager.info.ReadToken() == Token.None || backgroundManager.info.ReadToken() == Token.Input)
                 {
-                    token = NextToken();
+                    token = csvManager.NextToken();
                     LoadStory();
                 }
                 break;
@@ -171,7 +172,7 @@ public class StoryManager : MonoBehaviour
             case Token.Effect:
                 if (audioManager.info.ReadToken() == Token.None || audioManager.info.ReadToken() == Token.Input)
                 {
-                    token = NextToken();
+                    token = csvManager.NextToken();
                     LoadStory();
                 }
                 break;
@@ -180,95 +181,10 @@ public class StoryManager : MonoBehaviour
         }
     }
 
-    HashSet<string> hashNPC = new HashSet<string>();
-    HashSet<string> hashBG = new HashSet<string>();
-    HashSet<string> hashObj = new HashSet<string>();
-    HashSet<string> hashEffect = new HashSet<string>();
-    HashSet<string> hashBGM = new HashSet<string>();
-    LinkedList<int> linkSelection = new LinkedList<int>();
-    List<int> listAnswer = new List<int>();
-
-    
-    private void ReadStory()
-    {
-        HashSet<string> hashSet;
-        string type = "";
-
-        for (int i = 0; i < storyList.Count; i++)
-        {
-            string control = storyList[i]["Control"].ToString();
-
-            switch (control)
-            {
-                case "Background":
-                    hashSet = hashBG;
-                    hashSet.Add(storyList[i]["Name"].ToString());
-                    break;
-                case "Object":
-                    hashSet = hashObj;
-                    hashSet.Add(storyList[i]["Name"].ToString());
-                    break;
-                case "BGM":
-                    hashSet = hashBGM;
-                    hashSet.Add(storyList[i]["Name"].ToString());
-                    break;
-                case "Effect":
-                    hashSet = hashEffect;
-                    hashSet.Add(storyList[i]["Name"].ToString());
-                    break;
-                case "Dialog":
-                    hashSet = hashNPC;
-                    hashSet.Add(storyList[i]["Name"].ToString());
-                    break;
-                case "Answer":
-                    hashSet = hashNPC;
-                    hashSet.Add(storyList[i]["Name"].ToString());
-                    if(type != storyList[i]["Type"].ToString())
-                    {
-                        type = storyList[i]["Type"].ToString();
-                        listAnswer.Add(i);
-                    }
-                    break;
-                case "Selection":
-                    if (linkSelection.Count == 0)
-                        linkSelection.AddFirst(i);
-                    else
-                        linkSelection.AddLast(i);
-                    break;
-                default:
-                    continue;
-            }            
-        }
-    }
-
-    private void LoadFile()
-    {
-        ReadStory();
-
-        foreach(string str in hashNPC)
-            characterManager.info.LoadCharacter(str);
-        
-        foreach (string str in hashBG)
-            backgroundManager.info.LoadBackground(str);
-
-        foreach (string str in hashObj)
-            backgroundManager.info.LoadObject(str);
-        
-        foreach (string str in hashEffect)
-            audioManager.info.LoadEffect(str);
-
-        foreach (string str in hashBGM)
-            audioManager.info.LoadBGM(str);
-    }
-
     private void LoadStory ()
     {
-        beforeConfigStory = configStory;
-
-        SetConfig();
-
-        listCnt++;
-        if (listCnt >= storyList.Count)
+        // End Story
+        if (!csvManager.NextStory())
         {
             print("End Story");
             //delay
@@ -278,28 +194,9 @@ public class StoryManager : MonoBehaviour
         ActiveStory();
     }
 
-    void SetConfig()
-    {
-        string idx = storyList[listCnt]["Index"].ToString();
-        if (idx != null && idx != "")
-            configStory.index = int.Parse(idx);
-        string subIdx = storyList[listCnt]["Sub Index"].ToString();
-        if (subIdx != null && subIdx != "")
-            configStory.subIndex = int.Parse(subIdx);
-        configStory.control = storyList[listCnt]["Control"].ToString();
-        configStory.type = storyList[listCnt]["Type"].ToString();
-        string val = storyList[listCnt]["Value"].ToString();
-        if (val != null && val != "")
-            configStory.value = int.Parse(val);
-        configStory.emotion = storyList[listCnt]["Emotion"].ToString();
-        configStory.name = storyList[listCnt]["Name"].ToString();
-        configStory.face = storyList[listCnt]["Face"].ToString();
-        configStory.chat = storyList[listCnt]["Chat"].ToString();
-    }
-
     void ActiveStory ()
     {
-        switch (configStory.control)
+        switch (csvManager.story.control)
         {
             case "Background":
                 CtrlBackground();
@@ -329,7 +226,7 @@ public class StoryManager : MonoBehaviour
                 CtrlDelay();
                 break;
             default:
-                print("Error csv active stroy. Control name :: " + configStory.control);
+                print("Error csv active stroy. Control name :: " + csvManager.story.control);
                 break;
         }
         
@@ -338,20 +235,20 @@ public class StoryManager : MonoBehaviour
     void CtrlBackground()
     {
         SetToken(Token.Background);
-        switch (configStory.type)
+        switch (csvManager.story.type)
         {
             case "On":
-                backgroundManager.SetBackground(configStory.name);
+                backgroundManager.SetBackground(csvManager.story.name);
                 backgroundManager.OnBackground();
                 break;
             case "Off":
                 backgroundManager.OffBackground();
                 break;
             case "Change":
-                backgroundManager.SetBackground(configStory.name);
+                backgroundManager.SetBackground(csvManager.story.name);
                 break;
             default:
-                print("CtrlBackground. Type name :: " + configStory.type);
+                print("CtrlBackground. Type name :: " + csvManager.story.type);
                 break;
         }
     }
@@ -359,20 +256,20 @@ public class StoryManager : MonoBehaviour
     void CtrlObject()
     {
         SetToken(Token.Object);
-        switch (configStory.type)
+        switch (csvManager.story.type)
         {
             case "On":
-                backgroundManager.SetObject(configStory.name);
+                backgroundManager.SetObject(csvManager.story.name);
                 backgroundManager.OnObject();
                 break;
             case "Off":
                 backgroundManager.OffObject();
                 break;
             case "Change":
-                backgroundManager.SetObject(configStory.name);
+                backgroundManager.SetObject(csvManager.story.name);
                 break;
             default:
-                print("CtrlObject. Type name :: " + configStory.type);
+                print("CtrlObject. Type name :: " + csvManager.story.type);
                 break;
         }
     }
@@ -380,15 +277,15 @@ public class StoryManager : MonoBehaviour
     void CtrlBGM()
     {
         SetToken(Token.BGM);
-        switch (configStory.type)
+        switch (csvManager.story.type)
         {
             case "On":
-                audioManager.OnBGM(configStory.name);
+                audioManager.OnBGM(csvManager.story.name);
                 break;
             case "Off":
                 break;
             default:
-                print("CtrlBGM. Type name :: " + configStory.type);
+                print("CtrlBGM. Type name :: " + csvManager.story.type);
                 break;
         }
     }
@@ -396,16 +293,16 @@ public class StoryManager : MonoBehaviour
     void CtrlEffect()
     {
         SetToken(Token.Effect);
-        switch (configStory.type)
+        switch (csvManager.story.type)
         {
             case "Play":
-                audioManager.OnEffect(configStory.name);
+                audioManager.OnEffect(csvManager.story.name);
                 break;
             case "Fade In":
-                audioManager.OnEffect(configStory.name);
+                audioManager.OnEffect(csvManager.story.name);
                 break;
             default:
-                print("CtrlBGM. Type name :: " + configStory.type);
+                print("CtrlBGM. Type name :: " + csvManager.story.type);
                 break;
         }
     }
@@ -413,7 +310,7 @@ public class StoryManager : MonoBehaviour
     void CtrlParty()
     {
         SetToken(Token.Party);
-        switch (configStory.type)
+        switch (csvManager.story.type)
         {
             case "Add":
                 
@@ -421,7 +318,7 @@ public class StoryManager : MonoBehaviour
             case "Remove":
                 break;
             default:
-                print("CtrlParty. Type name :: " + configStory.type);
+                print("CtrlParty. Type name :: " + csvManager.story.type);
                 break;
         }
     }
@@ -430,34 +327,34 @@ public class StoryManager : MonoBehaviour
     {
         SetToken(Token.Selection);
 
-        string emotion = configStory.emotion;
-        int val = configStory.value;
-        switch (configStory.type)
+        string emotion = csvManager.story.emotion;
+        int val = csvManager.story.value;
+        switch (csvManager.story.type)
         {
             case "A":
                 selectionManager.info.SetConfig(SelectionBtn.BUTTON_A, emotion, val);
-                selectionManager.UpdateText(SelectionBtn.BUTTON_A, configStory.chat);
+                selectionManager.UpdateText(SelectionBtn.BUTTON_A, csvManager.story.chat);
                 break;
             case "B":
                 selectionManager.info.SetConfig(SelectionBtn.BUTTON_B, emotion, val);
-                selectionManager.UpdateText(SelectionBtn.BUTTON_B, configStory.chat);
+                selectionManager.UpdateText(SelectionBtn.BUTTON_B, csvManager.story.chat);
                 break;
             case "C":
                 selectionManager.info.SetConfig(SelectionBtn.BUTTON_C, emotion, val);
-                selectionManager.UpdateText(SelectionBtn.BUTTON_C, configStory.chat);
+                selectionManager.UpdateText(SelectionBtn.BUTTON_C, csvManager.story.chat);
                 if (selectionManager.info.OnOff == false)
                     selectionManager.OnSelection();
                 break;
             default:
-                print("CtrlParty. Type name :: " + configStory.type);
+                print("CtrlParty. Type name :: " + csvManager.story.type);
                 break;
         }        
     }
 
     void SetDIalog()
     {
-        string name = configStory.name;
-        string face = configStory.face;
+        string name = csvManager.story.name;
+        string face = csvManager.story.face;
         
         dialogManager.SetName(name);
         characterManager.SetCharacter(name, face);
@@ -466,21 +363,28 @@ public class StoryManager : MonoBehaviour
         if (dialogManager.info.onDialog == false)
         {
             dialogManager.info.onDialog = true;
-            if (dialogManager.GetName() != "")
-                dialogManager.EnableName();
+            if (name == "" || name == "None")
+                dialogManager.DisableName();
             else
                 dialogManager.OnDialog();
         }
-
+        /*
         if (configStory.index == beforeConfigStory.index && configStory.subIndex > beforeConfigStory.subIndex)
         {
             string str = dialogManager.GetDialog() + "\n" + configStory.chat;
             int length = dialogManager.GetDialog().Length;
             dialogManager.SetDialog(length, str);
         }
+        */
+        if(csvManager.story.subIndex > 1)
+        {
+            string str = dialogManager.GetDialog() + "\n" + csvManager.story.chat;
+            int length = dialogManager.GetDialog().Length;
+            dialogManager.SetDialog(length, str);
+        }
         else
         {
-            string str = configStory.chat;
+            string str = csvManager.story.chat;
             dialogManager.SetDialog(str);
         }
     }
@@ -489,16 +393,23 @@ public class StoryManager : MonoBehaviour
     {
         // test. 세이브 매니저에서 불러오기.
         string emotion = "None";
-        if (configStory.emotion == emotion || configStory.emotion == "None")
+        if (csvManager.story.emotion == emotion || csvManager.story.emotion == "None")
         {
-            switch (configStory.type)
+            switch (csvManager.story.type)
             {
+                case "On":
+                    SetToken(Token.Dialog);
+                    characterManager.OnCharacter(0);
+                    dialogManager.info.onDialog = true;
+                    dialogManager.OnDialog();
+                    SetToken(Token.None);
+                    break;
                 case "Off":
                     SetToken(Token.Dialog);
                     characterManager.OffCharacter();
                     dialogManager.info.onDialog = false;
                     dialogManager.OffDialog();
-                    ResetToken();
+                    SetToken(Token.None);
                     break;
                 case "Play":
                     SetToken(Token.Dialog);
@@ -506,7 +417,7 @@ public class StoryManager : MonoBehaviour
                     break;
                 default:
                     ResetToken();
-                    print("CtrlParty. Type name :: " + configStory.type);
+                    print("CtrlParty. Type name :: " + csvManager.story.type);
                     break;
             }
         }
@@ -519,31 +430,19 @@ public class StoryManager : MonoBehaviour
 
         SelectionBtn btn = selectionManager.info.GetSelectButton();
         SelectionConfig config = selectionManager.info.GetConfig(btn);
-        string type = "A";
-        switch (btn)
-        {
-            case SelectionBtn.BUTTON_A:
-                type = "A";
-                break;
-            case SelectionBtn.BUTTON_B:
-                type = "B";
-                break;
-            case SelectionBtn.BUTTON_C:
-                type = "C";
-                break;
-        }
+        string type = selectionManager.info.GetSelectButtonString();
 
-        if (configStory.emotion == emotion || configStory.emotion == "None")
+        if (csvManager.story.emotion == emotion || csvManager.story.emotion == "None")
         {
             SetToken(Token.Answer);
 
             // A / B / C
-            if (configStory.type == type)
+            if (csvManager.story.type == type)
             {
                 SetDIalog();
             } else
             {
-                NextDialog(configStory.type);
+                csvManager.NextDialog(csvManager.story.type);
                 ResetToken();
             }
         }
@@ -551,37 +450,13 @@ public class StoryManager : MonoBehaviour
 
     void CtrlDelay()
     {
-        float time = (float)configStory.value;
+        float time = (float)csvManager.story.value;
         StartCoroutine(Delay(time));
-    }
-
-    void NextDialog(string type)
-    {
-        listCnt++;
-        SetConfig();
-
-        if (configStory.type == type)
-            NextDialog(type);
-        else
-            return;
-    }
-
-    Token NextToken()
-    {
-        if (storyList.Count <= (listCnt + 1))
-            return Token.None;
-
-        string ctrl = storyList[listCnt + 1]["Control"].ToString();
-
-        if (ctrl == "Dialog" || ctrl == "Answer")
-            return Token.Input;
-
-        return Token.None;
     }
 
     void ResetToken()
     {
-        token = NextToken();
+        token = csvManager.NextToken();
 
         SetToken(token);
     }
@@ -589,7 +464,7 @@ public class StoryManager : MonoBehaviour
     void EndStory()
     {
         ResetToken();
-        listCnt = 0;
+        csvManager.ResetCSV();
         cntSel = 0;
         // 데이터 저장
         // scene 이동 : 메인 스토리이면 플레이어 홈으로, 캐릭터 스토리면 미니게임으로

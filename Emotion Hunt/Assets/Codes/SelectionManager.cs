@@ -187,6 +187,7 @@ public class SelectionInfo
     Token token = Token.None;
     public bool OnOff = false;
     SelectionBtn selectBtn = 0;
+    string selectBtnStr = "";
     SelectionConfig[] selConfig = new SelectionConfig[3];
 
     public void SetToken(Token type)
@@ -242,10 +243,28 @@ public class SelectionInfo
     public void SetSelectButton(SelectionBtn btn)
     {
         selectBtn = btn;
+
+        switch(btn)
+        {
+            case SelectionBtn.BUTTON_A:
+                selectBtnStr = "A";
+                break;
+            case SelectionBtn.BUTTON_B:
+                selectBtnStr = "B";
+                break;
+            case SelectionBtn.BUTTON_C:
+                selectBtnStr = "C";
+                break;
+        }
     }
 
     public SelectionBtn GetSelectButton()
     {
         return selectBtn;
+    }
+
+    public string GetSelectButtonString()
+    {
+        return selectBtnStr;
     }
  }

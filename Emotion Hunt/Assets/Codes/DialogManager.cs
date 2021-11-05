@@ -267,7 +267,11 @@ public class DialogManager : MonoBehaviour
 
             yield return ws;
         }
-        changeStateCoroutine = true;
+
+        yield return new WaitForSeconds(0.5f);
+
+        info.SetToken(Token.None);
+        //changeStateCoroutine = true;
     }
     IEnumerator PrintDialog(int stPoit, string str)
     {
@@ -281,7 +285,11 @@ public class DialogManager : MonoBehaviour
 
             yield return ws;
         }
-        changeStateCoroutine = true;
+
+        yield return new WaitForSeconds(0.5f);
+
+        info.SetToken(Token.None);
+        //changeStateCoroutine = true;
     }
 
 }
