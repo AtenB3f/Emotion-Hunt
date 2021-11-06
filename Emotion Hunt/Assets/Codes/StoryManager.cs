@@ -41,6 +41,11 @@ public class StoryManager : MonoBehaviour
         audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
 
         LoadFile();
+
+        while(!csvManager.doneLoadStory)
+        {
+            ;
+        }
         LoadStory();
     }
 
@@ -141,23 +146,14 @@ public class StoryManager : MonoBehaviour
                 if (dialogManager.info.ReadToken() == Token.None || dialogManager.info.ReadToken() == Token.Input)
                 {
                     token = csvManager.NextToken();
-                    //dialogManager.info.SetToken(token);
                 }
                 break;
             case Token.Selection:
                 if (selectionManager.info.ReadToken() == Token.None || selectionManager.info.ReadToken() == Token.Input)
                 {
-                    token = csvManager.NextToken();
-                    /*
-                    int addIdx = (int)selectionManager.info.GetSelectButton();
-                    int idx = (cntSel * 3) + addIdx;
-                    listCnt = listAnswer[idx];
-                    cntSel++;
-                    */
-                    //LoadStory();
                     string btn = selectionManager.info.GetSelectButtonString();
-                    csvManager.NextSelectionDialog(btn);
-                    LoadStory();
+                    csvManager.NextSelectionDialog(btn, csvManager.listCnt-1);
+                    token = csvManager.NextToken();
                 }
                 break;
             case Token.Background:
@@ -165,7 +161,6 @@ public class StoryManager : MonoBehaviour
                 if (backgroundManager.info.ReadToken() == Token.None || backgroundManager.info.ReadToken() == Token.Input)
                 {
                     token = csvManager.NextToken();
-                    LoadStory();
                 }
                 break;
             case Token.BGM:
@@ -173,7 +168,6 @@ public class StoryManager : MonoBehaviour
                 if (audioManager.info.ReadToken() == Token.None || audioManager.info.ReadToken() == Token.Input)
                 {
                     token = csvManager.NextToken();
-                    LoadStory();
                 }
                 break;
             default:
@@ -184,19 +178,22 @@ public class StoryManager : MonoBehaviour
     private void LoadStory ()
     {
         // End Story
-        if (!csvManager.NextStory())
+        if (csvManager.CheckLast())
         {
             print("End Story");
             //delay
             EndStory();
             return;
         }
-        ActiveStory();
+
+        if(ActiveStory())
+            csvManager.CurrentStory();
     }
 
-    void ActiveStory ()
+    bool ActiveStory ()
     {
-        switch (csvManager.story.control)
+        bool addCnt = true;
+        switch (csvManager.story.ctrl)
         {
             case "Background":
                 CtrlBackground();
@@ -220,16 +217,16 @@ public class StoryManager : MonoBehaviour
                 CtrlDialog();
                 break;
             case "Answer":
-                CtrlAnswer();
+                addCnt = CtrlAnswer();
                 break;
             case "Delay":
                 CtrlDelay();
                 break;
             default:
-                print("Error csv active stroy. Control name :: " + csvManager.story.control);
+                print("Error csv active stroy. Control name :: " + csvManager.story.ctrl);
                 break;
         }
-        
+        return addCnt;
     }
 
     void CtrlBackground()
@@ -350,33 +347,29 @@ public class StoryManager : MonoBehaviour
                 break;
         }        
     }
-
-    void SetDIalog()
+    void SetName()
+    {
+        string name = csvManager.story.name;
+        dialogManager.SetName(name);
+    }
+    void SetCharacter()
     {
         string name = csvManager.story.name;
         string face = csvManager.story.face;
-        
-        dialogManager.SetName(name);
         characterManager.SetCharacter(name, face);
+    }
+    void SetDIalog()
+    {
+        SetName();
+        SetCharacter();
 
         // Dialog On
-        if (dialogManager.info.onDialog == false)
-        {
-            dialogManager.info.onDialog = true;
-            if (name == "" || name == "None")
-                dialogManager.DisableName();
-            else
-                dialogManager.OnDialog();
-        }
-        /*
-        if (configStory.index == beforeConfigStory.index && configStory.subIndex > beforeConfigStory.subIndex)
-        {
-            string str = dialogManager.GetDialog() + "\n" + configStory.chat;
-            int length = dialogManager.GetDialog().Length;
-            dialogManager.SetDialog(length, str);
-        }
-        */
-        if(csvManager.story.subIndex > 1)
+        if (name == "" || name == "None")
+            dialogManager.DisableName();
+        else if(dialogManager.info.onName == false)
+            dialogManager.EnableName();
+
+        if (csvManager.story.subIndex > 1)
         {
             string str = dialogManager.GetDialog() + "\n" + csvManager.story.chat;
             int length = dialogManager.GetDialog().Length;
@@ -399,17 +392,17 @@ public class StoryManager : MonoBehaviour
             {
                 case "On":
                     SetToken(Token.Dialog);
+                    SetName();
+                    SetCharacter();
                     characterManager.OnCharacter(0);
                     dialogManager.info.onDialog = true;
                     dialogManager.OnDialog();
-                    SetToken(Token.None);
                     break;
                 case "Off":
-                    SetToken(Token.Dialog);
+                     SetToken(Token.Dialog);
                     characterManager.OffCharacter();
                     dialogManager.info.onDialog = false;
                     dialogManager.OffDialog();
-                    SetToken(Token.None);
                     break;
                 case "Play":
                     SetToken(Token.Dialog);
@@ -423,8 +416,9 @@ public class StoryManager : MonoBehaviour
         }
     }
 
-    void CtrlAnswer()
+    bool CtrlAnswer()
     {
+        bool addCnt = true;
         // test. 세이브 매니저에서 불러오기
         string emotion = "None";
 
@@ -444,12 +438,15 @@ public class StoryManager : MonoBehaviour
             {
                 csvManager.NextDialog(csvManager.story.type);
                 ResetToken();
+                addCnt = false;
             }
         }
+        return addCnt;
     }
 
     void CtrlDelay()
     {
+        SetToken(Token.Delay);
         float time = (float)csvManager.story.value;
         StartCoroutine(Delay(time));
     }

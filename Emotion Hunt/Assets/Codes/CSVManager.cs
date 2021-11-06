@@ -6,7 +6,9 @@ public struct StoryConfig
 {
     public int index;
     public int subIndex;
-    public string control;
+    public string version;
+    public string ctrl;
+    public string subCtrl;
     public string type;
     public int value;
     public string emotion;
@@ -17,9 +19,12 @@ public struct StoryConfig
 
 public class CSVManager : MonoBehaviour
 {
+    public bool doneLoadStory = false;
+    public StoryConfig prevStory;
     public StoryConfig story;
+    public StoryConfig nextStory;
     List<Dictionary<string, object>> storyList;
-    int listCnt = 0;
+    public int listCnt = 0;
 
     public HashSet<string> hashNPC = new HashSet<string>();
     public HashSet<string> hashBG = new HashSet<string>();
@@ -42,6 +47,8 @@ public class CSVManager : MonoBehaviour
         storyList = CSVReader.Read(path);
 
         ReadStory();
+        SetConfig();
+        doneLoadStory = true;
     }
 
     void Update()
@@ -51,21 +58,40 @@ public class CSVManager : MonoBehaviour
 
     public void SetConfig()
     {
-        string idx = storyList[listCnt]["Index"].ToString();
+        SetConfig(listCnt, ref story);          // 해야할 것 
+        SetConfig(listCnt - 1, ref prevStory);  // 했던 것
+        SetConfig(listCnt + 1, ref nextStory);
+    }
+
+    public bool CheckLast()
+    {
+        if (storyList.Count <= listCnt)
+            return true;
+        return false;
+    }
+
+    private void SetConfig(int index, ref StoryConfig config)
+    {
+        if (index < 0 || index >= storyList.Count)
+            return;
+
+        string idx = storyList[index]["Index"].ToString();
         if (idx != null && idx != "")
-            story.index = int.Parse(idx);
-        string subIdx = storyList[listCnt]["Sub Index"].ToString();
+            config.index = int.Parse(idx);
+        string subIdx = storyList[index]["Sub Index"].ToString();
         if (subIdx != null && subIdx != "")
-            story.subIndex = int.Parse(subIdx);
-        story.control = storyList[listCnt]["Control"].ToString();
-        story.type = storyList[listCnt]["Type"].ToString();
-        string val = storyList[listCnt]["Value"].ToString();
+            config.subIndex = int.Parse(subIdx);
+        config.version = storyList[index]["Version"].ToString();
+        config.ctrl = storyList[index]["Control"].ToString();
+        config.subCtrl = storyList[index]["Sub Control"].ToString();
+        config.type = storyList[index]["Type"].ToString();
+        string val = storyList[index]["Value"].ToString();
         if (val != null && val != "")
-            story.value = int.Parse(val);
-        story.emotion = storyList[listCnt]["Emotion"].ToString();
-        story.name = storyList[listCnt]["Name"].ToString();
-        story.face = storyList[listCnt]["Face"].ToString();
-        story.chat = storyList[listCnt]["Chat"].ToString();
+            config.value = int.Parse(val);
+        config.emotion = storyList[index]["Emotion"].ToString();
+        config.name = storyList[index]["Name"].ToString();
+        config.face = storyList[index]["Face"].ToString();
+        config.chat = storyList[index]["Chat"].ToString();
     }
 
     private void ReadStory()
@@ -118,50 +144,56 @@ public class CSVManager : MonoBehaviour
                     continue;
             }
         }
-
     }
 
-    // Answer of seleted type
-    public void NextSelectionDialog(string type)
+    private void IncreaseCount()
     {
+        if (listCnt >= storyList.Count)
+            return;
+        
         listCnt++;
         SetConfig();
-
-        if (story.type != type)
-            NextSelectionDialog(type);
-        else
-            return;
     }
+
+    private void DecreaseCount()
+    {
+        if (listCnt <= 0)
+            return;
+
+        listCnt--;
+        SetConfig();
+    }
+
+    // Answer of seleted type (After Seleted)
+    public void NextSelectionDialog(string type, int idxSelection)
+    {
+        if (story.type != type)
+        {
+            IncreaseCount();
+            NextSelectionDialog(type, idxSelection);
+        }
+        else
+        {
+            SetConfig(idxSelection, ref prevStory);
+            return;
+        }
+    }
+
+    // Find the index after answer done
     public void NextDialog(string type)
     {
-        listCnt++;
-        SetConfig();
-
-        
-
-        if (story.control == "Answer")
-            NextDialog(type);
-        else
+        if (story.ctrl == "Answer")
         {
-            listCnt--;
-            return;
+            IncreaseCount();
+            NextDialog(type);
         }
-
+        else
+            return;
     }
 
-    // End Story(false) / if not (true)
-    public bool NextStory()
+    public void CurrentStory()
     {
-        SetConfig();
-
-        listCnt++;
-
-        if ((listCnt-1) >= storyList.Count)
-        {
-            return false;
-        }
-
-        return true;
+        IncreaseCount();
     }
 
     public void ResetCSV()
@@ -174,11 +206,23 @@ public class CSVManager : MonoBehaviour
         if (storyList.Count <= (listCnt))
             return Token.None;
 
-        string ctrl = storyList[listCnt]["Control"].ToString();
+        int idx = story.index;
+        string ctrl = story.ctrl;//storyList[listCnt]["Control"].ToString();
+        string type = story.type;
+        int prevIdx = prevStory.index;
+        string prevCtrl = prevStory.ctrl;
+        string prevType = prevStory.type;
 
         if (ctrl == "Dialog" || ctrl == "Answer")
-            return Token.Input;
-
-        return Token.None;
+        {
+            if (prevType == "On" || prevType == "Off")
+                return Token.None;
+            else if (idx != prevIdx)
+                return Token.None;
+            else
+                return Token.Input;
+        }
+        else
+            return Token.None;
     }
 }

@@ -102,26 +102,40 @@ public class DialogManager : MonoBehaviour
     {
         nameText.text = name;
     }
-
-    public void OnDialog()
+    IEnumerator EnableDialog()
     {
         ResetData();
         OnName();
         OnSkip();
         OnChat();
         OnTriangle();
+        yield return new WaitForSeconds(ON_OFF_TIME + 0.4f);
+        info.SetToken(Token.None);
     }
 
-    public void OffDialog()
+    IEnumerator DisableDialog()
     {
         OffName();
         OffSkip();
         OffChat();
         OffTriangle();
         ResetData();
+        yield return new WaitForSeconds(ON_OFF_TIME + 0.4f);
+        info.SetToken(Token.None);
+    }
+
+    public void OnDialog()
+    {
+        StartCoroutine(EnableDialog());
+    }
+
+    public void OffDialog()
+    {
+        StartCoroutine(DisableDialog());
     }
     public void OnName()
     {
+        info.onName = true;
         nameImg.DOFade(SET_ALPHA, ON_OFF_TIME);
         Color col = new Color(1.0f, 1.0f, 1.0f, 1.0f);
         nameLineImg.DOColor(col, ON_OFF_TIME);
@@ -149,6 +163,7 @@ public class DialogManager : MonoBehaviour
 
     public void OffName()
     {
+        info.onName = false;
         nameText.DOFade(0.0f, ON_OFF_TIME);
         nameLineImg.DOFade(0.0f, ON_OFF_TIME);
         nameImg.DOFade(0.0f, ON_OFF_TIME);
@@ -161,18 +176,26 @@ public class DialogManager : MonoBehaviour
 
     public void EnableName()
     {
+        info.onName = true;
+        
         Color col = new Color(1.0f, 1.0f, 1.0f, 1.0f);
         nameText.color = col;
         nameLineImg.color = col;
         nameImg.color = col;
+        
+        //nameObj.active = true;
     }
 
     public void DisableName()
     {
+        info.onName = false;
+        
         Color col = new Color(1.0f, 1.0f, 1.0f, 0.0f);
         nameText.color = col;
         nameLineImg.color = col;
         nameImg.color = col;
+        
+        //nameObj.active = false;
     }
 
     public void OffTriangle()
@@ -205,6 +228,7 @@ public class DialogManager : MonoBehaviour
                 break;
             case "Player":
                 // 저장된 이름 불러오기
+                str = "플레이어";
                 break;
             case "Helen":
                 str = "헬렌";
@@ -298,6 +322,7 @@ public class DialogInfo
 {
     Token token = Token.None;
     public bool onDialog = false;
+    public bool onName = false;
 
     public void SetToken(Token type)
     {
