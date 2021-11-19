@@ -14,7 +14,7 @@
 7,2,None,Answer,,A,,None,Helen,Default,아침은 든든하게 먹어야 해! 감자스프가 있으니 우리 집에 와서 먹고 가렴.
 7,1,None,Answer,,A,,None,Player,,…네.
 7,1,None,Answer,,B,,None,Player,,아직 먹지 않았어요.
-7,1,None,Answer,,B,,None,Helen,Default,"어머, 어지럽지 않니?? 지금 시간이 몇 시인데!"
+7,1,None,Answer,,B,,None,Helen,Surprised,"어머, 어지럽지 않니?? 지금 시간이 몇 시인데!"
 7,2,None,Answer,,B,,None,Helen,Default,얼른 우리 집에 와서 감자 스프 먹고 가렴.
 7,1,None,Answer,,B,,None,Player,,감사해요.
 7,1,None,Answer,,C,,None,Player,,…..
@@ -25,26 +25,27 @@
 8,,None,Dialog,,Off,,None,,,
 9,,None,Background,,Change,,,Helen_Home,,
 10,,None,Delay,,,1,,,,
-11,,None,Dialog,,On,,None,Helen,Default,
-12,1,None,Dialog,,Play,,None,Helen,Default,음식은 입에 맞지? 우리 집에서 키운 감자로 만들었단다.
-12,2,None,Dialog,,Play,,None,Helen,Default,"벌써 한 그릇 다 먹었구나 호호, 내 감자 스프는 마을에서도 인기가 좋긴 해."
-12,3,None,Dialog,,Play,,None,Helen,Default,잘 먹었니?
-13,1,None,Selection,None,A,3,Philia,,,한 그릇 더!
-13,2,None,Selection,None,B,2,Philia,,,맛있네요
-13,3,None,Selection,None,C,1,Philia,,,…
-14,1,None,Answer,,A,,None,Player,,한 그릇 더 주세요.
-14,1,None,Answer,,A,,None,Helen,Smile,"후후. 그래, 젊을 때는 많이 먹어야지!"
-14,2,None,Answer,,A,,None,Helen,Smile,"자, 여기!"
-14,1,None,Answer,,B,,None,Player,,정말 맛있네요. 감사합니다.
-14,1,None,Answer,,B,,None,Helen,Smile,뭘 그렇게까지야. 앞으로도 배가 고프면 언제든 말하렴. 음식은 항상 많으니까!
-14,1,None,Answer,,C,,None,Player,,…..
-14,1,None,Answer,,C,,None,Helen,Default,사실 감자를 별로 좋아하지 않는구나?
-14,2,None,Answer,,C,,None,Helen,Default,우리 집 애도 어렸을 적엔 편식이 아주 심했지.
-14,3,None,Answer,,C,,None,Helen,Default,꿀밤 한 대로 고쳐졌지만 말야! 호호!
-15,,None,Delay,,Play,1,,,,
-16,1,None,Dialog,,Play,,None,Helen,Default,그리고 우리 마을에서는 먹을거리와 집을 주는 대신 일을 도와야 해.
-16,2,None,Dialog,,Play,,None,Helen,Default,하는 방법은 내가 잘 설명해 줄테니 너무 걱정하지 마렴.
-16,3,None,Dialog,,Play,,None,Helen,Default,할 수 있겠지?
-16,1,None,Dialog,,Play,,None,Player,,네. 잘 부탁드려요.
-17,,None,Delay,,,3,,,,
-18,,None,Dialog,,Off,,None,,,
+11,,,Effect,,Play,,,Silverware_Eating,,
+12,,None,Dialog,,On,,None,Helen,Default,
+13,1,None,Dialog,,Play,,None,Helen,Default,음식은 입에 맞지? 우리 집에서 키운 감자로 만들었단다.
+13,2,None,Dialog,,Play,,None,Helen,Smile,"벌써 한 그릇 다 먹었구나 호호, 내 감자 스프는 마을에서도 인기가 좋긴 해."
+13,3,None,Dialog,,Play,,None,Helen,Smile,잘 먹었니?
+14,1,None,Selection,None,A,3,Philia,,,한 그릇 더!
+14,2,None,Selection,None,B,2,Philia,,,맛있네요
+14,3,None,Selection,None,C,1,Philia,,,…
+15,1,None,Answer,,A,,None,Player,,한 그릇 더 주세요.
+15,1,None,Answer,,A,,None,Helen,Smile,"후후. 그래, 젊을 때는 많이 먹어야지!"
+15,2,None,Answer,,A,,None,Helen,Smile,"자, 여기!"
+15,1,None,Answer,,B,,None,Player,,정말 맛있네요. 감사합니다.
+15,1,None,Answer,,B,,None,Helen,Smile,뭘 그렇게까지야. 앞으로도 배가 고프면 언제든 말하렴. 음식은 항상 많으니까!
+15,1,None,Answer,,C,,None,Player,,…..
+15,1,None,Answer,,C,,None,Helen,Default,사실 감자를 별로 좋아하지 않는구나?
+15,2,None,Answer,,C,,None,Helen,Default,우리 집 애도 어렸을 적엔 편식이 아주 심했지.
+15,3,None,Answer,,C,,None,Helen,Smile,꿀밤 한 대로 고쳐졌지만 말야! 호호!
+16,,None,Delay,,Play,1,,,,
+17,1,None,Dialog,,Play,,None,Helen,Default,그리고 우리 마을에서는 먹을거리와 집을 주는 대신 일을 도와야 해.
+17,2,None,Dialog,,Play,,None,Helen,Default,하는 방법은 내가 잘 설명해 줄테니 너무 걱정하지 마렴.
+17,3,None,Dialog,,Play,,None,Helen,Default,할 수 있겠지?
+17,1,None,Dialog,,Play,,None,Player,,네. 잘 부탁드려요.
+18,,None,Delay,,,3,,,,
+19,,None,Dialog,,Off,,None,,,

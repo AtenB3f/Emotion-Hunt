@@ -39,7 +39,7 @@ public class CSVManager : MonoBehaviour
         // 공략 NPC 확인
         // day확인
         string targetNPC = "Helen";
-        int playDay = 1;
+        int playDay = 2;
 
 
         // CSV Read

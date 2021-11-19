@@ -134,7 +134,6 @@ public class StoryManager : MonoBehaviour
         }
     }
 
-    int cntSel = 0;
     private void ObserveToken()
     {
 
@@ -313,6 +312,7 @@ public class StoryManager : MonoBehaviour
                 
                 break;
             case "Remove":
+
                 break;
             default:
                 print("CtrlParty. Type name :: " + csvManager.story.type);
@@ -394,7 +394,6 @@ public class StoryManager : MonoBehaviour
                     SetToken(Token.Dialog);
                     SetName();
                     SetCharacter();
-                    characterManager.OnCharacter(0);
                     dialogManager.info.onDialog = true;
                     dialogManager.OnDialog();
                     break;
@@ -403,6 +402,7 @@ public class StoryManager : MonoBehaviour
                     characterManager.OffCharacter();
                     dialogManager.info.onDialog = false;
                     dialogManager.OffDialog();
+                    characterManager.info.ResetMember();
                     break;
                 case "Play":
                     SetToken(Token.Dialog);
@@ -458,6 +458,7 @@ public class StoryManager : MonoBehaviour
         SetToken(token);
     }
 
+    int cntSel = 0;
     void EndStory()
     {
         ResetToken();

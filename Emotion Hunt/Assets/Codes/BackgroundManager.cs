@@ -106,9 +106,6 @@ public class BackgroundInfo
     public Dictionary<string, Sprite> fileBackground = new Dictionary<string, Sprite>();
     public Dictionary<string, Sprite> fileObject = new Dictionary<string, Sprite>();
 
-    bool onBackground = false;
-    bool onObject = false;
-
     public void SetToken(Token type)
     {
         token = type;

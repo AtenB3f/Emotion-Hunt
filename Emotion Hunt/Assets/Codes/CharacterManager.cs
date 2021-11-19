@@ -5,6 +5,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 
+public enum NPC
+{
+    A,
+    B,
+    C
+}
+
 public class CharacterManager : MonoBehaviour
 {
     const int MAIN_NPC = 0;
@@ -66,23 +73,34 @@ public class CharacterManager : MonoBehaviour
         NPC_C.DOFade(0.0f, ON_OFF_TIME);
     }
 
+    int AddMember(string name)
+    {
+        Image[] NPCs = { NPC_A, NPC_B, NPC_C };
+        NPC[] indexs = { NPC.A, NPC.B, NPC.C };
+
+        for(int i=0;i<NPCs.Length;i++)
+        {
+            if(info.CheckMember(name, NPCs[i]))
+            {
+                info.AddMember(name, indexs[i], NPCs[i]);
+                return i;
+            }
+        }
+        return 0;
+    }
+
     public void SetCharacter(string name, string face)
     {
         if (name == "" || name == "Player")
             return;
 
         Sprite img = info.GetCharacter(name, face) as Sprite;
+
         int idx = 0;
 
-        if (info.numNPC == 0)
-        {
-            info.AddMember(name);
-        } else
-        {
-            for (; idx < info.numNPC; idx++)
-                if (info.party[idx] == name)
-                    break;
-        }
+        // No Setting Member
+        if (info.CheckMember(name) >= MAX_NPC)
+            idx = AddMember(name);
 
         switch(idx)
         {
@@ -97,16 +115,23 @@ public class CharacterManager : MonoBehaviour
                 break;
         }
 
+        SettingCharacter();
+
         if (info.onCharacter[idx] == false)
             OnCharacter(idx);
+
+        SetImageDark(name);
     }
 
     public void RemoveParty(string name)
     {
         for (int i = 0; i<info.numNPC; i++)
         {
-            if (info.party[i] == name)
+            if (info.characters[i].name == name)
+            {
+                info.RemoveMember(name);
                 break;
+            }
         }
     }
 
@@ -118,26 +143,25 @@ public class CharacterManager : MonoBehaviour
 
     private void SetRect()
     {
-        if (info.numNPC == 1)
+        foreach(NpcInfo npc in info.characters)
         {
-            NPC_A.rectTransform.anchorMin = new Vector2(0.5f, 0.0f);
-            NPC_A.rectTransform.anchorMax = new Vector2(0.5f, 0.0f);
-        }
-        else if (info.numNPC == 2)
-        {
-            NPC_A.rectTransform.anchorMin = new Vector2(0.2f, 0.0f);
-            NPC_A.rectTransform.anchorMax = new Vector2(0.2f, 0.0f);
-            NPC_B.rectTransform.anchorMin = new Vector2(0.8f, 0.0f);
-            NPC_B.rectTransform.anchorMax = new Vector2(0.8f, 0.0f);
-        }
-        else if (info.numNPC == 3)
-        {
-            NPC_A.rectTransform.anchorMin = new Vector2(0.5f, 0.0f);
-            NPC_A.rectTransform.anchorMax = new Vector2(0.5f, 0.0f);
-            NPC_B.rectTransform.anchorMin = new Vector2(0.0f, 0.0f);
-            NPC_B.rectTransform.anchorMax = new Vector2(0.0f, 0.0f);
-            NPC_B.rectTransform.anchorMin = new Vector2(1.0f, 0.0f);
-            NPC_C.rectTransform.anchorMax = new Vector2(1.0f, 0.0f);
+            switch(npc.index)
+            {
+                case NPC.A:
+                    NPC_A.rectTransform.anchorMin = new Vector2(0.5f, 0.0f);
+                    NPC_A.rectTransform.anchorMax = new Vector2(0.5f, 0.0f);
+                    break;
+                case NPC.B:
+                    NPC_B.rectTransform.anchorMin = new Vector2(0.8f, 0.0f);
+                    NPC_B.rectTransform.anchorMax = new Vector2(0.8f, 0.0f);
+                    break;
+                case NPC.C:
+                    NPC_C.rectTransform.anchorMin = new Vector2(1.0f, 0.0f);
+                    NPC_C.rectTransform.anchorMax = new Vector2(1.0f, 0.0f);
+                    break;
+                default:
+                    break;
+            }
         }
     }
     private void SetSize()
@@ -150,7 +174,7 @@ public class CharacterManager : MonoBehaviour
     }
     
     // nameTalking : 대화하는 사람 이름. 대사가 나오는 NPC는 밝게, 나머지는 어둡게
-    public void SetImageDark(string nameTalking)
+    public void SetImageDark(string talking)
     {
         Image[] NPC = { NPC_A, NPC_B, NPC_C };
         Color colDark = new Color(0.5f, 0.5f, 0.5f, 1.0f);
@@ -158,7 +182,7 @@ public class CharacterManager : MonoBehaviour
 
         for(int i=0; i < info.numNPC ; i++)
         {
-            if (nameTalking == info.party[i])
+            if (talking == info.characters[i].name)
                 NPC[i].DOColor(colLight, DARKLIGHT_TIME);
             else
                 NPC[i].DOColor(colDark, DARKLIGHT_TIME);
@@ -166,43 +190,84 @@ public class CharacterManager : MonoBehaviour
     }
 }
 
+public struct NpcInfo
+{
+    public string name;
+    public NPC index;
+    public Image image;
+
+    public NpcInfo(string npcName, NPC npcIdx, Image npcImg)
+    {
+        name = npcName;
+        image = npcImg;
+        index = npcIdx;
+    }
+}
+
 public class CharacerInfo
 {
     public const int MAX_NPC = 3;
-    public bool[] onCharacter = new bool[3];
+    public bool[] onCharacter = new bool[MAX_NPC];
+    //public string[] characters = new string[MAX_NPC];
+    public List<NpcInfo> characters = new List<NpcInfo>();
     public int numNPC = 0;
-    public string[] party = new string[MAX_NPC];
     private Dictionary<string, Sprite> fileCharacter = new Dictionary<string, Sprite>();
 
-    public void AddMember(string name)
+    public int CheckMember(string name)
     {
-        if (numNPC >= MAX_NPC)
+        int i = 0;
+        foreach(NpcInfo npc in characters)
+        {
+            if (npc.name == name)
+                return i;
+            i++;
+        }
+        return MAX_NPC;
+    }
+
+    public bool CheckMember(string name, Image img)
+    {
+        foreach(NpcInfo npc in characters)
+        {
+            if (npc.image == img)
+                return false;
+        }
+        return true;
+    }
+    public void AddMember(string name, NPC idx, Image img)
+    {
+        //if (numNPC >= MAX_NPC)
+        if(characters.Count >= MAX_NPC)
             return;
 
+        NpcInfo info = new NpcInfo(name, idx, img);
+
         numNPC++;
-        party[numNPC - 1] = name;
+        
+        characters.Add(info);
     }
 
     public void RemoveMember(string name)
     {
-        if (numNPC >= 1)
+        if (numNPC <= 0)
             return;
 
         numNPC--;
 
-        string[] tmp = new string[MAX_NPC];
-        int idx = 0;
-        for (int i = 0; i < numNPC; i++)
+        foreach(NpcInfo npc in characters)
         {
-            if (name == party[i])
-                continue;
-            else
+            if(npc.name == name)
             {
-                tmp[idx] = party[idx];
-                idx++;
+                int index = characters.IndexOf(npc);
+                characters.Remove(npc);
             }
         }
-        party = tmp;
+    }
+
+    public void ResetMember()
+    {
+        numNPC = 0;
+        characters.Clear();
     }
 
     public Sprite GetCharacter(string name, string face)
@@ -237,7 +302,16 @@ public enum Emotion
     Contempt
 }
 
-
+enum EmotionInfo
+{
+    love,
+    philia,
+    sympathy,
+    hate,
+    contempt,
+    loveNhate
+}
+/*
 public struct EmotionInfo
 {
     [Range(0, 100)] int love;           // 사랑
@@ -247,3 +321,4 @@ public struct EmotionInfo
     [Range(0, 100)] int contempt;       // 경멸
     [Range(0, 100)] int lovenhate;      // 애증
 }
+*/
