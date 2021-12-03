@@ -77,7 +77,7 @@ public class DialogManager : MonoBehaviour
 
         chatImg.color = chatImgColor;
         nameImg.color = nameImgColor;
-        nameLineImg.color = nameImgColor;
+        nameLineImg.color = nameLineImgColor;
         nameText.color = nameTextColor;
         chatText.color = chatTextColor;
         triangleImg.color = triangleColor;
@@ -137,8 +137,7 @@ public class DialogManager : MonoBehaviour
     {
         info.onName = true;
         nameImg.DOFade(SET_ALPHA, ON_OFF_TIME);
-        Color col = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-        nameLineImg.DOColor(col, ON_OFF_TIME);
+        nameLineImg.DOFade(1.0f, ON_OFF_TIME);
         nameText.DOFade(1.0f, ON_OFF_TIME);
     }
 
@@ -177,25 +176,17 @@ public class DialogManager : MonoBehaviour
     public void EnableName()
     {
         info.onName = true;
-        
-        Color col = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-        nameText.color = col;
-        nameLineImg.color = col;
-        nameImg.color = col;
-        
-        //nameObj.active = true;
+        nameText.DOFade(1.0f, 0.0f);
+        nameLineImg.DOFade(1.0f, 0.0f);
+        nameImg.DOFade(1.0f, 0.0f);
     }
 
     public void DisableName()
     {
         info.onName = false;
-        
-        Color col = new Color(1.0f, 1.0f, 1.0f, 0.0f);
-        nameText.color = col;
-        nameLineImg.color = col;
-        nameImg.color = col;
-        
-        //nameObj.active = false;
+        nameText.DOFade(0.0f, 0.0f);
+        nameLineImg.DOFade(0.0f, 0.0f);
+        nameImg.DOFade(0.0f, 0.0f);
     }
 
     public void OffTriangle()
@@ -295,7 +286,6 @@ public class DialogManager : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 
         info.SetToken(Token.None);
-        //changeStateCoroutine = true;
     }
     IEnumerator PrintDialog(int stPoit, string str)
     {
@@ -313,9 +303,7 @@ public class DialogManager : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 
         info.SetToken(Token.None);
-        //changeStateCoroutine = true;
     }
-
 }
 
 public class DialogInfo

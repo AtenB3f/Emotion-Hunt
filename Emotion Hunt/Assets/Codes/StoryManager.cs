@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-
 public enum Token
 { 
     None,
@@ -77,7 +76,6 @@ public class StoryManager : MonoBehaviour
             }
             else if (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.KeypadEnter))
             {
-                print("next");
                 LoadStory();
             }
         }
@@ -292,9 +290,9 @@ public class StoryManager : MonoBehaviour
         switch (csvManager.story.type)
         {
             case "Play":
-                audioManager.OnEffect(csvManager.story.name);
+                audioManager.PlayEffect(csvManager.story.name);
                 break;
-            case "Fade In":
+            case "On":
                 audioManager.OnEffect(csvManager.story.name);
                 break;
             default:
@@ -305,19 +303,23 @@ public class StoryManager : MonoBehaviour
 
     void CtrlParty()
     {
+        const int MAX_PARTY = 3;
         SetToken(Token.Party);
         switch (csvManager.story.type)
         {
             case "Add":
-                
+                characterManager.SetCharacter(csvManager.story.name, csvManager.story.face);
                 break;
             case "Remove":
-
+                int idxRmv = characterManager.RemoveParty(csvManager.story.name);
+                if(idxRmv < MAX_PARTY)
+                    characterManager.OffCharacter(idxRmv);
                 break;
             default:
                 print("CtrlParty. Type name :: " + csvManager.story.type);
                 break;
         }
+        SetToken(Token.None);
     }
 
     void CtrlSelection()
@@ -350,6 +352,10 @@ public class StoryManager : MonoBehaviour
     void SetName()
     {
         string name = csvManager.story.name;
+
+        if (csvManager.story.subCtrl == "Unknown")
+            name = "???";
+
         dialogManager.SetName(name);
     }
     void SetCharacter()
@@ -360,8 +366,11 @@ public class StoryManager : MonoBehaviour
     }
     void SetDIalog()
     {
+        string name = csvManager.story.name;
+
         SetName();
         SetCharacter();
+        characterManager.SetImageDark(name);
 
         // Dialog On
         if (name == "" || name == "None")
@@ -405,6 +414,10 @@ public class StoryManager : MonoBehaviour
                     characterManager.info.ResetMember();
                     break;
                 case "Play":
+                    SetToken(Token.Dialog);
+                    SetDIalog();
+                    break;
+                case "Shake":
                     SetToken(Token.Dialog);
                     SetDIalog();
                     break;

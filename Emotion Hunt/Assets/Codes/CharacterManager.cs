@@ -49,6 +49,7 @@ public class CharacterManager : MonoBehaviour
                 NPC_C.DOFade(1.0f, ON_OFF_TIME);
                 break;
         }
+        info.onCharacter[idx] = true;
     }
 
     public void OffCharacter(int idx)
@@ -65,15 +66,19 @@ public class CharacterManager : MonoBehaviour
                 NPC_C.DOFade(0.0f, ON_OFF_TIME);
                 break;
         }
+        info.onCharacter[idx] = false;
     }
     public void OffCharacter()
     {
         NPC_A.DOFade(0.0f, ON_OFF_TIME);
         NPC_B.DOFade(0.0f, ON_OFF_TIME);
         NPC_C.DOFade(0.0f, ON_OFF_TIME);
+        info.onCharacter[0] = false;
+        info.onCharacter[1] = false;
+        info.onCharacter[2] = false;
     }
 
-    int AddMember(string name)
+    public int AddMember(string name)
     {
         Image[] NPCs = { NPC_A, NPC_B, NPC_C };
         NPC[] indexs = { NPC.A, NPC.B, NPC.C };
@@ -91,16 +96,17 @@ public class CharacterManager : MonoBehaviour
 
     public void SetCharacter(string name, string face)
     {
-        if (name == "" || name == "Player")
+        if (name == "" || name == "Player" || name == "None")
             return;
 
         Sprite img = info.GetCharacter(name, face) as Sprite;
 
-        int idx = 0;
+        int idx = info.CheckMember(name);
 
         // No Setting Member
-        if (info.CheckMember(name) >= MAX_NPC)
+        if (idx >= MAX_NPC)
             idx = AddMember(name);
+
 
         switch(idx)
         {
@@ -119,20 +125,20 @@ public class CharacterManager : MonoBehaviour
 
         if (info.onCharacter[idx] == false)
             OnCharacter(idx);
-
-        SetImageDark(name);
     }
 
-    public void RemoveParty(string name)
+    public int RemoveParty(string name)
     {
-        for (int i = 0; i<info.numNPC; i++)
+        foreach(NpcInfo npc in info.characters)
         {
-            if (info.characters[i].name == name)
+            if (npc.name == name)
             {
+                int idx = info.characters.IndexOf(npc);
                 info.RemoveMember(name);
-                break;
+                return idx;
             }
         }
+        return MAX_NPC;
     }
 
     public void SettingCharacter()
@@ -143,32 +149,44 @@ public class CharacterManager : MonoBehaviour
 
     private void SetRect()
     {
-        foreach(NpcInfo npc in info.characters)
+        float posi = 0.5f;
+        float[] posiTwo = { 0.2f, 0.8f};
+        float[] posiThree = { 0.5f, 0.2f, 0.8f };
+        int idx = 0;
+
+        foreach (NpcInfo npc in info.characters)
         {
-            switch(npc.index)
+            if (info.numNPC == 2)
+                posi = posiTwo[idx];
+            else if (info.numNPC == 3)
+                posi = posiThree[idx];
+            switch (npc.index)
             {
                 case NPC.A:
-                    NPC_A.rectTransform.anchorMin = new Vector2(0.5f, 0.0f);
-                    NPC_A.rectTransform.anchorMax = new Vector2(0.5f, 0.0f);
+                    
+                    NPC_A.rectTransform.anchorMin = new Vector2(posi, 0.0f);
+                    NPC_A.rectTransform.anchorMax = new Vector2(posi, 0.0f);
                     break;
                 case NPC.B:
-                    NPC_B.rectTransform.anchorMin = new Vector2(0.8f, 0.0f);
-                    NPC_B.rectTransform.anchorMax = new Vector2(0.8f, 0.0f);
+                    NPC_B.rectTransform.anchorMin = new Vector2(posi, 0.0f);
+                    NPC_B.rectTransform.anchorMax = new Vector2(posi, 0.0f);
                     break;
                 case NPC.C:
-                    NPC_C.rectTransform.anchorMin = new Vector2(1.0f, 0.0f);
-                    NPC_C.rectTransform.anchorMax = new Vector2(1.0f, 0.0f);
+                    NPC_C.rectTransform.anchorMin = new Vector2(posi, 0.0f);
+                    NPC_C.rectTransform.anchorMax = new Vector2(posi, 0.0f);
                     break;
                 default:
                     break;
             }
+            idx++;
         }
     }
     private void SetSize()
     {
         Image[] NPC = { NPC_A, NPC_B, NPC_C };
-        for(int i=0; i<info.numNPC; i++)
+        foreach(NpcInfo npc in info.characters)
         {
+            int i = (int)npc.index;
             NPC[i].SetNativeSize();
         }
     }
@@ -176,16 +194,17 @@ public class CharacterManager : MonoBehaviour
     // nameTalking : 대화하는 사람 이름. 대사가 나오는 NPC는 밝게, 나머지는 어둡게
     public void SetImageDark(string talking)
     {
-        Image[] NPC = { NPC_A, NPC_B, NPC_C };
+        Image[] img = { NPC_A, NPC_B, NPC_C };
         Color colDark = new Color(0.5f, 0.5f, 0.5f, 1.0f);
         Color colLight = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 
-        for(int i=0; i < info.numNPC ; i++)
+        foreach(NpcInfo npc in info.characters)
         {
-            if (talking == info.characters[i].name)
-                NPC[i].DOColor(colLight, DARKLIGHT_TIME);
+            int idx = (int)npc.index;
+            if(talking == npc.name)
+                img[idx].DOColor(colLight, DARKLIGHT_TIME);
             else
-                NPC[i].DOColor(colDark, DARKLIGHT_TIME);
+                img[idx].DOColor(colDark, DARKLIGHT_TIME);
         }
     }
 }
@@ -208,19 +227,18 @@ public class CharacerInfo
 {
     public const int MAX_NPC = 3;
     public bool[] onCharacter = new bool[MAX_NPC];
-    //public string[] characters = new string[MAX_NPC];
     public List<NpcInfo> characters = new List<NpcInfo>();
     public int numNPC = 0;
     private Dictionary<string, Sprite> fileCharacter = new Dictionary<string, Sprite>();
 
     public int CheckMember(string name)
     {
-        int i = 0;
         foreach(NpcInfo npc in characters)
         {
             if (npc.name == name)
-                return i;
-            i++;
+            {
+                return (int)npc.index;
+            }
         }
         return MAX_NPC;
     }
@@ -236,7 +254,6 @@ public class CharacerInfo
     }
     public void AddMember(string name, NPC idx, Image img)
     {
-        //if (numNPC >= MAX_NPC)
         if(characters.Count >= MAX_NPC)
             return;
 
@@ -260,6 +277,7 @@ public class CharacerInfo
             {
                 int index = characters.IndexOf(npc);
                 characters.Remove(npc);
+                return;
             }
         }
     }

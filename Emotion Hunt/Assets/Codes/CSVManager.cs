@@ -207,7 +207,7 @@ public class CSVManager : MonoBehaviour
             return Token.None;
 
         int idx = story.index;
-        string ctrl = story.ctrl;//storyList[listCnt]["Control"].ToString();
+        string ctrl = story.ctrl;
         string type = story.type;
         int prevIdx = prevStory.index;
         string prevCtrl = prevStory.ctrl;
@@ -221,6 +221,10 @@ public class CSVManager : MonoBehaviour
                 return Token.None;
             else
                 return Token.Input;
+        }
+        else if(ctrl == "Party")
+        {
+            return Token.Input;
         }
         else
             return Token.None;

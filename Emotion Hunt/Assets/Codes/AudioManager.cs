@@ -71,7 +71,7 @@ public class AudioManager : MonoBehaviour
         float Decibel = ChangeValueToDecibel(level);
         audioMixer.SetFloat("musicVol", Decibel);
     }
-    private IEnumerator PlayEffect()
+    private IEnumerator StartEffect()
     {
         WaitForSeconds ws = new WaitForSeconds(effectSrc.clip.length+1.0f);
         effectSrc.Play();
@@ -80,6 +80,21 @@ public class AudioManager : MonoBehaviour
             yield return ws;
 
         info.SetToken(Token.None);
+    }
+
+    public void PlayEffect(string name)
+    {
+        AudioClip clip = info.GetEffect(name);
+
+        if (clip == null)
+        {
+            info.SetToken(Token.None);
+            return;
+        }
+
+        effectSrc.clip = clip;
+
+        StartCoroutine("StartEffect");
     }
 
     public void OnEffect(string name)
@@ -93,8 +108,8 @@ public class AudioManager : MonoBehaviour
         }
 
         effectSrc.clip = clip;
-
-        StartCoroutine("PlayEffect");
+        effectSrc.Play();
+        info.SetToken(Token.None);
     }
     public void OnBGM(string name)
     {
