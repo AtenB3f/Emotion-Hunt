@@ -26,11 +26,13 @@ public class StoryManager : MonoBehaviour
     CharacterManager characterManager;
     AudioManager audioManager;
     CSVManager csvManager;
+    SaveManager saveManager;
 
     Token token;
     
     void Start()
     {
+        saveManager = GameObject.Find("Main Camera").GetComponent<SaveManager>();
         csvManager = GameObject.Find("Main Camera").GetComponent<CSVManager>();
         dialogManager = GameObject.Find("Dialog").GetComponent<DialogManager>();
         backgroundManager = GameObject.Find("GameObject").GetComponent<BackgroundManager>();
@@ -190,6 +192,10 @@ public class StoryManager : MonoBehaviour
     bool ActiveStory ()
     {
         bool addCnt = true;
+
+        if (!CheckVersion(csvManager.story.version))
+            return addCnt;
+
         switch (csvManager.story.ctrl)
         {
             case "Background":
@@ -328,26 +334,35 @@ public class StoryManager : MonoBehaviour
 
         string emotion = csvManager.story.emotion;
         int val = csvManager.story.value;
-        switch (csvManager.story.type)
+        string version = csvManager.story.version;
+
+        if (csvManager.story.version == version || csvManager.story.version == "None")
         {
-            case "A":
-                selectionManager.info.SetConfig(SelectionBtn.BUTTON_A, emotion, val);
-                selectionManager.UpdateText(SelectionBtn.BUTTON_A, csvManager.story.chat);
-                break;
-            case "B":
-                selectionManager.info.SetConfig(SelectionBtn.BUTTON_B, emotion, val);
-                selectionManager.UpdateText(SelectionBtn.BUTTON_B, csvManager.story.chat);
-                break;
-            case "C":
-                selectionManager.info.SetConfig(SelectionBtn.BUTTON_C, emotion, val);
-                selectionManager.UpdateText(SelectionBtn.BUTTON_C, csvManager.story.chat);
-                if (selectionManager.info.OnOff == false)
-                    selectionManager.OnSelection();
-                break;
-            default:
-                print("CtrlParty. Type name :: " + csvManager.story.type);
-                break;
-        }        
+            switch (csvManager.story.type)
+            {
+                case "A":
+                    selectionManager.info.SetConfig(SelectionBtn.BUTTON_A, emotion, val);
+                    selectionManager.UpdateText(SelectionBtn.BUTTON_A, csvManager.story.chat);
+                    break;
+                case "B":
+                    selectionManager.info.SetConfig(SelectionBtn.BUTTON_B, emotion, val);
+                    selectionManager.UpdateText(SelectionBtn.BUTTON_B, csvManager.story.chat);
+                    break;
+                case "C":
+                    selectionManager.info.SetConfig(SelectionBtn.BUTTON_C, emotion, val);
+                    selectionManager.UpdateText(SelectionBtn.BUTTON_C, csvManager.story.chat);
+                    if (selectionManager.info.OnOff == false)
+                        selectionManager.OnSelection();
+                    break;
+                default:
+                    print("CtrlParty. Type name :: " + csvManager.story.type);
+                    break;
+            }
+        } else
+        {
+            SetToken(Token.None);
+        }
+             
     }
     void SetName()
     {
@@ -390,69 +405,65 @@ public class StoryManager : MonoBehaviour
             dialogManager.SetDialog(str);
         }
     }
-
+    bool CheckVersion(string version)
+    {
+        string saveEmotion = saveManager.GetTargetEmotion();
+        if (saveEmotion == version || version == "None")
+            return true;
+        return false;
+    }
     void CtrlDialog()
     {
-        // test. 세이브 매니저에서 불러오기.
-        string emotion = "None";
-        if (csvManager.story.emotion == emotion || csvManager.story.emotion == "None")
+        switch (csvManager.story.type)
         {
-            switch (csvManager.story.type)
-            {
-                case "On":
+            case "On":
+                SetToken(Token.Dialog);
+                SetName();
+                SetCharacter();
+                dialogManager.info.onDialog = true;
+                dialogManager.OnDialog();
+                break;
+            case "Off":
                     SetToken(Token.Dialog);
-                    SetName();
-                    SetCharacter();
-                    dialogManager.info.onDialog = true;
-                    dialogManager.OnDialog();
-                    break;
-                case "Off":
-                     SetToken(Token.Dialog);
-                    characterManager.OffCharacter();
-                    dialogManager.info.onDialog = false;
-                    dialogManager.OffDialog();
-                    characterManager.info.ResetMember();
-                    break;
-                case "Play":
-                    SetToken(Token.Dialog);
-                    SetDIalog();
-                    break;
-                case "Shake":
-                    SetToken(Token.Dialog);
-                    SetDIalog();
-                    break;
-                default:
-                    ResetToken();
-                    print("CtrlParty. Type name :: " + csvManager.story.type);
-                    break;
-            }
+                characterManager.OffCharacter();
+                dialogManager.info.onDialog = false;
+                dialogManager.OffDialog();
+                characterManager.info.ResetMember();
+                break;
+            case "Play":
+                SetToken(Token.Dialog);
+                SetDIalog();
+                break;
+            case "Shake":
+                SetToken(Token.Dialog);
+                SetDIalog();
+                break;
+            default:
+                ResetToken();
+                print("CtrlParty. Type name :: " + csvManager.story.type);
+                break;
         }
     }
 
     bool CtrlAnswer()
     {
         bool addCnt = true;
-        // test. 세이브 매니저에서 불러오기
-        string emotion = "None";
 
         SelectionBtn btn = selectionManager.info.GetSelectButton();
         SelectionConfig config = selectionManager.info.GetConfig(btn);
         string type = selectionManager.info.GetSelectButtonString();
 
-        if (csvManager.story.emotion == emotion || csvManager.story.emotion == "None")
-        {
-            SetToken(Token.Answer);
+        SetToken(Token.Answer);
 
-            // A / B / C
-            if (csvManager.story.type == type)
-            {
-                SetDIalog();
-            } else
-            {
-                csvManager.NextDialog(csvManager.story.type);
-                ResetToken();
-                addCnt = false;
-            }
+        // A / B / C
+        if (csvManager.story.type == type)
+        {
+            SetDIalog();
+        } else
+        {
+            csvManager.NextDialog(csvManager.story.type);
+            ResetToken();
+            addCnt = false;
         }
         return addCnt;
     }
@@ -471,13 +482,13 @@ public class StoryManager : MonoBehaviour
         SetToken(token);
     }
 
-    int cntSel = 0;
+
     void EndStory()
     {
         ResetToken();
         csvManager.ResetCSV();
-        cntSel = 0;
         // 데이터 저장
+        saveManager.SaveData();
         // scene 이동 : 메인 스토리이면 플레이어 홈으로, 캐릭터 스토리면 미니게임으로
     }
 }

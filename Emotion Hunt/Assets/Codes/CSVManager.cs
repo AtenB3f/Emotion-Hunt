@@ -19,10 +19,11 @@ public struct StoryConfig
 
 public class CSVManager : MonoBehaviour
 {
+    public SaveManager saveManager;
+
     public bool doneLoadStory = false;
     public StoryConfig prevStory;
     public StoryConfig story;
-    public StoryConfig nextStory;
     List<Dictionary<string, object>> storyList;
     public int listCnt = 0;
 
@@ -32,18 +33,23 @@ public class CSVManager : MonoBehaviour
     public HashSet<string> hashEffect = new HashSet<string>();
     public HashSet<string> hashBGM = new HashSet<string>();
     public LinkedList<int> linkSelection = new LinkedList<int>();
-    public List<int> listAnswer = new List<int>();
+
 
     void Start()
     {
-        // 공략 NPC 확인
-        // day확인
+        saveManager = GameObject.Find("Main Camera").GetComponent<SaveManager>();
+
         string targetNPC = "Helen";
+        //string targetNPC = saveManager.GetTargetNpc();
         int playDay = 2;
+        //int playDay = saveManager.GetPlayDay();
 
 
         // CSV Read
-        string path = "Script/" + targetNPC + "/Story_" + targetNPC + "_" + playDay.ToString();
+        //string path = "Script/" + targetNPC + "/Story_" + targetNPC + "_" + playDay.ToString();
+
+        // test csv file read
+        string path = "Script/" + targetNPC + "/Story_" + targetNPC + "_" + "test";
         storyList = CSVReader.Read(path);
 
         ReadStory();
@@ -60,7 +66,6 @@ public class CSVManager : MonoBehaviour
     {
         SetConfig(listCnt, ref story);          // 해야할 것 
         SetConfig(listCnt - 1, ref prevStory);  // 했던 것
-        SetConfig(listCnt + 1, ref nextStory);
     }
 
     public bool CheckLast()
@@ -131,7 +136,6 @@ public class CSVManager : MonoBehaviour
                     if (type != storyList[i]["Type"].ToString())
                     {
                         type = storyList[i]["Type"].ToString();
-                        listAnswer.Add(i);
                     }
                     break;
                 case "Selection":
@@ -212,21 +216,31 @@ public class CSVManager : MonoBehaviour
         int prevIdx = prevStory.index;
         string prevCtrl = prevStory.ctrl;
         string prevType = prevStory.type;
+        string version = story.version;
 
-        if (ctrl == "Dialog" || ctrl == "Answer")
+        //세이브 매니저에서 불러오기
+        string npcVersion = "None";
+
+        if (version == "None" || version == npcVersion)
         {
-            if (prevType == "On" || prevType == "Off")
-                return Token.None;
-            else if (idx != prevIdx)
-                return Token.None;
-            else
+            if (ctrl == "Dialog" || ctrl == "Answer")
+            {
+                if (prevType == "On" || prevType == "Off")
+                    return Token.None;
+                else if (idx != prevIdx)
+                    return Token.None;
+                else
+                    return Token.Input;
+            }
+            else if (ctrl == "Party")
+            {
                 return Token.Input;
-        }
-        else if(ctrl == "Party")
+            }
+            else
+                return Token.None;
+        } else
         {
-            return Token.Input;
-        }
-        else
             return Token.None;
+        }
     }
 }

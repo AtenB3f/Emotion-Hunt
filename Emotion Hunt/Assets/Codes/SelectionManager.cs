@@ -13,6 +13,7 @@ public enum SelectionBtn
 }
 public class SelectionManager : MonoBehaviour
 {
+    SaveManager saveManager;
     public SelectionInfo info = new SelectionInfo();
 
     public GameObject Selection;
@@ -41,6 +42,8 @@ public class SelectionManager : MonoBehaviour
 
     void Start()
     {
+        saveManager = GameObject.Find("Main Camera").GetComponent<SaveManager>();
+
         groupA = A.GetComponentsInChildren<CanvasGroup>();
         groupB = B.GetComponentsInChildren<CanvasGroup>();
         groupC = C.GetComponentsInChildren<CanvasGroup>();
@@ -144,8 +147,7 @@ public class SelectionManager : MonoBehaviour
     {
         info.SetSelectButton(SelectionBtn.BUTTON_A);
         SelectionConfig config = info.GetConfig(SelectionBtn.BUTTON_A);
-        config.value += SaveManager.GetValueEmotion(config.emotion);
-        SaveManager.SaveValueEmotion(config);
+        saveManager.AddValueEmotion(config);
         OffSelection();
         info.SetToken(Token.None);
     }
@@ -153,8 +155,7 @@ public class SelectionManager : MonoBehaviour
     {
         info.SetSelectButton(SelectionBtn.BUTTON_B);
         SelectionConfig config = info.GetConfig(SelectionBtn.BUTTON_B);
-        config.value += SaveManager.GetValueEmotion(config.emotion);
-        SaveManager.SaveValueEmotion(config);
+        saveManager.AddValueEmotion(config);
         OffSelection();
         info.SetToken(Token.None);
     }
@@ -162,8 +163,7 @@ public class SelectionManager : MonoBehaviour
     {
         info.SetSelectButton(SelectionBtn.BUTTON_C);
         SelectionConfig config = info.GetConfig(SelectionBtn.BUTTON_C);
-        config.value += SaveManager.GetValueEmotion(config.emotion);
-        SaveManager.SaveValueEmotion(config);
+        saveManager.AddValueEmotion(config);
         OffSelection();
         info.SetToken(Token.None);
     }

@@ -2,100 +2,236 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-struct SaveData
+public struct Emotions
 {
-    string playerName;
-    int playDay;
-    string targetNPC;
-    Emotion valueEmomtion;
+    [Range(0, 100)] public int love;           // 사랑
+    [Range(0, 100)] public int philia;         // 애정
+    [Range(0, 100)] public int sympathy;       // 연민
+    [Range(0, 100)] public int hate;           // 증오
+    [Range(0, 100)] public int contempt;       // 경멸
+    [Range(0, 100)] public int loveAndHate;      // 애증
+    [Range(0, 100)] public int none;
 }
 
-public class SaveManager
+public struct SaveData
 {
-    public static void SavePlayDay(int day)
+    public string playerName;
+    public int playDay;
+    public string targetNPC;
+    public Emotion targetEmotion;
+    public Emotions emotions;
+}
+
+
+public class SaveManager : MonoBehaviour
+{
+    SaveData saveData = new SaveData();
+    string saveString;
+
+    void Awake()
     {
-        PlayerPrefs.SetInt("PlayDay", day);
+        LoadData();
     }
 
-    public static int GetPlayDay()
+    public void SaveData()
     {
-        return PlayerPrefs.GetInt("PlayDay");
+        saveString = SaveData(saveData);
     }
 
-    public static void SavePlayerName(string name)
+    public void LoadData()
     {
-        PlayerPrefs.SetString("PlayerName", name);
+        saveData = LoadData<SaveData>(saveString);
     }
 
-    public static string GetPlayerName()
+    string SaveData(object obj)
     {
-        return PlayerPrefs.GetString("PlayerName");
+        return JsonUtility.ToJson(obj);
     }
 
-    public static void SaveValueEmotion(SelectionConfig config)
+    T LoadData<T>(string jsonData)
+    {
+        return JsonUtility.FromJson<T>(jsonData);
+    }
+
+    public void SetPlayerName(string name)
+    {
+        saveData.playerName = name;
+    }
+    public string GetPlayerName()
+    {
+        return saveData.playerName;
+    }
+
+    public void SetPlayDay(int day)
+    {
+        saveData.playDay = day;
+    }
+    public int GetPlayDay()
+    {
+        return saveData.playDay;
+    }
+
+    public void SetTargetNpc(string name)
+    {
+        saveData.targetNPC = name;
+    }
+    public string GetTargetNpc()
+    {
+        return saveData.targetNPC;
+    }
+
+    public void SetTargetEmotion(Emotion type)
+    {
+        saveData.targetEmotion = type;
+    }
+    // return : String Emotion Name
+    public string GetTargetEmotion()
     {
         string emotion;
-        switch (config.emotion)
+        switch (saveData.targetEmotion)
         {
             case Emotion.Love:
                 emotion = "Love";
-                PlayerPrefs.SetInt(emotion, config.value);
                 break;
             case Emotion.Philia:
                 emotion = "Philia";
-                PlayerPrefs.SetInt(emotion, config.value);
                 break;
             case Emotion.Sympathy:
                 emotion = "Sympathy";
-                PlayerPrefs.SetInt(emotion, config.value);
-                break;
-            case Emotion.Contempt:
-                emotion = "Contempt";
-                PlayerPrefs.SetInt(emotion, config.value);
-                break;
-            case Emotion.Hate:
-                emotion = "Hate";
-                PlayerPrefs.SetInt(emotion, config.value);
                 break;
             case Emotion.LoveAndHate:
                 emotion = "LoveAndHate";
-                PlayerPrefs.SetInt(emotion, config.value);
+                break;
+            case Emotion.Hate:
+                emotion = "Hate";
+                break;
+            case Emotion.Contempt:
+                emotion = "Contempt";
+                break;
+            default:
+                emotion = "None";
                 break;
         }
+        return emotion;
     }
 
-    public static int GetValueEmotion(Emotion emotion)
+    public void SetEmotions(Emotion type, int value)
+    {
+        string emotion;
+        switch (type)
+        {
+            case Emotion.Love:
+                emotion = "Love";
+                saveData.emotions.love = value;
+                break;
+            case Emotion.Philia:
+                emotion = "Philia";
+                saveData.emotions.philia = value;
+                break;
+            case Emotion.Sympathy:
+                emotion = "Sympathy";
+                saveData.emotions.sympathy = value;
+                break;
+            case Emotion.Contempt:
+                emotion = "Contempt";
+                saveData.emotions.contempt = value;
+                break;
+            case Emotion.Hate:
+                emotion = "Hate";
+                saveData.emotions.hate = value;
+                break;
+            case Emotion.LoveAndHate:
+                emotion = "LoveAndHate";
+                saveData.emotions.loveAndHate = value;
+                break;
+            default:
+                break;
+        }
+        
+    }
+
+    void CheckTargetEmotion()
+    {
+        int[] arr = { saveData.emotions.love, saveData.emotions.philia, 
+                    saveData.emotions.sympathy, saveData.emotions.hate, 
+                    saveData.emotions.contempt, saveData.emotions.loveAndHate };
+        Emotion[] arrEmotion = { Emotion.Love, Emotion.Philia, 
+                                Emotion.Sympathy, Emotion.Hate,
+                                Emotion.Contempt, Emotion.LoveAndHate};
+
+        int greater = 0;
+        bool equal = false;
+        List<int> listEqual = new List<int>();
+
+        for(int i=0; i<arr.Length-1; i++)
+        {
+            if (arr[i] > greater)
+            {
+                greater = i;
+                equal = false;
+                listEqual.Clear();
+            } else if (arr[i] == greater)
+            {
+                equal = true;
+                listEqual.Add(greater);
+                listEqual.Add(i);
+            }
+        }
+
+        if (equal)
+            Debug.LogWarning("CheckTargetEmotion :: equal emotion value");
+
+        saveData.targetEmotion = arrEmotion[greater];
+    }
+
+    public void AddValueEmotion(SelectionConfig config)
+    {
+        int value = GetValueEmotion(config.emotion);
+        value += config.value;
+        SetEmotions(config.emotion, value);
+
+        // check target emotion
+        CheckTargetEmotion();
+    }
+
+    public void ChangeEmotion(Emotion from, Emotion to)
+    {
+        int swap = GetValueEmotion(from);
+        SetEmotions(to, swap);
+        SetEmotions(from, 0);
+
+        // check target emotion
+        CheckTargetEmotion();
+    }
+
+    public int GetValueEmotion(Emotion emotion)
     {
         int value = 0;
-        string key;
         switch (emotion)
         {
             case Emotion.Love:
-                key = "Love";
-                value = PlayerPrefs.GetInt(key);
+                value = saveData.emotions.love;
                 break;
             case Emotion.Philia:
-                key = "Philia";
-                value = PlayerPrefs.GetInt(key);
+                value = saveData.emotions.philia;
                 break;
             case Emotion.Sympathy:
-                key = "Sympathy";
-                value = PlayerPrefs.GetInt(key);
+                value = saveData.emotions.sympathy;
                 break;
             case Emotion.Contempt:
-                key = "Contempt";
-                value = PlayerPrefs.GetInt(key);
+                value = saveData.emotions.contempt;
                 break;
             case Emotion.Hate:
-                key = "Hate";
-                value = PlayerPrefs.GetInt(key);
+                value = saveData.emotions.hate;
                 break;
             case Emotion.LoveAndHate:
-                key = "LoveAndHate";
-                value = PlayerPrefs.GetInt(key);
+                value = saveData.emotions.loveAndHate;
+                break;
+            default:
                 break;
         }
         return value;
     }
 
+    
 }
