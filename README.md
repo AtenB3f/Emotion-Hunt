@@ -1,12 +1,11 @@
-![Emotion_Hunt_Icon_Round_128](https://user-images.githubusercontent.com/69495341/137141204-7f8fc8de-58d7-40c7-9796-7244c2e6b6a3.png)
-# Emotion-Hunt
-```sh
-플레이어는 인간들의 감정을 먹고 사는 존재입니다. 모습을 자유자재로 바꿀 수 있어 사람의 모습을 하고 인간들 사이에서 생활합니다.
-NPC들과 사회적 관계를 맺으며 그들에게서 얻을 수 있는 감정을 최대로 끌어내어 그들의 감정을 섭취합니다.
-사람이 느끼는 여러가지 감정 중 사랑, 애정, 연민, 증오, 애증, 경멸 6가지의 감정들을 공략하여 
-이런 플레이어와 같은 존재를 감정 사냥꾼이라 부릅니다.
-그리고 감정 사냥꾼을 밝혀내는 존재들이 있습니다. 이들의 의심을 피하고 무사히 NPC의 감정을 사냥하는 것이 플레이어의 목표입니다.
-```
+![logo2](https://user-images.githubusercontent.com/69495341/147758615-b93a9dc6-0807-4714-81d3-e6ad97f69e75.png)
+<br>
+
+플레이어는 감정사냥꾼이라 불리는 존재가 되어 게임을 진행하게 됩니다.  
+감정사냥꾼은 인간의 감정을 먹고 사는 존재로서, 외형을 자유자재로 바꾸며 인간들 사이에서 사회적 관계를 맺으며 생활합니다.  
+그들은 인간이 느끼는 여러가지의 감정 중 사랑, 애정, 연민, 증오, 애증, 경멸 6가지의 감정들을 공략합니다.  
+그리고 감정 사냥꾼을 밝혀내는 존재의 의심을 피하여 무사히 NPC들의 감정을 사냥하는 것이 플레이어의 목표입니다.  
+
 <br>
 <br>
 
@@ -25,6 +24,7 @@ SCM : Trello
 - Developer : **AtenB , Doby** <br>
 - Screenwriter : **페어리 참,** <br>
 - UX/UI : **민물장어** <br>
+- Audio : **Doby** <br>
 <br>
 <br>
 
@@ -32,11 +32,12 @@ SCM : Trello
 :e-mail: E-Mail : AtenB@gmail.com <br>
 :black_nib: Develop
 ```sh
-메인 메뉴 구현
+메인 메뉴 및 시스템 창 구현
 대화시스템 구현
 ```
 :black_nib: Illust
 ```sh
+메인 타이틀 일러스트
 NPC 캐릭터 디자인
 NPC 일러스트 작업
 ```
@@ -49,7 +50,8 @@ NPC 일러스트 작업
 ```
 :black_nib: Audio
 ```sh
-Effect 및 BGM 선정
+Effect 및 BGM 소스 찾기  
+NPC BGM 작곡
 ```
 
 ### 페어리 참
@@ -72,11 +74,13 @@ NPC 에드윈 시나리오
 :e-mail: E-Mail : qkr1790@gmail.com <br>
 :black_nib: UX/UI
 ```sh
-대화창 UI 디자인
+Emotion Hunt 로고 디자인  
+대화창 UI 디자인  
 ```
 
 ## ![Emotion_Hunt_Icon_Round_32](https://user-images.githubusercontent.com/69495341/137141567-23e382ab-0924-4c47-a6e2-33148bfa8d6e.png) Overview
-### 대화 시스템
-### 미니 게임
-### 호감도 시스템
+### Screen Shot
+<img width="960" alt="KakaoTalk_20211204_131951926" src="https://user-images.githubusercontent.com/69495341/147758463-19ae37f5-bd76-4d7a-bd25-2f4eba55cd6d.png">
+<img width="960" alt="KakaoTalk_20211204_131951671" src="https://user-images.githubusercontent.com/69495341/147758453-f92e6557-b167-4857-9dfe-487c2a6f82d1.png">
+
 <br>
