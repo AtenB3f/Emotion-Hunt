@@ -9,7 +9,8 @@ public struct Emotions
     [Range(0, 100)] public int sympathy;       // 연민
     [Range(0, 100)] public int hate;           // 증오
     [Range(0, 100)] public int contempt;       // 경멸
-    [Range(0, 100)] public int loveAndHate;      // 애증
+    [Range(0, 100)] public int loveAndHate;     // 애증
+    [Range(0, 100)] public int doubt;           // 의심
     [Range(0, 100)] public int none;
 }
 
@@ -17,11 +18,19 @@ public struct SaveData
 {
     public string playerName;
     public int playDay;
+    public Contents content;
     public string targetNPC;
     public Emotion targetEmotion;
     public Emotions emotions;
 }
 
+public enum Contents 
+{
+    Home,
+    NpcStory,
+    MiniGame,
+    MainStory
+}
 
 public class SaveManager : MonoBehaviour
 {
@@ -33,6 +42,7 @@ public class SaveManager : MonoBehaviour
         LoadData();
     }
 
+    // 컨텐츠가 다 끝난 뒤 이전 데이터를 저장.
     public void SaveData()
     {
         saveString = SaveData(saveData);
@@ -69,6 +79,15 @@ public class SaveManager : MonoBehaviour
     public int GetPlayDay()
     {
         return saveData.playDay;
+    }
+    public void SetContent(Contents type)
+    {
+        saveData.content = type;
+    }
+
+    public Contents GetContent()
+    {
+        return saveData.content;
     }
 
     public void SetTargetNpc(string name)
@@ -150,6 +169,10 @@ public class SaveManager : MonoBehaviour
         
     }
 
+    /*
+     * CheckTargetEmotion
+     * 현재 가장 높은 값을 갖는 감정을 targetEmotion로 설정하는 함수
+     */
     void CheckTargetEmotion()
     {
         int[] arr = { saveData.emotions.love, saveData.emotions.philia, 
@@ -179,9 +202,13 @@ public class SaveManager : MonoBehaviour
         }
 
         if (equal)
+        {
             Debug.LogWarning("CheckTargetEmotion :: equal emotion value");
-
-        saveData.targetEmotion = arrEmotion[greater];
+            SetTargetEmotion(Emotion.None);
+        } else
+        {
+            SetTargetEmotion(arrEmotion[greater]);
+        }
     }
 
     public void AddValueEmotion(SelectionConfig config)
@@ -233,5 +260,36 @@ public class SaveManager : MonoBehaviour
         return value;
     }
 
-    
+    public void NextContent()
+    {
+        // Home - NPC story - Mini Game - Main Story
+
+        SaveData();
+
+        switch (saveData.content)
+        {
+            case Contents.Home:
+                saveData.content = Contents.NpcStory;
+                break;
+            case Contents.NpcStory:
+                saveData.content = Contents.MiniGame;
+                break;
+            case Contents.MiniGame:
+                saveData.content = Contents.MainStory;
+                break;
+            case Contents.MainStory:
+                saveData.content = Contents.Home;
+                saveData.playDay++;
+                break;
+            default:
+                Debug.LogWarning("NextContent() :: saveData.content error");
+                saveData.content = Contents.Home;
+                break;
+        }
+    }
+
+    public void NextDay()
+    {
+
+    }
 }

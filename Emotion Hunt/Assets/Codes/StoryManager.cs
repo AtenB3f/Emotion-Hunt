@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public enum Token
 { 
@@ -487,8 +488,8 @@ public class StoryManager : MonoBehaviour
     {
         ResetToken();
         csvManager.ResetCSV();
-        // 데이터 저장
-        saveManager.SaveData();
-        // scene 이동 : 메인 스토리이면 플레이어 홈으로, 캐릭터 스토리면 미니게임으로
+
+        saveManager.NextContent();
+        SceneManager.LoadScene("MiniGame");
     }
 }

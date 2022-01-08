@@ -39,7 +39,6 @@ public class MainMenuManager : MonoBehaviour
     public const int DEF_MAINMENU_EXIT = 3;
 
     public GameObject MainBtn;      // Play, Collect, Setting, Exit Button (in "TitlePanel"-"ButtonSet")
-    public GameObject SubBtn;       // Setting Icon, Exit Icon Button (in "TitlePanel"-"SubButtonSet")
     public GameObject PlayObj;      // Play Menu Object
     public GameObject SettingObj;   // Setting Menu Object
     public GameObject ExitObj;      // Exit Menu Object
@@ -48,12 +47,10 @@ public class MainMenuManager : MonoBehaviour
     public GameObject SystemPanel;  // System Panel
     private int MainMenuStat;
     private Button[] MainBtnArr;
-    private Button[] SubBtnArr;
 
     void Start()
     {
         MainBtnArr = MainBtn.GetComponentsInChildren<Button>();
-        SubBtnArr = SubBtn.GetComponentsInChildren<Button>();
 
         // Panel Disable
         EnableSystemPanel(false);
@@ -239,7 +236,8 @@ public class MainMenuManager : MonoBehaviour
 
     public void PlayNewGame()
     {
-        SceneManager.LoadScene("NewGame");
+        //SceneManager.LoadScene("NewGame");
+        SceneManager.LoadScene("NpcStory");
     }
 
     public void PlayContinue()

@@ -12,9 +12,8 @@ public class MainTitleIntro : MonoBehaviour
     public GameObject MenuPanel;
     public Image IntroImg;
     public Image TitleImg;
-    public Image BgImg;
+    //public Image BgImg;
     public GameObject Btn;
-    public GameObject SubBtn;
     private VideoPlayer Video;
     //public AudioSource Audio;
 
@@ -92,7 +91,6 @@ public class MainTitleIntro : MonoBehaviour
 
         //Button Fade In
         ButtonFadeIn(Btn);
-        ButtonFadeIn(SubBtn);
 
         yield return null;
     }
