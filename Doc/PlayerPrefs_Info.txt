@@ -8,8 +8,10 @@ AudioBGVolume		[0 ~ 100]				Setting-Audio 배경음 볼륨 크기
 
 
 ------------------------------------------------------------ Play ------------------------------------------------------------
-PlayDay			[0~90]				게임 진행 날짜
+PlayerName		string				플레이어가 입력한 이름
+PlayDay			int				게임 진행 날짜
 PlayPoint			npc story/game/main story		save point
-HuntNPC1		string				공략 NPC
-HuntNPC2		string				공략 NPC
-HuntNPC3		string				공략 NPC
+TargetNPC		string				공략 NPC
+
+------------------------------------------------------------ Save Point ------------------------------------------------------------
+SavePoint1		SaveData Structure			세이브 포인트

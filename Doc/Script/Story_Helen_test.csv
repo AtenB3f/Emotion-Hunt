@@ -18,6 +18,8 @@
 9,1,None,Dialog,,Play,,None,Edwin,Whine,아파요 엄마~!
 9,2,None,Dialog,,Play,,None,Edwin,Smile,하지만 오늘도 건강하시네요!
 9,3,None,Dialog,,Play,,None,Edwin,Default,이따가 밭에 잠깐 들를게요! 이방인 신사분! 나중에 봐요!
+9,1,Love,Dialog,,Play,,None,Player,,Love Test Code
+9,1,Philia,Dialog,,Play,,None,Player,,Philia Test Code
 10,,None,Party,,Remove,,,Edwin,,
 11,1,None,Dialog,,Play,,None,None,,에드윈이라고 불린 남자가 헬렌에게서 벗어나 손키스를 날리며 길 저쪽으로 사라졌다.
 11,1,None,Dialog,,Play,,None,Helen,Sigh,"어휴...미안, 쟤는 우리 아들이란다. 이름은 에드윈. 나이는 비슷해 보이는데 친하게 지내 주렴."
