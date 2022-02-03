@@ -34,8 +34,16 @@ public class CSVManager : MonoBehaviour
     public HashSet<string> hashObj = new HashSet<string>();
     public HashSet<string> hashEffect = new HashSet<string>();
     public HashSet<string> hashBGM = new HashSet<string>();
-    public LinkedList<int> linkSelection = new LinkedList<int>();
 
+    public LinkedList<int> storyNone = new LinkedList<int>();
+    public LinkedList<int> storyLove = new LinkedList<int>();
+    public LinkedList<int> storyPhilia = new LinkedList<int>();
+    public LinkedList<int> storySympathy = new LinkedList<int>();
+    public LinkedList<int> storyLoveAndHate = new LinkedList<int>();
+    public LinkedList<int> storyHate = new LinkedList<int>();
+    public LinkedList<int> storyContempt = new LinkedList<int>();
+
+    public Dictionary<int,string> listSelection = new Dictionary<int,string>();
 
     void Start()
     {
@@ -46,10 +54,9 @@ public class CSVManager : MonoBehaviour
         int playDay = 2;
         //int playDay = saveManager.GetPlayDay();
 
-
         // CSV Read
         //string path = "Script/" + targetNPC + "/Story_" + targetNPC + "_" + playDay.ToString();
-
+        
         // test csv file read
         string path = "Script/" + targetNPC + "/Story_" + targetNPC + "_" + "test";
         storyList = CSVReader.Read(path);
@@ -77,6 +84,14 @@ public class CSVManager : MonoBehaviour
         return false;
     }
 
+    /*
+     * [SetConfig]
+     * 
+     * csv파일을 파싱하고 스크립트 데이터를 구조체에 데이터를 담기 위한 함수.
+     * 
+     * - parameters
+     * index : storyList리스트의 몇 번재 데이터를 읽을 것인지
+     */
     private void SetConfig(int index, ref StoryConfig config)
     {
         if (index < 0 || index >= storyList.Count)
@@ -105,54 +120,104 @@ public class CSVManager : MonoBehaviour
         config.chat = storyList[index]["Chat"].ToString();
     }
 
+    /* 
+     * [Read Story]
+     * 
+     * CSV파일을 읽어 스크립트에 등장하는 파일(배경 이미지, 인물 이미지, 배경 사운드 등) 목록을 파악하기 위한 함수.
+     * 
+     */
     private void ReadStory()
+    {
+        for (int i = 0; i < storyList.Count; i++)
+        {
+            ReadVersion(i);
+            ReadControl(i);
+        }
+    }
+
+    private void ReadVersion(int index)
+    {
+        string version = storyList[index]["Version"].ToString();
+        int nextIndex = int.Parse(storyList[index]["Next Index"].ToString());
+
+        switch (version)
+        {
+            case "None":
+                storyNone.AddLast(nextIndex);
+                storyLove.AddLast(nextIndex);
+                storyPhilia.AddLast(nextIndex);
+                storySympathy.AddLast(nextIndex);
+                storyLoveAndHate.AddLast(nextIndex);
+                storyHate.AddLast(nextIndex);
+                storyContempt.AddLast(nextIndex);
+                break;
+            case "Love":
+                storyLove.AddLast(nextIndex);
+                break;
+            case "Philia":
+                storyPhilia.AddLast(nextIndex);
+                break;
+            case "Symphathy":
+                storySympathy.AddLast(nextIndex);
+                break;
+            case "LoveAndHate":
+                storyLoveAndHate.AddLast(nextIndex);
+                break;
+            case "Hate":
+                storyHate.AddLast(nextIndex);
+                break;
+            case "Comtempt":
+                storyContempt.AddLast(nextIndex);
+                break;
+            default:
+                Debug.LogWarning("ReadVersion :: script version error");
+                break;
+        }
+    }
+
+    private void ReadControl(int index)
     {
         HashSet<string> hashSet;
         string type = "";
+        string control = storyList[index]["Control"].ToString();
 
-        for (int i = 0; i < storyList.Count; i++)
+        switch (control)
         {
-            string control = storyList[i]["Control"].ToString();
-
-            switch (control)
-            {
-                case "Background":
-                    hashSet = hashBG;
-                    hashSet.Add(storyList[i]["Name"].ToString());
-                    break;
-                case "Object":
-                    hashSet = hashObj;
-                    hashSet.Add(storyList[i]["Name"].ToString());
-                    break;
-                case "BGM":
-                    hashSet = hashBGM;
-                    hashSet.Add(storyList[i]["Name"].ToString());
-                    break;
-                case "Effect":
-                    hashSet = hashEffect;
-                    hashSet.Add(storyList[i]["Name"].ToString());
-                    break;
-                case "Dialog":
-                    hashSet = hashNPC;
-                    hashSet.Add(storyList[i]["Name"].ToString());
-                    break;
-                case "Answer":
-                    hashSet = hashNPC;
-                    hashSet.Add(storyList[i]["Name"].ToString());
-                    if (type != storyList[i]["Type"].ToString())
-                    {
-                        type = storyList[i]["Type"].ToString();
-                    }
-                    break;
-                case "Selection":
-                    if (linkSelection.Count == 0)
-                        linkSelection.AddFirst(i);
-                    else
-                        linkSelection.AddLast(i);
-                    break;
-                default:
-                    continue;
-            }
+            case "Background":
+                hashSet = hashBG;
+                hashSet.Add(storyList[index]["Name"].ToString());
+                break;
+            case "Object":
+                hashSet = hashObj;
+                hashSet.Add(storyList[index]["Name"].ToString());
+                break;
+            case "BGM":
+                hashSet = hashBGM;
+                hashSet.Add(storyList[index]["Name"].ToString());
+                break;
+            case "Effect":
+                hashSet = hashEffect;
+                hashSet.Add(storyList[index]["Name"].ToString());
+                break;
+            case "Dialog":
+                hashSet = hashNPC;
+                hashSet.Add(storyList[index]["Name"].ToString());
+                break;
+            case "Answer":
+                hashSet = hashNPC;
+                hashSet.Add(storyList[index]["Name"].ToString());
+                if (type != storyList[index]["Type"].ToString())
+                {
+                    type = storyList[index]["Type"].ToString();
+                }
+                break;
+            case "Selection":
+                string version = storyList[index]["Version"].ToString();
+                listSelection[index] = version;
+                break;
+            default:
+                Debug.LogWarning("ReadControl:: script control name error");
+                break;
         }
     }
 
