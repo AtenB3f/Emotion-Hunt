@@ -6,6 +6,7 @@ public struct StoryConfig
 {
     public int index;
     public int subIndex;
+    public int nextIndex;
     public string version;
     public string ctrl;
     public string subCtrl;
@@ -14,6 +15,7 @@ public struct StoryConfig
     public string emotion;
     public string name;
     public string face;
+    public string image;
     public string chat;
 }
 
@@ -86,6 +88,9 @@ public class CSVManager : MonoBehaviour
         string subIdx = storyList[index]["Sub Index"].ToString();
         if (subIdx != null && subIdx != "")
             config.subIndex = int.Parse(subIdx);
+        string nextIdx = storyList[index]["Next Index"].ToString();
+        if (nextIdx != null && nextIdx != "")
+            config.nextIndex = int.Parse(nextIdx);
         config.version = storyList[index]["Version"].ToString();
         config.ctrl = storyList[index]["Control"].ToString();
         config.subCtrl = storyList[index]["Sub Control"].ToString();
@@ -96,6 +101,7 @@ public class CSVManager : MonoBehaviour
         config.emotion = storyList[index]["Emotion"].ToString();
         config.name = storyList[index]["Name"].ToString();
         config.face = storyList[index]["Face"].ToString();
+        config.face = storyList[index]["Image"].ToString();
         config.chat = storyList[index]["Chat"].ToString();
     }
 
