@@ -30,7 +30,9 @@ public class StoryManager : MonoBehaviour
     SaveManager saveManager;
 
     Token token;
-    
+
+    LinkedList<int> currentStory = new LinkedList<int>();
+
     void Start()
     {
         saveManager = GameObject.Find("Main Camera").GetComponent<SaveManager>();
@@ -43,11 +45,7 @@ public class StoryManager : MonoBehaviour
         audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
 
         LoadFile();
-
-        while(!csvManager.doneLoadStory)
-        {
-            ;
-        }
+        LoadScript();
         LoadStory();
     }
 
@@ -106,6 +104,40 @@ public class StoryManager : MonoBehaviour
 
         foreach (string str in csvManager.hashBGM)
             audioManager.info.LoadBGM(str);
+    }
+
+    private void LoadScript()
+    {
+        string emotion = saveManager.GetTargetEmotion();
+        switch (emotion)
+        {
+            case "Love":
+                currentStory = csvManager.storyLove;
+                break;
+            case "Philia":
+                currentStory = csvManager.storyPhilia;
+                break;
+            case "Sympathy":
+                currentStory = csvManager.storySympathy;
+                break;
+            case "LoveAndHate":
+                currentStory = csvManager.storyLoveAndHate;
+                break;
+            case "Hate":
+                currentStory = csvManager.storyHate;
+                break;
+            case "Contempt":
+                currentStory = csvManager.storyContempt;
+                break;
+            case "None":
+                currentStory = csvManager.storyNone;
+                break;
+            default:
+                currentStory = csvManager.storyNone;
+                Debug.LogError("LoadScript :: "+ emotion);
+                break;
+        }
+
     }
 
     private void SetToken(Token type)

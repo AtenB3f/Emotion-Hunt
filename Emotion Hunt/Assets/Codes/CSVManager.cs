@@ -58,7 +58,7 @@ public class CSVManager : MonoBehaviour
         //string path = "Script/" + targetNPC + "/Story_" + targetNPC + "_" + playDay.ToString();
         
         // test csv file read
-        string path = "Script/" + targetNPC + "/Story_" + targetNPC + "_" + "test";
+        string path = "Script/" + targetNPC + "/Story_" + targetNPC + "_" + "2";
         storyList = CSVReader.Read(path);
 
         ReadStory();
@@ -73,8 +73,7 @@ public class CSVManager : MonoBehaviour
 
     public void SetConfig()
     {
-        SetConfig(listCnt, ref story);          // 해야할 것 
-        SetConfig(listCnt - 1, ref prevStory);  // 했던 것
+        SetConfig(listCnt, ref story);
     }
 
     public bool CheckLast()
@@ -138,7 +137,10 @@ public class CSVManager : MonoBehaviour
     private void ReadVersion(int index)
     {
         string version = storyList[index]["Version"].ToString();
-        int nextIndex = int.Parse(storyList[index]["Next Index"].ToString());
+        int nextIndex = 0;
+        bool num = int.TryParse(storyList[index]["Next Index"].ToString(), out nextIndex);
+        if (!num)
+            return;
 
         switch (version)
         {
@@ -213,7 +215,9 @@ public class CSVManager : MonoBehaviour
                 break;
             case "Selection":
                 string version = storyList[index]["Version"].ToString();
-                listSelection[index] = version;
+                int subIndex = int.Parse(storyList[index]["Sub Index"].ToString());
+                if (subIndex == 1)
+                    listSelection[index] = version;
                 break;
             default:
                 Debug.LogWarning("ReadControl:: script control name error");
@@ -283,9 +287,7 @@ public class CSVManager : MonoBehaviour
 
         int idx = story.index;
         string ctrl = story.ctrl;
-        string type = story.type;
         int prevIdx = prevStory.index;
-        string prevCtrl = prevStory.ctrl;
         string prevType = prevStory.type;
         string version = story.version;
 

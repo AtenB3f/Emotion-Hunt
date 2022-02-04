@@ -200,8 +200,8 @@ public class SaveManager : MonoBehaviour
                 listEqual.Add(i);
             }
         }
-
-        if (equal)
+        
+        if (equal || saveData.playDay <= 16)
         {
             Debug.LogWarning("CheckTargetEmotion :: equal emotion value");
             SetTargetEmotion(Emotion.None);
