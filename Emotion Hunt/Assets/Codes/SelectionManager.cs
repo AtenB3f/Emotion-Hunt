@@ -14,6 +14,7 @@ public enum SelectionBtn
 public class SelectionManager : MonoBehaviour
 {
     SaveManager saveManager;
+    CSVManager csvManager;
     public SelectionInfo info = new SelectionInfo();
 
     public GameObject Selection;
@@ -43,6 +44,7 @@ public class SelectionManager : MonoBehaviour
     void Start()
     {
         saveManager = GameObject.Find("Main Camera").GetComponent<SaveManager>();
+        csvManager = GameObject.Find("Main Camera").GetComponent<CSVManager>();
 
         groupA = A.GetComponentsInChildren<CanvasGroup>();
         groupB = B.GetComponentsInChildren<CanvasGroup>();
@@ -149,6 +151,7 @@ public class SelectionManager : MonoBehaviour
         SelectionConfig config = info.GetConfig(SelectionBtn.BUTTON_A);
         saveManager.AddValueEmotion(config);
         OffSelection();
+        csvManager.SetNextStory(config.index);
         info.SetToken(Token.None);
     }
     public void SelectOptionB()
@@ -157,6 +160,7 @@ public class SelectionManager : MonoBehaviour
         SelectionConfig config = info.GetConfig(SelectionBtn.BUTTON_B);
         saveManager.AddValueEmotion(config);
         OffSelection();
+        csvManager.SetNextStory(config.index);
         info.SetToken(Token.None);
     }
     public void SelectOptionC()
@@ -165,6 +169,7 @@ public class SelectionManager : MonoBehaviour
         SelectionConfig config = info.GetConfig(SelectionBtn.BUTTON_C);
         saveManager.AddValueEmotion(config);
         OffSelection();
+        csvManager.SetNextStory(config.index);
         info.SetToken(Token.None);
     }
 
@@ -180,6 +185,7 @@ public struct SelectionConfig
 {
     public Emotion emotion;
     public int value;
+    public int index;
 }
 
 public class SelectionInfo
@@ -188,6 +194,7 @@ public class SelectionInfo
     public bool OnOff = false;
     SelectionBtn selectBtn = 0;
     string selectBtnStr = "";
+    public int listCntSelection = 0;
     SelectionConfig[] selConfig = new SelectionConfig[3];
 
     public void SetToken(Token type)
@@ -200,10 +207,11 @@ public class SelectionInfo
         return token;
     }
 
-    public void SetConfig(SelectionBtn btn, string emotion, int value)
+    public void SetConfig(SelectionBtn btn, string emotion, int value, int index)
     {
         int idx = (int)btn;
         selConfig[idx].value = value;
+        selConfig[idx].index = index;
         switch (emotion)
         {
             case "Love":
@@ -236,6 +244,7 @@ public class SelectionInfo
 
         config.emotion = selConfig[(int)btn].emotion;
         config.value = selConfig[(int)btn].value;
+        config.index = selConfig[(int)btn].index;
 
         return config;
     }

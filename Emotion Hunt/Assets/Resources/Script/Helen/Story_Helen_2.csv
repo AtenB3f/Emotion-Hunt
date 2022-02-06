@@ -1,40 +1,40 @@
 ﻿Index,Sub Index,Next Index,Version,Control,Sub Control,Type,Value,Emotion,Name,Face,Image,Chat
-1,,2,None,Background,,On,,,Market,,,
-2,,3,None,Effect,,On,,,Murmur,,,
-3,,4,None,Effect,,On,,,Running_Footsteps_Road,,,
-4,,5,None,Dialog,Unknown,On,,None,Edwin,Default,Edwin_Basic_Default,
-5,1,6,None,Dialog,Unknown,Play,,None,Edwin,Default,Edwin_Basic_Default,"저기 저기, 신사분~? 헉, 헉."
-6,2,7,None,Dialog,Unknown,Play,,None,Edwin,Default,Edwin_Basic_Default,다리가 길어서 그런가 걸음이 빠르시네요.
-7,1,8,None,Dialog,,Play,,None,Player,,,(누구지? 일단 위험 인물은 아닌 것 같다.)
-8,1,9,None,Dialog,Unknown,Play,,None,Edwin,Smile,Edwin_Basic_Smile,"그 옷 정말 멋진데, 어디서 구했나요?"
-9,2,10,None,Dialog,Unknown,Play,,None,Edwin,Default,Edwin_Basic_Default,당신은 외부인이니까 분명 멋들어진 상점에서 산 거겠죠? 이 단추와….
-10,,11,None,Party,,Add,,,Helen,Angry,Helen_Basic_Angry,
-11,1,12,None,Dialog,,Shake,,None,Helen,Angry,Helen_Basic_Angry,에드윈~~!!
-12,,13,None,Effect,,Play,,,Impact_Slap,,,
-13,1,14,None,Dialog,,Play,,None,Edwin,Whine,Edwin_Basic_Whine,악! 엄마! 아! 
-14,2,15,None,Dialog,,Play,,None,Edwin,Whine,Edwin_Basic_Whine,제발 머리카락만큼은 놔둬 주세요. 아침에 공들여 세팅한….아얏!
-15,1,16,None,Dialog,,Play,,None,Player,,,(헬렌이 남자의 머리를 세게 주먹으로 쳤다.
-16,2,17,None,Dialog,,Play,,None,Player,,,저게 꿀밤이라고 불리는 행위인 것 같다.)
-17,1,18,None,Dialog,,Play,,None,Edwin,Whine,Edwin_Basic_Whine,아파요 엄마~!
-18,2,19,None,Dialog,,Play,,None,Edwin,Smile,Edwin_Basic_Smile,하지만 오늘도 건강하시네요!
-19,3,20,None,Dialog,,Play,,None,Edwin,Default,Edwin_Basic_Default,이따가 밭에 잠깐 들를게요! 이방인 신사분! 나중에 봐요!
-20,,21,None,Party,,Remove,,,Edwin,,,
-21,1,22,None,Dialog,,Play,,None,None,,,에드윈이라고 불린 남자가 헬렌에게서 벗어나 손키스를 날리며 길 저쪽으로 사라졌다.
-22,1,23,None,Dialog,,Play,,None,Helen,Sigh,Helen_Basic_Sigh,"어휴...미안, 쟤는 우리 아들이란다. 이름은 에드윈. 나이는 비슷해 보이는데 친하게 지내 주렴."
-23,2,24,None,Dialog,,Play,,None,Helen,Default,Helen_Basic_Default,바깥양반은 이름이 빌츠라고 해. 무뚝뚝한 양반이지만 다정하단다. 후후. 
-24,1,25,None,Selection,None,A,2,Philia,,,,헬렌과 많이 닮았네요
-25,2,26,None,Selection,None,B,3,Philia,,,,아버지와 더 닮았나요? 
-26,3,27,None,Selection,None,C,1,Philia,,,,아드님이 잘생기셨네요
-27,1,28,None,Answer,,A,,None,Player,,,헬렌과 많이 닮았네요.
-28,1,29,None,Answer,,A,,None,Helen,Expressionless,Helen_Basic_Expressinless,...그렇니? 나는 어릴 적부터 저렇게 촐싹대진 않았는데 말야. 
-29,1,30,None,Answer,,B,,None,Player,,,아버지와 더 닮았나요?
-30,1,31,None,Answer,,B,,None,Helen,Default,Helen_Basic_Default,"아니, 빌츠와는 하나도 닮지 않았어."
-31,2,32,None,Answer,,B,,None,Helen,Smile,Helen_Basic_Smile,그래도 성격은 좋아.
-32,1,33,None,Answer,,C,,None,Player,,,아드님이 잘 생기셨네요.
-33,1,34,None,Answer,,C,,None,Helen,Default,Helen_Basic_Default,그런가? 잘 생기면 뭘 하니. 실속이 없는 걸. 
-34,,35,None,Delay,,,1,,,,,
-35,1,36,None,Dialog,,Play,,None,Helen,Default,Helen_Basic_Default,"어머, 내 정신 좀 봐. 밭일도 안 끝내고 장을 보러 와 버렸지 뭐니."
-36,2,37,None,Dialog,,Play,,None,Helen,Default,Helen_Basic_Default,네가 충분히 할 수 있는 일이니 밭일 좀 거들어 주겠니?
-37,1,38,None,Dialog,,Play,,None,Player,,,"네, 좋아요."
-38,1,39,None,Dialog,,Play,,None,Helen,Smile,Helen_Basic_Smile,그럼 맡길게. 이따 보자꾸나~
-39,,,None,Dialog,,Off,,,,,,
+0,,1,None,Background,,On,,,Market,,,
+1,,2,None,Effect,,On,,,Murmur,,,
+2,,3,None,Effect,,On,,,Running_Footsteps_Road,,,
+3,,4,None,Dialog,Unknown,On,,None,Edwin,Default,Edwin_Basic_Default,
+4,1,5,None,Dialog,Unknown,Play,,None,Edwin,Default,Edwin_Basic_Default,"저기 저기, 신사분~? 헉, 헉."
+5,2,6,None,Dialog,Unknown,Play,,None,Edwin,Default,Edwin_Basic_Default,다리가 길어서 그런가 걸음이 빠르시네요.
+6,1,7,None,Dialog,,Play,,None,Player,,,(누구지? 일단 위험 인물은 아닌 것 같다.)
+7,1,8,None,Dialog,Unknown,Play,,None,Edwin,Smile,Edwin_Basic_Smile,"그 옷 정말 멋진데, 어디서 구했나요?"
+8,2,9,None,Dialog,Unknown,Play,,None,Edwin,Default,Edwin_Basic_Default,당신은 외부인이니까 분명 멋들어진 상점에서 산 거겠죠? 이 단추와….
+9,,10,None,Party,,Add,,,Helen,Angry,Helen_Basic_Angry,
+10,1,11,None,Dialog,,Shake,,None,Helen,Angry,Helen_Basic_Angry,에드윈~~!!
+11,,12,None,Effect,,Play,,,Impact_Slap,,,
+12,1,13,None,Dialog,,Play,,None,Edwin,Whine,Edwin_Basic_Whine,악! 엄마! 아! 
+13,2,14,None,Dialog,,Play,,None,Edwin,Whine,Edwin_Basic_Whine,제발 머리카락만큼은 놔둬 주세요. 아침에 공들여 세팅한….아얏!
+14,1,15,None,Dialog,,Play,,None,Player,,,(헬렌이 남자의 머리를 세게 주먹으로 쳤다.
+15,2,16,None,Dialog,,Play,,None,Player,,,저게 꿀밤이라고 불리는 행위인 것 같다.)
+16,1,17,None,Dialog,,Play,,None,Edwin,Whine,Edwin_Basic_Whine,아파요 엄마~!
+17,2,18,None,Dialog,,Play,,None,Edwin,Smile,Edwin_Basic_Smile,하지만 오늘도 건강하시네요!
+18,3,19,None,Dialog,,Play,,None,Edwin,Default,Edwin_Basic_Default,이따가 밭에 잠깐 들를게요! 이방인 신사분! 나중에 봐요!
+19,,20,None,Party,,Remove,,,Edwin,,,
+20,1,21,None,Dialog,,Play,,None,None,,,에드윈이라고 불린 남자가 헬렌에게서 벗어나 손키스를 날리며 길 저쪽으로 사라졌다.
+21,1,22,None,Dialog,,Play,,None,Helen,Sigh,Helen_Basic_Sigh,"어휴...미안, 쟤는 우리 아들이란다. 이름은 에드윈. 나이는 비슷해 보이는데 친하게 지내 주렴."
+22,2,23,None,Dialog,,Play,,None,Helen,Default,Helen_Basic_Default,바깥양반은 이름이 빌츠라고 해. 무뚝뚝한 양반이지만 다정하단다. 후후. 
+23,1,26,None,Selection,None,A,2,Philia,,,,헬렌과 많이 닮았네요
+24,2,28,None,Selection,None,B,3,Philia,,,,아버지와 더 닮았나요? 
+25,3,31,None,Selection,None,C,1,Philia,,,,아드님이 잘생기셨네요
+26,1,27,None,Answer,,A,,None,Player,,,헬렌과 많이 닮았네요.
+27,1,33,None,Answer,,A,,None,Helen,Expressionless,Helen_Basic_Expressinless,...그렇니? 나는 어릴 적부터 저렇게 촐싹대진 않았는데 말야. 
+28,1,29,None,Answer,,B,,None,Player,,,아버지와 더 닮았나요?
+29,1,30,None,Answer,,B,,None,Helen,Default,Helen_Basic_Default,"아니, 빌츠와는 하나도 닮지 않았어."
+30,2,33,None,Answer,,B,,None,Helen,Smile,Helen_Basic_Smile,그래도 성격은 좋아.
+31,1,32,None,Answer,,C,,None,Player,,,아드님이 잘 생기셨네요.
+32,1,33,None,Answer,,C,,None,Helen,Default,Helen_Basic_Default,그런가? 잘 생기면 뭘 하니. 실속이 없는 걸. 
+33,,34,None,Delay,,,1,,,,,
+34,1,35,None,Dialog,,Play,,None,Helen,Default,Helen_Basic_Default,"어머, 내 정신 좀 봐. 밭일도 안 끝내고 장을 보러 와 버렸지 뭐니."
+35,2,36,None,Dialog,,Play,,None,Helen,Default,Helen_Basic_Default,네가 충분히 할 수 있는 일이니 밭일 좀 거들어 주겠니?
+36,1,37,None,Dialog,,Play,,None,Player,,,"네, 좋아요."
+37,1,38,None,Dialog,,Play,,None,Helen,Smile,Helen_Basic_Smile,그럼 맡길게. 이따 보자꾸나~
+38,,,None,Dialog,,Off,,,,,,

@@ -23,7 +23,6 @@ public class CSVManager : MonoBehaviour
 {
     public SaveManager saveManager;
 
-    public bool doneLoadStory = false;
     public StoryConfig prevStory;
     public StoryConfig story;
     List<Dictionary<string, object>> storyList;
@@ -35,6 +34,8 @@ public class CSVManager : MonoBehaviour
     public HashSet<string> hashEffect = new HashSet<string>();
     public HashSet<string> hashBGM = new HashSet<string>();
 
+    private LinkedListNode<int> currentStoryNode;
+    public LinkedList<int> currentStory = new LinkedList<int>();
     public LinkedList<int> storyNone = new LinkedList<int>();
     public LinkedList<int> storyLove = new LinkedList<int>();
     public LinkedList<int> storyPhilia = new LinkedList<int>();
@@ -62,17 +63,6 @@ public class CSVManager : MonoBehaviour
         storyList = CSVReader.Read(path);
 
         ReadStory();
-        SetConfig();
-        doneLoadStory = true;
-    }
-
-    void Update()
-    {
-        
-    }
-
-    public void SetConfig()
-    {
         SetConfig(listCnt, ref story);
     }
 
@@ -91,10 +81,12 @@ public class CSVManager : MonoBehaviour
      * - parameters
      * index : storyList리스트의 몇 번재 데이터를 읽을 것인지
      */
-    private void SetConfig(int index, ref StoryConfig config)
+    public void SetConfig(int index, ref StoryConfig config)
     {
         if (index < 0 || index >= storyList.Count)
             return;
+
+        prevStory = story;
 
         string idx = storyList[index]["Index"].ToString();
         if (idx != null && idx != "")
@@ -115,15 +107,13 @@ public class CSVManager : MonoBehaviour
         config.emotion = storyList[index]["Emotion"].ToString();
         config.name = storyList[index]["Name"].ToString();
         config.face = storyList[index]["Face"].ToString();
-        config.face = storyList[index]["Image"].ToString();
+        config.image = storyList[index]["Image"].ToString();
         config.chat = storyList[index]["Chat"].ToString();
     }
 
     /* 
      * [Read Story]
-     * 
-     * CSV파일을 읽어 스크립트에 등장하는 파일(배경 이미지, 인물 이미지, 배경 사운드 등) 목록을 파악하기 위한 함수.
-     * 
+     * CSV파일을 읽어서 대화와 사용되는 이미지,오디오 파일을 파악하는 함수.
      */
     private void ReadStory()
     {
@@ -134,6 +124,10 @@ public class CSVManager : MonoBehaviour
         }
     }
 
+    /*
+     * [ReadVersion]
+     * 감정별로 시나리오 데이터를 연결리스트에 데이터를 저장하는 함수.
+     */
     private void ReadVersion(int index)
     {
         string version = storyList[index]["Version"].ToString();
@@ -177,6 +171,10 @@ public class CSVManager : MonoBehaviour
         }
     }
 
+    /*
+     * [ReadControl]
+     * CSV파일을 읽어 스크립트에 등장하는 파일(배경 이미지, 인물 이미지, 배경 사운드 등) 목록을 파악하기 위한 함수.
+     */
     private void ReadControl(int index)
     {
         HashSet<string> hashSet;
@@ -225,37 +223,34 @@ public class CSVManager : MonoBehaviour
         }
     }
 
-    private void IncreaseCount()
+    /*
+     * [SetNextStory]
+     * 다음 스크립트를 세팅해주는 함수.
+     */
+    public void SetNextStory()
     {
-        if (listCnt >= storyList.Count)
-            return;
-        
-        listCnt++;
-        SetConfig();
-    }
-
-    private void DecreaseCount()
-    {
-        if (listCnt <= 0)
+        if (CheckLast())
             return;
 
-        listCnt--;
-        SetConfig();
-    }
-
-    // Answer of seleted type (After Seleted)
-    public void NextSelectionDialog(string type, int idxSelection)
-    {
-        if (story.type != type)
+        if (currentStory == null)
         {
-            IncreaseCount();
-            NextSelectionDialog(type, idxSelection);
-        }
-        else
-        {
-            SetConfig(idxSelection, ref prevStory);
+            Debug.LogError("SetNextStory :: Not setting current sotry");
             return;
         }
+
+        if (currentStoryNode == null)
+            currentStoryNode = currentStory.First;
+
+        listCnt = currentStoryNode.Value;
+        currentStoryNode = currentStoryNode.Next;
+        SetConfig(listCnt, ref story);
+    }
+
+    public void SetNextStory(int index)
+    {
+        listCnt = index;
+        currentStoryNode = currentStory.Find(index);
+        SetConfig(listCnt, ref story);
     }
 
     // Find the index after answer done
@@ -263,16 +258,11 @@ public class CSVManager : MonoBehaviour
     {
         if (story.ctrl == "Answer")
         {
-            IncreaseCount();
+            SetNextStory();
             NextDialog(type);
         }
         else
             return;
-    }
-
-    public void CurrentStory()
-    {
-        IncreaseCount();
     }
 
     public void ResetCSV()
@@ -282,14 +272,14 @@ public class CSVManager : MonoBehaviour
 
     public Token NextToken()
     {
-        if (storyList.Count <= (listCnt))
+        if (CheckLast())
             return Token.None;
 
         int idx = story.index;
         string ctrl = story.ctrl;
+        string version = story.version;
         int prevIdx = prevStory.index;
         string prevType = prevStory.type;
-        string version = story.version;
 
         //세이브 매니저에서 불러오기
         string npcVersion = "None";
@@ -299,8 +289,6 @@ public class CSVManager : MonoBehaviour
             if (ctrl == "Dialog" || ctrl == "Answer")
             {
                 if (prevType == "On" || prevType == "Off")
-                    return Token.None;
-                else if (idx != prevIdx)
                     return Token.None;
                 else
                     return Token.Input;

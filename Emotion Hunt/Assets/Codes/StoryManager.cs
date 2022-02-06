@@ -31,8 +31,6 @@ public class StoryManager : MonoBehaviour
 
     Token token;
 
-    LinkedList<int> currentStory = new LinkedList<int>();
-
     void Start()
     {
         saveManager = GameObject.Find("Main Camera").GetComponent<SaveManager>();
@@ -112,32 +110,31 @@ public class StoryManager : MonoBehaviour
         switch (emotion)
         {
             case "Love":
-                currentStory = csvManager.storyLove;
+                csvManager.currentStory = csvManager.storyLove;
                 break;
             case "Philia":
-                currentStory = csvManager.storyPhilia;
+                csvManager.currentStory = csvManager.storyPhilia;
                 break;
             case "Sympathy":
-                currentStory = csvManager.storySympathy;
+                csvManager.currentStory = csvManager.storySympathy;
                 break;
             case "LoveAndHate":
-                currentStory = csvManager.storyLoveAndHate;
+                csvManager.currentStory = csvManager.storyLoveAndHate;
                 break;
             case "Hate":
-                currentStory = csvManager.storyHate;
+                csvManager.currentStory = csvManager.storyHate;
                 break;
             case "Contempt":
-                currentStory = csvManager.storyContempt;
+                csvManager.currentStory = csvManager.storyContempt;
                 break;
             case "None":
-                currentStory = csvManager.storyNone;
+                csvManager.currentStory = csvManager.storyNone;
                 break;
             default:
-                currentStory = csvManager.storyNone;
+                csvManager.currentStory = csvManager.storyNone;
                 Debug.LogError("LoadScript :: "+ emotion);
                 break;
         }
-
     }
 
     private void SetToken(Token type)
@@ -183,8 +180,6 @@ public class StoryManager : MonoBehaviour
             case Token.Selection:
                 if (selectionManager.info.ReadToken() == Token.None || selectionManager.info.ReadToken() == Token.Input)
                 {
-                    string btn = selectionManager.info.GetSelectButtonString();
-                    csvManager.NextSelectionDialog(btn, csvManager.listCnt-1);
                     token = csvManager.NextToken();
                 }
                 break;
@@ -218,16 +213,14 @@ public class StoryManager : MonoBehaviour
             return;
         }
 
-        if(ActiveStory())
-            csvManager.CurrentStory();
+        ActiveStory();
+        csvManager.SetNextStory();
     }
 
-    bool ActiveStory ()
+    void ActiveStory ()
     {
-        bool addCnt = true;
-
-        if (!CheckVersion(csvManager.story.version))
-            return addCnt;
+        //if (!CheckVersion(csvManager.story.version))
+            //return addCnt;
 
         switch (csvManager.story.ctrl)
         {
@@ -253,7 +246,7 @@ public class StoryManager : MonoBehaviour
                 CtrlDialog();
                 break;
             case "Answer":
-                addCnt = CtrlAnswer();
+                CtrlAnswer();
                 break;
             case "Delay":
                 CtrlDelay();
@@ -262,7 +255,6 @@ public class StoryManager : MonoBehaviour
                 print("Error csv active stroy. Control name :: " + csvManager.story.ctrl);
                 break;
         }
-        return addCnt;
     }
 
     void CtrlBackground()
@@ -365,24 +357,26 @@ public class StoryManager : MonoBehaviour
     {
         SetToken(Token.Selection);
 
-        string emotion = csvManager.story.emotion;
-        int val = csvManager.story.value;
-        string version = csvManager.story.version;
-
-        if (csvManager.story.version == version || csvManager.story.version == "None")
+        int count = csvManager.listCnt;
+        for(int i = 0; i<3; i++)
         {
+            csvManager.SetNextStory(count + i);
+
+            string emotion = csvManager.story.emotion;
+            int val = csvManager.story.value;
+
             switch (csvManager.story.type)
             {
                 case "A":
-                    selectionManager.info.SetConfig(SelectionBtn.BUTTON_A, emotion, val);
+                    selectionManager.info.SetConfig(SelectionBtn.BUTTON_A, emotion, val, csvManager.story.nextIndex);
                     selectionManager.UpdateText(SelectionBtn.BUTTON_A, csvManager.story.chat);
                     break;
                 case "B":
-                    selectionManager.info.SetConfig(SelectionBtn.BUTTON_B, emotion, val);
+                    selectionManager.info.SetConfig(SelectionBtn.BUTTON_B, emotion, val, csvManager.story.nextIndex);
                     selectionManager.UpdateText(SelectionBtn.BUTTON_B, csvManager.story.chat);
                     break;
                 case "C":
-                    selectionManager.info.SetConfig(SelectionBtn.BUTTON_C, emotion, val);
+                    selectionManager.info.SetConfig(SelectionBtn.BUTTON_C, emotion, val, csvManager.story.nextIndex);
                     selectionManager.UpdateText(SelectionBtn.BUTTON_C, csvManager.story.chat);
                     if (selectionManager.info.OnOff == false)
                         selectionManager.OnSelection();
@@ -391,11 +385,7 @@ public class StoryManager : MonoBehaviour
                     print("CtrlParty. Type name :: " + csvManager.story.type);
                     break;
             }
-        } else
-        {
-            SetToken(Token.None);
-        }
-             
+        }  
     }
     void SetName()
     {
@@ -478,10 +468,8 @@ public class StoryManager : MonoBehaviour
         }
     }
 
-    bool CtrlAnswer()
+    void CtrlAnswer()
     {
-        bool addCnt = true;
-
         SelectionBtn btn = selectionManager.info.GetSelectButton();
         SelectionConfig config = selectionManager.info.GetConfig(btn);
         string type = selectionManager.info.GetSelectButtonString();
@@ -489,16 +477,13 @@ public class StoryManager : MonoBehaviour
         SetToken(Token.Answer);
 
         // A / B / C
-        if (csvManager.story.type == type)
+        SetDIalog();
+
+        if (csvManager.story.type != type)
         {
-            SetDIalog();
-        } else
-        {
-            csvManager.NextDialog(csvManager.story.type);
-            ResetToken();
-            addCnt = false;
+            Debug.LogWarning("CtrlAnswer:: script error. Anwer is different type.");
+            Debug.LogWarning(csvManager.story.index + "   " + csvManager.story.nextIndex);
         }
-        return addCnt;
     }
 
     void CtrlDelay()
