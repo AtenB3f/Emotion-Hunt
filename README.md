@@ -22,7 +22,7 @@ SCM : Trello
 <br>
 - Leader : **AtenB** <br>
 - Developer : **AtenB , Doby** <br>
-- Screenwriter : **페어리 참,** <br>
+- Screenwriter : **페어리 참, 도로** <br>
 - UX/UI : **민물장어** <br>
 - Audio : **Doby** <br>
 <br>
@@ -40,6 +40,11 @@ SCM : Trello
 메인 타이틀 일러스트
 NPC 캐릭터 디자인
 NPC 일러스트 작업
+```
+:black_nib: Scenario
+```sh
+세계관 설정
+NPC 시나리오
 ```
 
 ### [Doby](https://github.com/treasure-shun)
@@ -59,7 +64,7 @@ NPC BGM 작곡
 :black_nib: Scenario
 ```sh
 세계관 설정
-NPC 헬렌 시나리오
+NPC 시나리오
 ```
 
 ### 도로
@@ -67,19 +72,20 @@ NPC 헬렌 시나리오
 :black_nib: Scenario
 ```sh
 세계관 설정
-NPC 에드윈 시나리오
+NPC 시나리오
 ```
 
 ### 민물장어
 :e-mail: E-Mail : qkr1790@gmail.com <br>
 :black_nib: UX/UI
 ```sh
-Emotion Hunt 로고 디자인  
-대화창 UI 디자인  
+로고 디자인  
+UI 디자인  
 ```
 
 ## ![Emotion_Hunt_Icon_Round_32](https://user-images.githubusercontent.com/69495341/137141567-23e382ab-0924-4c47-a6e2-33148bfa8d6e.png) Overview
 ### Screen Shot
+<img width="960" alt="KakaoTalk_20220205_215247421" src="https://user-images.githubusercontent.com/69495341/152642936-8fb15840-3c06-43a3-aedf-32d5d86c9c58.png">
 <img width="960" alt="KakaoTalk_20211204_131951926" src="https://user-images.githubusercontent.com/69495341/147758463-19ae37f5-bd76-4d7a-bd25-2f4eba55cd6d.png">
 <img width="960" alt="KakaoTalk_20211204_131951671" src="https://user-images.githubusercontent.com/69495341/147758453-f92e6557-b167-4857-9dfe-487c2a6f82d1.png">
 
