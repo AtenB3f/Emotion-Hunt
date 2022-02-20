@@ -94,19 +94,18 @@ public class CharacterManager : MonoBehaviour
         return 0;
     }
 
-    public void SetCharacter(string name, string face)
+    public void SetCharacter(string name, string fileName)
     {
         if (name == "" || name == "Player" || name == "None")
             return;
 
-        Sprite img = info.GetCharacter(name, face) as Sprite;
+        Sprite img = info.GetCharacter(fileName) as Sprite;
 
         int idx = info.CheckMember(name);
 
         // No Setting Member
         if (idx >= MAX_NPC)
             idx = AddMember(name);
-
 
         switch(idx)
         {
@@ -188,6 +187,9 @@ public class CharacterManager : MonoBehaviour
         {
             int i = (int)npc.index;
             NPC[i].SetNativeSize();
+            float w = NPC[i].rectTransform.rect.width * (float)0.5;
+            float h = NPC[i].rectTransform.rect.height * (float)0.5;
+            NPC[i].rectTransform.sizeDelta = new Vector2(w, h);
         }
     }
     
@@ -288,25 +290,22 @@ public class CharacerInfo
         characters.Clear();
     }
 
-    public Sprite GetCharacter(string name, string face)
+    public Sprite GetCharacter(string fileName)
     {
-        string key = name + "_" + face;
-        return fileCharacter[key];
+        return fileCharacter[fileName];
     }
 
     public void LoadCharacter(string name)
     {
         if (name == "" || name == "Player")
             return;
-        string path = "Image/NPC/" + name + "/" + "Basic";
-        Sprite[] sprites = Resources.LoadAll<Sprite>(path) as Sprite[];
-        for(int i=0; i<sprites.Length; i++)
-        {
-            string key = sprites[i].name;
-            fileCharacter.Add(key, sprites[i]);
-        }
-    }
 
+        string path = "Image/NPC/" + name + "/";
+        Sprite[] sprites = Resources.LoadAll<Sprite>(path) as Sprite[];
+
+        foreach (Sprite img in sprites)
+            fileCharacter.Add(img.name, img);
+    }
 }
 
 public enum Emotion 

@@ -354,7 +354,7 @@ public class StoryManager : MonoBehaviour
         switch (csvManager.story.type)
         {
             case "Add":
-                characterManager.SetCharacter(csvManager.story.name, csvManager.story.face);
+                characterManager.SetCharacter(csvManager.story.name, csvManager.story.image);
                 break;
             case "Remove":
                 int idxRmv = characterManager.RemoveParty(csvManager.story.name);
@@ -417,8 +417,8 @@ public class StoryManager : MonoBehaviour
     void SetCharacter()
     {
         string name = csvManager.story.name;
-        string face = csvManager.story.face;
-        characterManager.SetCharacter(name, face);
+        string file = csvManager.story.image;
+        characterManager.SetCharacter(name, file);
     }
     void SetDIalog()
     {
