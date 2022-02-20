@@ -34,7 +34,7 @@ public class CSVManager : MonoBehaviour
     public HashSet<string> hashEffect = new HashSet<string>();
     public HashSet<string> hashBGM = new HashSet<string>();
 
-    private LinkedListNode<int> currentStoryNode;
+    private LinkedListNode<int> nextStoryNode;
     public LinkedList<int> currentStory = new LinkedList<int>();
     public LinkedList<int> storyNone = new LinkedList<int>();
     public LinkedList<int> storyLove = new LinkedList<int>();
@@ -109,6 +109,37 @@ public class CSVManager : MonoBehaviour
         config.face = storyList[index]["Face"].ToString();
         config.image = storyList[index]["Image"].ToString();
         config.chat = storyList[index]["Chat"].ToString();
+    }
+
+    public StoryConfig? GetConfig(int index)
+    {
+        StoryConfig config = new StoryConfig();
+        if (index < 0 || index >= storyList.Count)
+            return null;
+
+        string idx = storyList[index]["Index"].ToString();
+        if (idx != null && idx != "")
+            config.index = int.Parse(idx);
+        string subIdx = storyList[index]["Sub Index"].ToString();
+        if (subIdx != null && subIdx != "")
+            config.subIndex = int.Parse(subIdx);
+        string nextIdx = storyList[index]["Next Index"].ToString();
+        if (nextIdx != null && nextIdx != "")
+            config.nextIndex = int.Parse(nextIdx);
+        config.version = storyList[index]["Version"].ToString();
+        config.ctrl = storyList[index]["Control"].ToString();
+        config.subCtrl = storyList[index]["Sub Control"].ToString();
+        config.type = storyList[index]["Type"].ToString();
+        string val = storyList[index]["Value"].ToString();
+        if (val != null && val != "")
+            config.value = int.Parse(val);
+        config.emotion = storyList[index]["Emotion"].ToString();
+        config.name = storyList[index]["Name"].ToString();
+        config.face = storyList[index]["Face"].ToString();
+        config.image = storyList[index]["Image"].ToString();
+        config.chat = storyList[index]["Chat"].ToString();
+
+        return config;
     }
 
     /* 
@@ -238,31 +269,30 @@ public class CSVManager : MonoBehaviour
             return;
         }
 
-        if (currentStoryNode == null)
-            currentStoryNode = currentStory.First;
-
-        listCnt = currentStoryNode.Value;
-        currentStoryNode = currentStoryNode.Next;
-        SetConfig(listCnt, ref story);
+        if (nextStoryNode == null)
+        {
+            listCnt = 0;
+            SetConfig(listCnt, ref story);
+            nextStoryNode = currentStory.First;
+        }
+        else
+        {
+            listCnt = nextStoryNode.Value;
+            SetConfig(listCnt, ref story);
+            nextStoryNode = currentStory.Find(story.nextIndex);
+        }
     }
 
+    /*
+     * [ SetNextStory ]
+     * 인덱스에 해당하는 스크립트를 동작시키기 위한 함수.
+     * 선택한 선택지에 맞는 스크립트를 재생하기 위해 사용한다.
+     */
     public void SetNextStory(int index)
     {
         listCnt = index;
-        currentStoryNode = currentStory.Find(index);
         SetConfig(listCnt, ref story);
-    }
-
-    // Find the index after answer done
-    public void NextDialog(string type)
-    {
-        if (story.ctrl == "Answer")
-        {
-            SetNextStory();
-            NextDialog(type);
-        }
-        else
-            return;
+        nextStoryNode = currentStory.Find(story.nextIndex);
     }
 
     public void ResetCSV()
@@ -275,33 +305,31 @@ public class CSVManager : MonoBehaviour
         if (CheckLast())
             return Token.None;
 
-        int idx = story.index;
-        string ctrl = story.ctrl;
-        string version = story.version;
-        int prevIdx = prevStory.index;
-        string prevType = prevStory.type;
+        StoryConfig? config = GetConfig(listCnt+1);
 
-        //세이브 매니저에서 불러오기
-        string npcVersion = "None";
-
-        if (version == "None" || version == npcVersion)
+        if (config == null)
         {
-            if (ctrl == "Dialog" || ctrl == "Answer")
-            {
-                if (prevType == "On" || prevType == "Off")
-                    return Token.None;
-                else
-                    return Token.Input;
-            }
-            else if (ctrl == "Party")
-            {
-                return Token.Input;
-            }
-            else
-                return Token.None;
-        } else
-        {
+            Debug.LogWarning("NextToken :: last listCnt");
             return Token.None;
         }
+        
+        // test 세이브 매니저에서 불러오기
+        string npcVersion = "None";
+        string prevType = story.type;
+
+        // 실행했던 동작이 무엇인지
+        if ( config.Value.ctrl == "Dialog" || config.Value.ctrl == "Answer")
+        {
+            if (prevType == "On" || prevType == "Off")
+                return Token.None;
+            else
+                return Token.Input;
+        }
+        else if (config.Value.ctrl == "Party")
+        {
+            return Token.Input;
+        }
+        else
+            return Token.None;
     }
 }

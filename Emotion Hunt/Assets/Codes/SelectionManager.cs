@@ -152,7 +152,6 @@ public class SelectionManager : MonoBehaviour
         saveManager.AddValueEmotion(config);
         OffSelection();
         csvManager.SetNextStory(config.index);
-        info.SetToken(Token.None);
     }
     public void SelectOptionB()
     {
@@ -161,7 +160,6 @@ public class SelectionManager : MonoBehaviour
         saveManager.AddValueEmotion(config);
         OffSelection();
         csvManager.SetNextStory(config.index);
-        info.SetToken(Token.None);
     }
     public void SelectOptionC()
     {
@@ -170,7 +168,6 @@ public class SelectionManager : MonoBehaviour
         saveManager.AddValueEmotion(config);
         OffSelection();
         csvManager.SetNextStory(config.index);
-        info.SetToken(Token.None);
     }
 
     bool firstHighlight = false;

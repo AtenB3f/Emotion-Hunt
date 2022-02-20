@@ -62,11 +62,8 @@ public class StoryManager : MonoBehaviour
             print("system menu");
             // System 메뉴
         }
-
-        if ((token == Token.Selection) && (selectionManager.info.OnOff == false))
-        {
-            LoadStory();
-        } else if (token == Token.Input)
+        
+        if (token == Token.Input)
         {
             //test code
             if (Input.GetKeyUp(KeyCode.Backspace))
@@ -81,6 +78,11 @@ public class StoryManager : MonoBehaviour
         else if(token == Token.None)
         {
             LoadStory();
+        }
+        else if (token == Token.Selection)
+        {
+            if (selectionManager.info.OnOff == false)
+                ActiveStory();
         }
     }
 
@@ -212,9 +214,22 @@ public class StoryManager : MonoBehaviour
             EndStory();
             return;
         }
-
-        ActiveStory();
         csvManager.SetNextStory();
+        ActiveStory();
+    }
+
+    void LoadStory(int index)
+    {
+        // End Story
+        if (csvManager.CheckLast())
+        {
+            print("End Story");
+            //delay
+            EndStory();
+            return;
+        }
+        csvManager.SetConfig(index, ref csvManager.story);
+        ActiveStory();
     }
 
     void ActiveStory ()
@@ -360,32 +375,35 @@ public class StoryManager : MonoBehaviour
         int count = csvManager.listCnt;
         for(int i = 0; i<3; i++)
         {
-            csvManager.SetNextStory(count + i);
+            StoryConfig? config = csvManager.GetConfig(count + i);
 
-            string emotion = csvManager.story.emotion;
-            int val = csvManager.story.value;
+            if (config == null)
+                continue;
 
-            switch (csvManager.story.type)
+            string emotion = config.Value.emotion;
+            int val = config.Value.value;
+
+            switch (config.Value.type)
             {
                 case "A":
-                    selectionManager.info.SetConfig(SelectionBtn.BUTTON_A, emotion, val, csvManager.story.nextIndex);
-                    selectionManager.UpdateText(SelectionBtn.BUTTON_A, csvManager.story.chat);
+                    selectionManager.info.SetConfig(SelectionBtn.BUTTON_A, emotion, val, config.Value.nextIndex);
+                    selectionManager.UpdateText(SelectionBtn.BUTTON_A, config.Value.chat);
                     break;
                 case "B":
-                    selectionManager.info.SetConfig(SelectionBtn.BUTTON_B, emotion, val, csvManager.story.nextIndex);
-                    selectionManager.UpdateText(SelectionBtn.BUTTON_B, csvManager.story.chat);
+                    selectionManager.info.SetConfig(SelectionBtn.BUTTON_B, emotion, val, config.Value.nextIndex);
+                    selectionManager.UpdateText(SelectionBtn.BUTTON_B, config.Value.chat);
                     break;
                 case "C":
-                    selectionManager.info.SetConfig(SelectionBtn.BUTTON_C, emotion, val, csvManager.story.nextIndex);
-                    selectionManager.UpdateText(SelectionBtn.BUTTON_C, csvManager.story.chat);
+                    selectionManager.info.SetConfig(SelectionBtn.BUTTON_C, emotion, val, config.Value.nextIndex);
+                    selectionManager.UpdateText(SelectionBtn.BUTTON_C, config.Value.chat);
                     if (selectionManager.info.OnOff == false)
                         selectionManager.OnSelection();
                     break;
                 default:
-                    print("CtrlParty. Type name :: " + csvManager.story.type);
+                    print("CtrlParty. Type name :: " + config.Value.type);
                     break;
             }
-        }  
+        }
     }
     void SetName()
     {
@@ -470,8 +488,6 @@ public class StoryManager : MonoBehaviour
 
     void CtrlAnswer()
     {
-        SelectionBtn btn = selectionManager.info.GetSelectButton();
-        SelectionConfig config = selectionManager.info.GetConfig(btn);
         string type = selectionManager.info.GetSelectButtonString();
 
         SetToken(Token.Answer);
